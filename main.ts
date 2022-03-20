@@ -13,28 +13,52 @@
 // その場合は シェア や 前のブロック生成から経過した時間 もブロック情報に入れる
 //
 
-type Block = {
+// 1つの取引
+type Transaction = {
+  // 送信者
+  sender: string;
+  // 受信者
+  recipient: string;
+  // アイテム ID
+  item_id: string;
+  // 数量
+  amount: number;
+};
+
+function tx2String(tx: Transaction): string {
+  const str = tx.sender +
+    tx.recipient +
+    tx.item_id +
+    tx.amount.toString();
+  return str;
+}
+
+// 1つのブロック
+// T: ブロックの中に閉じ込めたいデータの型
+type PoSBlock<T> = {
   // ブロックチェーンに必要
   index: number;
   time: string;
-  prevHash: string;
+  prev_hash: string;
   hash: string;
   // ブロックの中に閉じ込めたいデータ
-  data: number;
+  data: T;
   // PoS に必要
   validator: string;
 };
 
+type Block = PoSBlock<Transaction>;
+
+type Validator = {
+  address: string;
+  token: number;
+};
+
 // 純粋な SHA256 ハッシュ関数
-function calculateHash(str: string): string {
+function calcHash(str: string): string {
   // FIXME: - 中身はパッケージ等を利用して実装する
   // 今回は依存関係を増やしたくなかったので省略
   return str;
-}
-
-class Validator {
-  address: string = "aaa";
-  token: number = 50;
 }
 
 class Wallet {
@@ -96,14 +120,15 @@ function pickValidator() {
     return;
   }
 
-  // 抽選のくじ引き箱
+  // 抽選箱
   const lotteryPool: string[] = [];
   // 全ての抽選者に対して
-  for (let [validatorAddress, tokenCount] of fullNode.validators) {
-    // 応募金の数だけ抽選箱に名前を追加
-    Array.from(Array(tokenCount).keys()).forEach((c) => {
-      lotteryPool.push(validatorAddress);
-    });
+  for (let [address, token] of fullNode.validators) {
+    // 応募金の数だけ抽選箱にアドレスを追加
+    const range = Array.from(Array(token).keys()); // 0..length
+    for (const _ of range) {
+      lotteryPool.push(address);
+    }
   }
 
   // 抽選箱からランダムに一つ取り出す
@@ -116,6 +141,7 @@ function pickValidator() {
   // FIXME: 実装
 
   // 他のバリデーターにも最新のブロックチェーンを配布
+  // 受け取ったらローカルへ保存
   // FIXME: 実装
 }
 
@@ -134,18 +160,18 @@ function handleConn(conn: string) {
 }
 
 // ブロックが有効かどうか確認する
-function isBlockValid(newBlock: Block, oldBlock: Block): boolean {
+function blockIsValid(b: Block, prevB: Block): boolean {
   // ハッシュを正しい計算方法で再計算 (中身が偽造されていないことを確認)
-  const hashIsCorrect = calculateBlockHash(newBlock) == newBlock.hash;
+  const hashIsCorrect = calcBlockHash(b) == b.hash;
   if (!hashIsCorrect) {
     return false;
   }
   // インデックスを確認 (連続したブロックであることを確認)
-  if (newBlock.index != oldBlock.index + 1) {
+  if (b.index != prevB.index + 1) {
     return false;
   }
   // ハッシュを確認 (ハッシュが引き継がれているか)
-  if (newBlock.prevHash != oldBlock.hash) {
+  if (b.prev_hash != prevB.hash) {
     return false;
   }
   return true;
@@ -154,7 +180,7 @@ function isBlockValid(newBlock: Block, oldBlock: Block): boolean {
 // 新しいブロックを生成
 function generateBlock(
   oldBlock: Block,
-  data: number,
+  data: Transaction,
   validatorAddress: string,
 ): Block {
   const time = new Date().toISOString();
@@ -164,11 +190,11 @@ function generateBlock(
     time: time,
     data: data,
     hash: "仮の値",
-    prevHash: oldBlock.hash,
+    prev_hash: oldBlock.hash,
     validator: validatorAddress,
   };
   // ハッシュを計算
-  const hash = calculateBlockHash(block);
+  const hash = calcBlockHash(block);
   block.hash = hash;
   return block;
 }
@@ -189,22 +215,22 @@ class BlockRepository {
     // create: ファイルが存在しない場合は作成 = false
     // append: ファイルが存在する場合でも、上書きせずに末尾に追加 = false
     // 今回は 存在する場合のみ 上書き
-    const option = { append: false, create: false };
-    Deno.writeTextFile(this.filePath, text, option);
+    const opt = { append: false, create: false };
+    Deno.writeTextFile(this.filePath, text, opt);
   }
 }
 
 // ブロックのハッシュを計算する
 // FIXME: - 一時的にハッシュが仮の状態になってるのどうにかならんか
-function calculateBlockHash(block: Block): string {
+function calcBlockHash(b: Block): string {
   // 順番は大切なので仕様を決めておく
   // とりあえずハッシュ以外の全部の情報を詰め込んでおけばOK
-  const blockString = block.index.toString() +
-    block.time +
-    block.prevHash +
-    block.data.toString() +
-    block.validator;
-  return calculateHash(blockString);
+  const str = b.index.toString() +
+    b.time +
+    b.prev_hash +
+    tx2String(b.data) +
+    b.validator;
+  return calcHash(str);
 }
 
 // フルノード (全てのブロックを持っている)
