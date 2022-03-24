@@ -3,10 +3,22 @@
 //
 
 // blockchain
-import { Block, blockLog, pickWinner, Stake } from "../blockchain/mod.ts";
+import {
+  Block,
+  blockLog,
+  createBlock,
+  pickWinner,
+  Stake,
+  Tx,
+  Validator,
+} from "../blockchain/mod.ts";
 
 // Repository
 import { BlockchainRepository } from "./blockchain_repository.ts";
+
+// utils
+import { pubKey2str, str2vrfyPubKey } from "../utils/signing_key_pair.ts";
+import { str2buf } from "../utils/arybuf_base64.ts";
 
 /// 中央発行局
 export class Ico {
@@ -20,6 +32,50 @@ export class Ico {
   onXXX() {
     // FIXME: 前の抽選から30秒に一回くらいの頻度で実施
     const pickedV = pickWinner(this.stakes);
+  }
+
+  // FIXME: - pubKey は事前に登録してあるやつを探してくる
+  async onReceiveTx(tx: Tx, _pubKey: CryptoKey): Promise<void> {
+    const pubKey = _pubKey;
+    const strPubKey = await pubKey2str(pubKey);
+    const txIsOk = await this.verifyTx(tx, strPubKey);
+    if (txIsOk) {
+      // txは検証されました
+      const prevBlock = this.blockchain[this.blockchain.length - 1];
+      const validator: Validator = {
+        address: "center",
+        signature: "xxx",
+        token: 0,
+      };
+      const block = await createBlock(prevBlock, tx, validator);
+      // FIXME: - ここでブロックの検証に入る 今はこのサーバーしかバリデーターがいないので素通り
+      this.blockchain.push(block);
+      const r = new BlockchainRepository();
+      r.saveLocalBlockchain(this.blockchain);
+      // FIXME: - ここで新しいチェーンを共有
+    } else {
+      console.log("改ざんされたトランザクションです");
+    }
+  }
+
+  async verifyTx(tx: Tx, strPubKey: string): Promise<boolean> {
+    const targetOutputs = tx.outputs;
+    const targetJson = JSON.stringify(targetOutputs);
+    const encoder = new TextEncoder();
+    const jsonBuf = encoder.encode(targetJson);
+    const pubKey = await str2vrfyPubKey(strPubKey);
+    // FIXME: - 全てのサインに対して実施する
+    const signatureBuf = await str2buf(tx.inputs[0].signature);
+    const result = await crypto.subtle.verify(
+      {
+        name: "RSA-PSS",
+        saltLength: 32,
+      },
+      pubKey,
+      signatureBuf,
+      jsonBuf,
+    );
+    return result;
   }
 
   async startServer() {

@@ -22,44 +22,50 @@
 // ICO
 import { Ico } from "./ico/ico.ts";
 
-// Key Pair
+// Wallet
+import { Wallet } from "./wallet/wallet.ts";
+
+// blockchain
 import {
-  createKeyPair,
-  privateKey2str,
-  publicKey2str,
-  str2privateKey,
-  str2publicKey,
-} from "./utils/key_pair.ts";
+  addrIsValid,
+  calcBlockHash,
+  correctHashOfBlock,
+} from "./blockchain/mod.ts";
+
+// utils
+import { pubKey2str } from "./utils/signing_key_pair.ts";
+
+// initializer
+import {Initializer} from "./initial_data/initializer.ts";
+
+const i = new Initializer();
+i.deleteAll();
+
+async function main() {
 
 const ico = new Ico();
 ico.startServer();
 
-const keyPair = await createKeyPair();
-const pristr = await privateKey2str(keyPair.privateKey);
-const pubstr = await publicKey2str(keyPair.publicKey);
+const w = new Wallet();
+await w.initialize();
 
-const privateKey = await str2privateKey(pristr);
-const publicKey = await str2publicKey(pubstr);
+console.log(`Wallet @addr: ${w.address}`);
 
-const encoder = new TextEncoder();
-const encoded = encoder.encode("Hello Hira");
-const ango = await crypto.subtle.encrypt(
-  {
-    name: "RSA-OAEP",
-  },
-  publicKey,
-  encoded,
-);
+const strPubKey = await pubKey2str(w.pubKey!);
+const isValidAddr = await addrIsValid(w.address, strPubKey);
 
-const hirabun = await crypto.subtle.decrypt(
-  {
-    name: "RSA-OAEP",
-  },
-  privateKey,
-  ango,
-);
+console.log(`isValid Addr?: ${isValidAddr}`);
 
-const decoder = new TextDecoder();
-const hello = decoder.decode(hirabun);
+const tx = await w.createTx();
+const txIsOk = await ico.verifyTx(tx, strPubKey);
 
-console.log(hello);
+console.log(`isValid Tx?: ${txIsOk}`);
+
+await ico.onReceiveTx(tx, w.pubKey!);
+
+const genB = ico.blockchain[0];
+const genBlockHash = await correctHashOfBlock(genB);
+
+console.log(`正しい初期ブロックハッシュ: ${genBlockHash}`);
+
+}

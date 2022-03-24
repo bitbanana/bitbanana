@@ -12,7 +12,6 @@ import { Validator } from "./types/validator.ts";
 // Transaction -> string
 function strOfTx(tx: Tx): string {
   const str = JSON.stringify(tx);
-  console.log("tx json: ${str}");
   return str;
 }
 

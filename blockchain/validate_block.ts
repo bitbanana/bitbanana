@@ -14,7 +14,7 @@ import { Block } from "./types/block.ts";
 import { calcBlockHash } from "./calc_block_hash.ts";
 
 // ブロックのハッシュを計算する
-async function correctHashOfBlock(
+export async function correctHashOfBlock(
   b: Block,
 ): Promise<string> {
   // 順番は必ず守ること
