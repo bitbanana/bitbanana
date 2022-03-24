@@ -12,4 +12,4 @@ export * as base58 from "https://deno.land/x/base58check@v0.1.4/mod.ts";
 export { v4 } from "https://deno.land/std@0.131.0/uuid/mod.ts";
 
 // File System
-export { move } from "https://deno.land/std/fs/move.ts";
+export { copySync } from "https://deno.land/std@0.131.0/fs/mod.ts";

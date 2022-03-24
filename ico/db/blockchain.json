@@ -14,33 +14,5 @@
       "signature": "",
       "token": 0
     }
-  },
-  {
-    "index": 1,
-    "time": "2022-03-24T06:50:32.766Z",
-    "tx": {
-      "id": "b2224afd-b32a-46e9-be7f-0b8e278e6f1b",
-      "inputs": [
-        {
-          "time": "2022-03-24T06:50:32.762Z",
-          "from": "2Nvz9hYmhm9VjjFBhCUxkck4RweTejK6LmSMPAdETWZxWy1PTE",
-          "signature": "YDVOr2QG2AsKuTe9fzncg12yeLIX9J0gJrt2rteg+JIY7tOKEvvm6Z6ibBQ+aWB+MIaBjVNofMn/AcUbXiV5ttoCZ8KFJEuOQT4HL5IQ6kTcyIUFN+MtdaQf9F3PZXiQpCMEkhNLOGE+E9UcO4ZPg1jQkf+fOO6UPHJFdrBVuvIRsXxjbwzzA8JraCXVLH0+JnruRDlPLUH/mqZsv0dw351aOuSyrnGwJoiDB+/+6oLQ4iAqQaNv4BbiRHG9GtfSFV7bd+ZC4uAlsDQCOTlrJ+PxNRB1Vbt/R4xRWI1CCmlTnjObbMNmi0sgycvK9oD6MMYB5+O9WX9uzBwwwci6pw=="
-        }
-      ],
-      "outputs": [
-        {
-          "to": "center",
-          "amount": 50,
-          "fee": 5
-        }
-      ]
-    },
-    "hash": "759e456a7d90c64f776683917ddc3b091e1ab2d0052858c2d55a6653b72e2baa",
-    "prev_hash": "f3d4417a5afba4d80d957f71d458b18a9228ad350a101656a78ef2049b081b58",
-    "validator": {
-      "address": "center",
-      "signature": "xxx",
-      "token": 0
-    }
   }
 ]

@@ -36,36 +36,37 @@ import {
 import { pubKey2str } from "./utils/signing_key_pair.ts";
 
 // initializer
-import {Initializer} from "./initial_data/initializer.ts";
+import { Initializer } from "./initial_data/initializer.ts";
 
 const i = new Initializer();
 i.deleteAll();
 
+// コメント解除して実行
+// main();
+
 async function main() {
+  const ico = new Ico();
+  ico.startServer();
 
-const ico = new Ico();
-ico.startServer();
+  const w = new Wallet();
+  await w.initialize();
 
-const w = new Wallet();
-await w.initialize();
+  console.log(`Wallet @addr: ${w.address}`);
 
-console.log(`Wallet @addr: ${w.address}`);
+  const strPubKey = await pubKey2str(w.pubKey!);
+  const isValidAddr = await addrIsValid(w.address, strPubKey);
 
-const strPubKey = await pubKey2str(w.pubKey!);
-const isValidAddr = await addrIsValid(w.address, strPubKey);
+  console.log(`isValid Addr?: ${isValidAddr}`);
 
-console.log(`isValid Addr?: ${isValidAddr}`);
+  const tx = await w.createTx();
+  const txIsOk = await ico.verifyTx(tx, strPubKey);
 
-const tx = await w.createTx();
-const txIsOk = await ico.verifyTx(tx, strPubKey);
+  console.log(`isValid Tx?: ${txIsOk}`);
 
-console.log(`isValid Tx?: ${txIsOk}`);
+  await ico.onReceiveTx(tx, w.pubKey!);
 
-await ico.onReceiveTx(tx, w.pubKey!);
+  const genB = ico.blockchain[0];
+  const genBlockHash = await correctHashOfBlock(genB);
 
-const genB = ico.blockchain[0];
-const genBlockHash = await correctHashOfBlock(genB);
-
-console.log(`正しい初期ブロックハッシュ: ${genBlockHash}`);
-
+  console.log(`正しい初期ブロックハッシュ: ${genBlockHash}`);
 }
