@@ -7,14 +7,14 @@ import { User } from "./user.ts";
 
 export class FruitServer {
   // ユーザー登録
-  async createUser(userAddr: string, banana: number): Promise<void> {
+  async createUser(userAddr: string): Promise<void> {
     const r = new UserRepository();
     let user: User | null = await r.getUser(userAddr);
     if (user != null) {
       console.log("すでに登録されているユーザーです");
       return;
     }
-    user = { addr: userAddr, banana: banana, items: {} };
+    user = { addr: userAddr, items: {} };
     await r.upsertUser(user);
   }
   // ユーザーがアイテムを購入
@@ -22,6 +22,7 @@ export class FruitServer {
     userAddr: string,
     itemId: number,
     itemCount: number,
+    txId: string,
   ): Promise<void> {
     const r = new UserRepository();
     const user = await r.getUser(userAddr);
@@ -32,8 +33,7 @@ export class FruitServer {
     const onePrice = await priceOfItem(itemId);
     const totalPrice = onePrice * itemCount;
     const count = user.items[itemId] ?? 0;
-    // FIXME: - バリデーション
-    user!.banana -= totalPrice; // バナナが減って
+    // FIXME: - 入金を確認する
     user.items[itemId] = count + itemCount; // アイテムが増える
     await r.upsertUser(user);
   }
@@ -43,6 +43,7 @@ export class FruitServer {
     userAddr: string,
     itemId: number,
     itemCount: number,
+    txId: string,
   ): Promise<void> {
     const r = new UserRepository();
     const user = await r.getUser(userAddr);
@@ -53,9 +54,20 @@ export class FruitServer {
     const onePrice = await priceOfItem(itemId);
     const totalPrice = onePrice * itemCount;
     const count = user.items[itemId] ?? 0;
-    user!.banana += totalPrice; // バナナが増えて
+    // FIXME: - 送金を確認する
     user.items[itemId] = count - itemCount; // アイテムが減る
     await r.upsertUser(user);
+  }
+
+  // アイテムの価格一覧を取得
+  async getItemPrices(): Promise<any> {
+    // FIXME: - 実装
+    return {
+      "0": 50,
+      "1": 70,
+      "2:": 30,
+      "3": 25,
+    };
   }
 }
 

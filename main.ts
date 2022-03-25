@@ -11,22 +11,13 @@ import { FruitServer } from "./fruit_server/fruit_server.ts";
 // Wallet
 import { Wallet } from "./wallet/wallet.ts";
 
-// blockchain
-import {
-  addrIsValid,
-  calcBlockHash,
-  correctHashOfBlock,
-} from "./blockchain/mod.ts";
-
 // utils
 import { pubKey2str } from "./utils/signing_key_pair.ts";
 
 // initializer
 import { Initializer } from "./initial_data/initializer.ts";
 
-// test
-import { PubKeyRepository } from "./ico/pub_key_repository.ts";
-
+// 全てのデータを初期化
 const i = new Initializer();
 i.deleteAll();
 
@@ -34,38 +25,41 @@ i.deleteAll();
 // main();
 
 async function main() {
-  const ico = new Ico();
-  ico.startServer();
-
+  // 鍵とアドレスを保持
   const w = new Wallet();
   await w.initialize();
 
-  console.log(`Wallet @addr: ${w.address}`);
+  // ico server 立ち上げ
+  const ico = new Ico();
+  await ico.startServer();
 
+  // ico に 公開鍵 を登録
   const strPubKey = await pubKey2str(w.pubKey!);
-  const isValidAddr = await addrIsValid(w.address, strPubKey);
+  await ico.savePubKey(w.address, strPubKey);
 
-  console.log(`isValid Addr?: ${isValidAddr}`);
+  // 残高を確認
+  const balance = await ico.calcBalance(w.address);
 
-  const tx = await w.createTx();
-  const txIsOk = await ico.verifyTx(tx, strPubKey);
-
-  console.log(`isValid Tx?: ${txIsOk}`);
-
-  await ico.onReceiveTx(tx, w.pubKey!);
-
-  const genB = ico.blockchain[0];
-  const genBlockHash = await correctHashOfBlock(genB);
-
-  console.log(`正しい初期ブロックハッシュ: ${genBlockHash}`);
-
+  // fruit server 立ち上げ
   const fServer = new FruitServer();
 
-  const balance = await ico.calcBalance(w.address);
-  await fServer.createUser(w.address, balance);
+  // fruit server 利用者登録
+  await fServer.createUser(w.address);
 
-  await fServer.userBuyItem(w.address, 7, 4);
+  // 現在のアイテム価格一覧を取得
+  const itemPrices = await fServer.getItemPrices();
 
-  const pr = new PubKeyRepository();
-  pr.savePubKey("hira", "pubkey");
+  // 購入アイテムを決定
+  const itemId = 0;
+  const onePrice = itemPrices["0"];
+  const itemCount = 3;
+
+  // 支払いのトランザクションを作成
+  const tx = await w.createTx();
+
+  // 購入開始
+  await fServer.userBuyItem(w.address, itemId, 3, tx.id);
+
+  // 支払い
+  await ico.onReceiveTx(tx, w.pubKey!);
 }

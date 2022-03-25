@@ -4,8 +4,11 @@
 
 // blockchain
 import {
+  addrIsValid,
   Block,
   blockLog,
+  calcBlockHash,
+  correctHashOfBlock,
   createBlock,
   pickWinner,
   Stake,
@@ -15,6 +18,7 @@ import {
 
 // Repository
 import { BlockchainRepository } from "./blockchain_repository.ts";
+import { PubKeyRepository } from "./pub_key_repository.ts";
 
 // utils
 import { pubKey2str, str2vrfyPubKey } from "../utils/signing_key_pair.ts";
@@ -82,6 +86,16 @@ export class Ico {
   async calcBalance(addr: string): Promise<number> {
     // FIXME: - 計算
     return 80;
+  }
+
+  async savePubKey(addr: string, strPubKey: string): Promise<void> {
+    const isValidAddr = await addrIsValid(addr, strPubKey);
+    if (isValidAddr) {
+      const pkr = new PubKeyRepository();
+      pkr.savePubKey(addr, strPubKey);
+    } else {
+      console.log("公開鍵とアドレスが矛盾しています");
+    }
   }
 
   async startServer() {
