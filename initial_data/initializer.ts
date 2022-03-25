@@ -9,6 +9,12 @@ export class Initializer {
     copySync("./initial_data/blockchain.json", "./ico/db/blockchain.json", {
       overwrite: true,
     });
+    copySync("./initial_data/users.json", "./fruit_server/db/users.json", {
+      overwrite: true,
+    });
+    copySync("./initial_data/pub_keys.json", "./ico/db/pub_keys.json", {
+      overwrite: true,
+    });
     copySync(
       "./initial_data/dec_pvt_key.pem",
       "./wallet/keychain/dec_pvt_key.pem",

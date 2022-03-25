@@ -78,6 +78,12 @@ export class Ico {
     return result;
   }
 
+  // UTXO から 残高を求める
+  async calcBalance(addr: string): Promise<number> {
+    // FIXME: - 計算
+    return 80;
+  }
+
   async startServer() {
     // ストレージから読み込み
     const repository = new BlockchainRepository();

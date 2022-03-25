@@ -5,6 +5,9 @@
 // ICO
 import { Ico } from "./ico/ico.ts";
 
+// Fruit Server
+import { FruitServer } from "./fruit_server/fruit_server.ts";
+
 // Wallet
 import { Wallet } from "./wallet/wallet.ts";
 
@@ -20,6 +23,9 @@ import { pubKey2str } from "./utils/signing_key_pair.ts";
 
 // initializer
 import { Initializer } from "./initial_data/initializer.ts";
+
+// test
+import { PubKeyRepository } from "./ico/pub_key_repository.ts";
 
 const i = new Initializer();
 i.deleteAll();
@@ -52,4 +58,14 @@ async function main() {
   const genBlockHash = await correctHashOfBlock(genB);
 
   console.log(`正しい初期ブロックハッシュ: ${genBlockHash}`);
+
+  const fServer = new FruitServer();
+
+  const balance = await ico.calcBalance(w.address);
+  await fServer.createUser(w.address, balance);
+
+  await fServer.userBuyItem(w.address, 7, 4);
+
+  const pr = new PubKeyRepository();
+  pr.savePubKey("hira", "pubkey");
 }
