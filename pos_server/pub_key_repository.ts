@@ -4,7 +4,7 @@
 
 export class PubKeyRepository {
   // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./ico/db/pub_keys.json";
+  filePath = "./pos_server/db/pub_keys.json";
   async loadPubkey(addr: string): Promise<string> {
     // 連想配列(生のオブジェクト)として読み込み
     const text = await Deno.readTextFile(this.filePath);
