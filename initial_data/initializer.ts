@@ -6,9 +6,13 @@ import { copySync } from "../deps.ts";
 
 export class Initializer {
   deleteAll() {
-    copySync("./initial_data/blockchain.json", "./pos_server/db/blockchain.json", {
-      overwrite: true,
-    });
+    copySync(
+      "./initial_data/blockchain.json",
+      "./pos_server/db/blockchain.json",
+      {
+        overwrite: true,
+      },
+    );
     copySync("./initial_data/users.json", "./fruit_server/db/users.json", {
       overwrite: true,
     });
