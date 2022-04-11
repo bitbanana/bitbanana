@@ -26,16 +26,14 @@ export async function createBlock(
     validator,
   );
 
-  // 仮のハッシュ値でブロックを生成
   const block: Block = {
     index: index,
     time: time,
-    tx: tx,
-    hash: hash,
     prev_hash: prevB.hash,
+    hash: hash,
+    tx: tx,
     validator: validator,
   };
-  // 正しいハッシュを計算
 
   return block;
 }
