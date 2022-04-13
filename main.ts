@@ -14,15 +14,7 @@ import { Wallet } from "./wallet/wallet.ts";
 // utils
 import { pubKey2str } from "./utils/signing_key_pair.ts";
 
-// initializer
-import { Initializer } from "./initial_data/initializer.ts";
-
-// 全てのデータを初期化
-const i = new Initializer();
-i.deleteAll();
-
-// コメント解除して実行
-// main();
+main();
 
 async function main() {
   // 鍵とアドレスを保持

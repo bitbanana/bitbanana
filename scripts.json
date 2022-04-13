@@ -1,0 +1,43 @@
+{
+  "$schema": "https://deno.land/x/denon@2.5.0/schema.json",
+  "scripts": {
+    "dev": {
+      "cmd": "deno run main.ts",
+      "desc": "run main.ts",
+      "allow": [
+        "env",
+        "net",
+        "read",
+        "write"
+      ],
+      "unstable": true
+    },
+    "reset": {
+      "cmd": "deno run initial_data/reset.ts",
+      "desc": "rreset all data",
+      "allow": [
+        "env",
+        "net",
+        "read",
+        "write"
+      ]
+    },
+    "lint": {
+      "cmd": "deno lint ./",
+      "desc": "lint all ts, tsx files"
+    },
+    "fmt": {
+      "cmd": "deno fmt ./",
+      "desc": "format all ts, tsx files"
+    }
+  },
+  "watcher": {
+    "exts": [
+      "ts",
+      "tsx"
+    ],
+    "skip": [
+      "*/.git/*"
+    ]
+  }
+}
