@@ -1,7 +1,7 @@
 {
   "$schema": "https://deno.land/x/denon@2.5.0/schema.json",
   "scripts": {
-    "dev": {
+    "main": {
       "cmd": "deno run main.ts",
       "desc": "run main.ts",
       "allow": [
@@ -10,7 +10,8 @@
         "read",
         "write"
       ],
-      "unstable": true
+      "unstable": true,
+      "watch": false
     },
     "reset": {
       "cmd": "deno run initial_data/reset.ts",
@@ -20,7 +21,8 @@
         "net",
         "read",
         "write"
-      ]
+      ],
+      "watch": false
     },
     "lint": {
       "cmd": "deno lint ./",

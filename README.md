@@ -20,8 +20,8 @@ $ deno install -qAf --unstable https://deno.land/x/denon/denon.ts
 $ denon reset
 ```
 
-- run with dev mode
+- run main.ts
 
 ```
-$ denon dev
+$ denon main
 ```
