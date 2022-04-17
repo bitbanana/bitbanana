@@ -1,4 +1,4 @@
-<img rsc="https://github.com/bitbanana/bitbanana/blob/main/resouces/images/bitbanana_logo_long.png">
+![ビットバナナのロゴ](https://github.com/bitbanana/bitbanana/blob/main/resouces/images/bitbanana_logo_long.png?raw=true)
 
 - TypeScript on Deno
 - Blockchain
