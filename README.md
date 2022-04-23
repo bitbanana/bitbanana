@@ -8,7 +8,17 @@
 
 ## Run
 
-- install denon
+- install Deno (https://deno.land/)
+
+```
+### Shell (Mac, Linux) ###
+$ curl -fsSL https://deno.land/install.sh | sh
+
+### PowerShell (Windows) ###
+$ iwr https://deno.land/install.ps1 -useb | iex
+```
+
+- install denon (https://deno.land/x/denon)
 
 ```
 $ deno install -qAf --unstable https://deno.land/x/denon/denon.ts
