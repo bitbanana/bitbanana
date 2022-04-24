@@ -7,8 +7,8 @@ console.log(`Bit Fruit Listening on ${baseUrl}`);
 serve((req: Request) => {
   console.log("リクエストを受け取りました");
   if (req.method === "GET" && req.url === `${baseUrl}/test`) {
-    return new Response(`ここは /testです`);
+    return new Response('{ "result": "OK" }');
   } else {
-    return new Response(`存在しないURLです ${req.url}`);
+    return new Response('{ "result": "NG 存在しないURL" }');
   }
 }, { addr });

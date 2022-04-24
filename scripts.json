@@ -37,7 +37,18 @@
     },
     "fruit": {
       "cmd": "deno run bit_fruit/server.ts",
-      "desc": "run full node server",
+      "desc": "run bit fruit server",
+      "allow": [
+        "env",
+        "net",
+        "read",
+        "write"
+      ],
+      "watch": false
+    },
+    "test": {
+      "cmd": "deno test",
+      "desc": "run test",
       "allow": [
         "env",
         "net",
