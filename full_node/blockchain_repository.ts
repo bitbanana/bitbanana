@@ -7,7 +7,7 @@ import { Block } from "../blockchain/mod.ts";
 
 export class BlockchainRepository {
   // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./pos_server/db/blockchain.json";
+  filePath = "./full_node/db/blockchain.json";
   async loadLocalBlockchain(): Promise<Block[]> {
     // ファイルのテキストを読み込む
     const text = await Deno.readTextFile(this.filePath);

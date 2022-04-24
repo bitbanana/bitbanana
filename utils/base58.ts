@@ -1,6 +1,6 @@
-import { base58 } from "../deps.ts";
+import { base58 as lib } from "../deps.ts";
 
-export async function base58Of(array: Uint8Array): Promise<string> {
-  const str = await base58.encode(array);
+export async function base58(array: Uint8Array): Promise<string> {
+  const str = await lib.encode(array);
   return str;
 }

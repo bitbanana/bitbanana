@@ -3,10 +3,10 @@
 //
 
 // utils
-import * as date_format from "../utils/date_format.ts";
+import * as date_format from "../../utils/date_format.ts";
 
 // types
-import { Block } from "./types/block.ts";
+import { Block } from "../types/block.ts";
 
 export function blockLog(b: Block): string {
   const str = `Block #${b.index}

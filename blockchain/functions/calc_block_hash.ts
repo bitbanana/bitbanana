@@ -3,11 +3,11 @@
 //
 
 // utils
-import * as hash from "../utils/hash.ts";
+import * as hash from "../../utils/sha256.ts";
 
 // types
-import { Tx } from "./types/tx.ts";
-import { Validator } from "./types/validator.ts";
+import { Tx } from "../types/tx.ts";
+import { Validator } from "../types/validator.ts";
 
 // Transaction -> string
 function strOfTx(tx: Tx): string {
@@ -35,6 +35,6 @@ export async function calcBlockHash(
     prevHash +
     strOfTx(tx) +
     strOfValidator(validator);
-  const hexHash = await hash.hexHashOf(str);
+  const hexHash = await hash.sha256(str);
   return hexHash;
 }

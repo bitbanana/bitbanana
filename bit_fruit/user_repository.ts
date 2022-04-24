@@ -6,7 +6,7 @@ import { User } from "./user.ts";
 
 export class UserRepository {
   // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./fruit_server/db/users.json";
+  filePath = "./bit_fruit/db/users.json";
   // 取得
   async getUser(addr: string): Promise<User | null> {
     const text = await Deno.readTextFile(this.filePath);

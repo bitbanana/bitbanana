@@ -5,7 +5,7 @@
 // utils
 import { createSigningKeyPair } from "../utils/signing_key_pair.ts";
 import { pubKey2str } from "../utils/cryption_key_pair.ts";
-import { buf2str } from "../utils/arybuf_base64.ts";
+import { buf2str } from "../utils/buf_base64.ts";
 
 // Repository
 import { KeyRepository } from "./key_repository.ts";

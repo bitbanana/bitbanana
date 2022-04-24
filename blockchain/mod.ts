@@ -12,9 +12,12 @@ export type { Validator } from "./types/validator.ts";
 export type { Wallet } from "./types/wallet.ts";
 
 // func
-export { addrIsValid, calcAddress } from "./calc_address.ts";
-export { calcBlockHash } from "./calc_block_hash.ts";
-export { createBlock } from "./create_block.ts";
-export { blockLog } from "./log_format.ts";
-export { pickWinner } from "./pick_winner.ts";
-export { correctHashOfBlock, validateBlock } from "./validate_block.ts";
+export { addrIsValid, calcAddress } from "./functions/calc_address.ts";
+export { calcBlockHash } from "./functions/calc_block_hash.ts";
+export { createBlock } from "./functions/create_block.ts";
+export { blockLog } from "./functions/log_format.ts";
+export { pickWinner } from "./functions/pick_winner.ts";
+export {
+  correctHashOfBlock,
+  validateBlock,
+} from "./functions/validate_block.ts";

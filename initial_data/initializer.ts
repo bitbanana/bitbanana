@@ -8,15 +8,15 @@ export class Initializer {
   deleteAll() {
     copySync(
       "./initial_data/blockchain.json",
-      "./pos_server/db/blockchain.json",
+      "./full_node/db/blockchain.json",
       {
         overwrite: true,
       },
     );
-    copySync("./initial_data/users.json", "./fruit_server/db/users.json", {
+    copySync("./initial_data/users.json", "./bit_fruit/db/users.json", {
       overwrite: true,
     });
-    copySync("./initial_data/pub_keys.json", "./pos_server/db/pub_keys.json", {
+    copySync("./initial_data/pub_keys.json", "./full_node/db/pub_keys.json", {
       overwrite: true,
     });
     copySync(

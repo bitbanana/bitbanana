@@ -22,10 +22,10 @@ import { PubKeyRepository } from "./pub_key_repository.ts";
 
 // utils
 import { pubKey2str, str2vrfyPubKey } from "../utils/signing_key_pair.ts";
-import { str2buf } from "../utils/arybuf_base64.ts";
+import { str2buf } from "../utils/buf_base64.ts";
 
-/// 中央発行局
-export class PosServer {
+/// フルノード
+export class FullNode {
   // 検証済みの全ブロック
   blockchain: Block[] = [];
   // 検証ように流れてきた候補のブロック

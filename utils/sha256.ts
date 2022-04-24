@@ -3,7 +3,7 @@
 //
 
 // 純粋な SHA256 ハッシュ関数 string -> Uint8Array
-export async function hashOf(str: string): Promise<Uint8Array> {
+export async function sha256ary(str: string): Promise<Uint8Array> {
   const uint8Ary = new TextEncoder().encode(str);
   const hashBuffer = await crypto.subtle.digest(
     "SHA-256",
@@ -14,7 +14,7 @@ export async function hashOf(str: string): Promise<Uint8Array> {
 }
 
 // Hex文字列を返す SHA256 ハッシュ関数 string -> string
-export async function hexHashOf(str: string): Promise<string> {
+export async function sha256(str: string): Promise<string> {
   const uint8Ary = new TextEncoder().encode(str);
   const hashBuffer = await crypto.subtle.digest(
     "SHA-256",

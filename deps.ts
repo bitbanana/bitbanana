@@ -13,3 +13,7 @@ export { v4 } from "https://deno.land/std@0.131.0/uuid/mod.ts";
 
 // File System
 export { copySync } from "https://deno.land/std@0.131.0/fs/mod.ts";
+
+// Oak HTTP Server
+export { Application, Router } from "https://deno.land/x/oak/mod.ts";
+export type { RouterContext } from "https://deno.land/x/oak/mod.ts";

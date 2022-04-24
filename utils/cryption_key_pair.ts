@@ -2,7 +2,7 @@
 //
 //
 
-import { buf2str, str2buf } from "./arybuf_base64.ts";
+import { buf2str, str2buf } from "./buf_base64.ts";
 
 // 新しい 暗号化用の 鍵ペアを作成
 export async function createCryptionKeyPair(): Promise<CryptoKeyPair> {

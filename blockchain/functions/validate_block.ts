@@ -3,12 +3,12 @@
 //
 
 // utils
-import * as date_format from "../utils/date_format.ts";
-import * as base58 from "../utils/base58.ts";
-import * as hash from "../utils/hash.ts";
+import * as date_format from "../../utils/date_format.ts";
+import * as base58 from "../../utils/base58.ts";
+import * as hash from "../../utils/sha256.ts";
 
 // types
-import { Block } from "./types/block.ts";
+import { Block } from "../types/block.ts";
 
 // func
 import { calcBlockHash } from "./calc_block_hash.ts";

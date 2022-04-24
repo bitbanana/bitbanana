@@ -5,7 +5,7 @@
 import { UserRepository } from "./user_repository.ts";
 import { User } from "./user.ts";
 
-export class FruitServer {
+export class BitFruit {
   // ユーザー登録
   async createUser(userAddr: string): Promise<void> {
     const r = new UserRepository();
