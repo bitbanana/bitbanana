@@ -16,7 +16,7 @@ import { pubKey2str } from "./utils/signing_key_pair.ts";
 
 import { startBonus } from "./full_node/web_api.ts";
 
-startBonus("rbdog");
+await startBonus("rbdog");
 
 // main();
 

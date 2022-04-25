@@ -21,35 +21,35 @@ export class Initializer {
     });
     copySync(
       "./initial_data/dec_pvt_key.pem",
-      "./wallet/keychain/dec_pvt_key.pem",
+      "./bit_fruit/keychain/dec_pvt_key.pem",
       {
         overwrite: true,
       },
     );
     copySync(
       "./initial_data/enc_pub_key.pem",
-      "./wallet/keychain/enc_pub_key.pem",
+      "./bit_fruit/keychain/enc_pub_key.pem",
       {
         overwrite: true,
       },
     );
     copySync(
       "./initial_data/sign_pvt_key.pem",
-      "./wallet/keychain/sign_pvt_key.pem",
+      "./bit_fruit/keychain/sign_pvt_key.pem",
       {
         overwrite: true,
       },
     );
     copySync(
       "./initial_data/vrfy_pub_key.pem",
-      "./wallet/keychain/vrfy_pub_key.pem",
+      "./bit_fruit/keychain/vrfy_pub_key.pem",
       {
         overwrite: true,
       },
     );
     copySync(
       "./initial_data/key_value.json",
-      "./wallet/storage/key_value.json",
+      "./bit_fruit/storage/key_value.json",
       {
         overwrite: true,
       },

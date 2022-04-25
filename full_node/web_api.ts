@@ -3,6 +3,7 @@ import { bitFruit, whiteTxList } from "./full_node.ts";
 
 // 初回限定ボーナスをもらう
 export async function startBonus(addr: string) {
+  await bitFruit.wallet.initialize();
   const tx = await bitFruit.createStartBonusTx(addr);
   addWhiteTx(tx);
 }

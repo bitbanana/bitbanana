@@ -27,7 +27,6 @@ export class BitFruit implements Follower {
       "./bit_fruit/keychain",
       "./bit_fruit/storage/key_value.json",
     );
-    this.wallet.initialize();
   }
 
   onRedTx(tx: Tx): void {
