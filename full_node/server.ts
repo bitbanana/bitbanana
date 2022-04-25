@@ -1,6 +1,6 @@
-import { Application, Router, RouterContext as AbstContext } from "../deps.ts";
-
-type RouterContext = AbstContext<any, any, any>;
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import type { RouterContext as XContext } from "https://deno.land/x/oak/mod.ts";
+type RouterContext = XContext<any, any, any>;
 
 const router = new Router();
 router
