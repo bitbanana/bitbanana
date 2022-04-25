@@ -14,11 +14,15 @@ import { Wallet } from "./wallet/wallet.ts";
 // utils
 import { pubKey2str } from "./utils/signing_key_pair.ts";
 
-main();
+import { startBonus } from "./full_node/web_api.ts";
+
+startBonus("rbdog");
+
+// main();
 
 async function main() {
   // 鍵とアドレスを保持
-  const w = new Wallet();
+  const w = new Wallet("./wallet/keychain", "./wallet/storage/key_value.json");
   await w.initialize();
 
   // full node server 立ち上げ
@@ -53,5 +57,5 @@ async function main() {
   await fServer.userBuyItem(w.address, itemId, 3, tx.id);
 
   // 支払い
-  await fullNode.onReceiveTx(tx, w.pubKey!);
+  await fullNode.onReceiveWhiteTx(tx, w.pubKey!);
 }

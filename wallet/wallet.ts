@@ -20,11 +20,18 @@ export class Wallet {
   address = "";
   pvtKey: CryptoKey | null = null;
   pubKey: CryptoKey | null = null;
+  keychainPath: string;
+  keyValueFilePath: string;
+
+  constructor(keychainPath: string, keyValueFilePath: string) {
+    this.keychainPath = keychainPath;
+    this.keyValueFilePath = keyValueFilePath;
+  }
 
   /// 初期化処理
   async initialize(): Promise<void> {
     // 保存された鍵をロード
-    const r = new KeyRepository();
+    const r = new KeyRepository(this.keychainPath);
     this.pvtKey = await r.loadSignPvtKey();
     this.pubKey = await r.loadVrfyPubKey();
     // 鍵をまだ持っていなければ、新しく作成して保存
@@ -34,13 +41,13 @@ export class Wallet {
       await this.createNewAddress();
     }
     // 保存されたアドレスをロード
-    const ar = new AddressRepository();
+    const ar = new AddressRepository(this.keyValueFilePath);
     this.address = await ar.loadAddress();
   }
 
   /// 新しく鍵ペアを作成して保存
   private async createNewKeyPair(): Promise<void> {
-    const r = new KeyRepository();
+    const r = new KeyRepository(this.keychainPath);
     const keyPair = await createSigningKeyPair();
     r.saveSignPvtKey(keyPair.privateKey);
     r.saveVrfyPubKey(keyPair.publicKey);
@@ -53,7 +60,7 @@ export class Wallet {
     if (this.pubKey instanceof CryptoKey) {
       const strPubKey = await pubKey2str(this.pubKey);
       const address = await calcAddress(strPubKey);
-      const ar = new AddressRepository();
+      const ar = new AddressRepository(this.keyValueFilePath);
       await ar.saveAddress(address);
       this.address = address;
     } else {

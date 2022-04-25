@@ -24,6 +24,16 @@ import { PubKeyRepository } from "./pub_key_repository.ts";
 import { pubKey2str, str2vrfyPubKey } from "../utils/signing_key_pair.ts";
 import { str2buf } from "../utils/buf_base64.ts";
 
+// BitFruit
+import { BitFruit } from "../bit_fruit/bit_fruit.ts";
+
+// Follower
+import { Follower } from "./follower.ts";
+
+export const bitFruit = new BitFruit();
+export const whiteTxList: Tx[] = [];
+export const followers: Follower[] = [];
+
 /// フルノード
 export class FullNode {
   // 検証済みの全ブロック
@@ -31,34 +41,36 @@ export class FullNode {
   // 検証ように流れてきた候補のブロック
   candidateBlocks: Block[] = [];
   // 抽選に参加しているバリデーターのステーク
-  stakes: Stake[] = [];
-
-  onXXX() {
-    // FIXME: 前の抽選から30秒に一回くらいの頻度で実施
-    const pickedV = pickWinner(this.stakes);
-  }
+  stakes: Stake[] = [
+    {
+      address: "BitFruitWallet",
+      token: 1,
+    },
+  ];
 
   // FIXME: - pubKey は事前に登録してあるやつを探してくる
-  async onReceiveTx(tx: Tx, _pubKey: CryptoKey): Promise<void> {
+  async onReceiveWhiteTx(tx: Tx, _pubKey: CryptoKey): Promise<void> {
     const pubKey = _pubKey;
     const strPubKey = await pubKey2str(pubKey);
     const txIsOk = await this.verifyTx(tx, strPubKey);
     if (txIsOk) {
       // txは検証されました
+      const winnerStake = pickWinner(this.stakes);
       const prevBlock = this.blockchain[this.blockchain.length - 1];
-      const validator: Validator = {
-        address: "center",
-        signature: "xxx",
-        token: 0,
-      };
-      const block = await createBlock(prevBlock, tx, validator);
-      // FIXME: - ここでブロックの検証に入る 今はこのサーバーしかバリデーターがいないので素通り
+      const block = await bitFruit.createBlock(prevBlock, tx, winnerStake);
       this.blockchain.push(block);
       const r = new BlockchainRepository();
       r.saveLocalBlockchain(this.blockchain);
-      // FIXME: - ここで新しいチェーンを共有
+      this.notifyGreenTx(block.tx);
+      // FIXME: - ここで他のノードへ新しいチェーンを共有
     } else {
       console.log("改ざんされたトランザクションです");
+    }
+  }
+
+  notifyGreenTx(tx: Tx) {
+    for (const f of followers) {
+      f.onGreenTx(tx);
     }
   }
 

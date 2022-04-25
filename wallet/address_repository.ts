@@ -13,7 +13,11 @@ import { str2signPvtKey, str2vrfyPubKey } from "../utils/signing_key_pair.ts";
 import type { KeyValue } from "./types/key_value.ts";
 
 export class AddressRepository {
-  filePath = "./wallet/storage/key_value.json";
+  filePath: string;
+  constructor(keyValueFilePath: string) {
+    this.filePath = keyValueFilePath;
+  }
+
   /// アドレスを読み込み
   async loadAddress(): Promise<string> {
     const text = await Deno.readTextFile(this.filePath);
