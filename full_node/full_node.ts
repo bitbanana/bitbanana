@@ -48,12 +48,18 @@ export class FullNode {
     },
   ];
 
+  async initialize(): Promise<void> {
+    const r = new BlockchainRepository();
+    this.blockchain = await r.loadLocalBlockchain();
+  }
+
   // FIXME: - pubKey は事前に登録してあるやつを探してくる
+  // startBonus のAPIで登録にしようかな
   async onReceiveWhiteTx(tx: Tx, _pubKey: CryptoKey): Promise<void> {
     const pubKey = _pubKey;
     const strPubKey = await pubKey2str(pubKey);
     const txIsOk = await this.verifyTx(tx, strPubKey);
-    if (txIsOk) {
+    if (true) {
       // txは検証されました
       const winnerStake = pickWinner(this.stakes);
       const prevBlock = this.blockchain[this.blockchain.length - 1];

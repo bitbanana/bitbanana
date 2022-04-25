@@ -19,6 +19,7 @@ export function balanceInquiry() {
 export async function addWhiteTx(tx: Tx): Promise<void> {
   whiteTxList.push(tx);
   const fullNode = new FullNode();
+  await fullNode.initialize();
   const dammyKey = await (await createSigningKeyPair()).publicKey;
   await fullNode.onReceiveWhiteTx(tx, dammyKey);
 }
