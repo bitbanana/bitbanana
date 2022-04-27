@@ -11,6 +11,7 @@ import { Block } from "../types/block.ts";
 export function blockLog(b: Block): string {
   const str = `Block #${b.index}
   - time: ${date_format.timeReadable(b.time)}
-  - tx.id: ${b.tx.id}`;
+  - tx_id: ${b.tx_id}
+  - tx_page: ${b.tx_page}/${b.tx_all_pages}`;
   return str;
 }

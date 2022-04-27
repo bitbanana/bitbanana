@@ -8,12 +8,10 @@ import {
   Block,
   blockLog,
   calcBlockHash,
-  correctHashOfBlock,
   createBlock,
   pickWinner,
+  SenderSigContent,
   Stake,
-  Tx,
-  Validator,
 } from "../blockchain/mod.ts";
 
 // Repository
@@ -31,7 +29,7 @@ import { BitFruit } from "../bit_fruit/bit_fruit.ts";
 import { Follower } from "./follower.ts";
 
 export const bitFruit = new BitFruit();
-export const whiteTxList: Tx[] = [];
+export const whiteTxList: SenderSigContent[] = [];
 export const followers: Follower[] = [];
 
 /// フルノード
@@ -43,7 +41,7 @@ export class FullNode {
   // 抽選に参加しているバリデーターのステーク
   stakes: Stake[] = [
     {
-      address: "BitFruitWallet",
+      addr: "BitFruitWallet",
       token: 1,
     },
   ];
@@ -55,55 +53,55 @@ export class FullNode {
 
   // FIXME: - pubKey は事前に登録してあるやつを探してくる
   // startBonus のAPIで登録にしようかな
-  async onReceiveWhiteTx(tx: Tx, _pubKey: CryptoKey): Promise<void> {
+  async onReceiveWhiteTx(
+    s_sig: string,
+    con: SenderSigContent,
+    _pubKey: CryptoKey,
+  ): Promise<void> {
     const pubKey = _pubKey;
     const strPubKey = await pubKey2str(pubKey);
-    const txIsOk = await this.verifyTx(tx, strPubKey);
+    const txIsOk = await this.verifyTx(s_sig, strPubKey, con);
     if (true) {
       // txは検証されました
       const winnerStake = pickWinner(this.stakes);
       const prevBlock = this.blockchain[this.blockchain.length - 1];
-      const block = await bitFruit.createBlock(prevBlock, tx, winnerStake);
+      const block = await bitFruit.createBlock(prevBlock, con, winnerStake);
       this.blockchain.push(block);
       const r = new BlockchainRepository();
       r.saveLocalBlockchain(this.blockchain);
-      this.notifyGreenTx(block.tx);
+      this.notifyGreenTx(con);
       // FIXME: - ここで他のノードへ新しいチェーンを共有
     } else {
       console.log("改ざんされたトランザクションです");
     }
   }
 
-  notifyGreenTx(tx: Tx) {
+  notifyGreenTx(content: SenderSigContent) {
     for (const f of followers) {
-      f.onGreenTx(tx);
+      f.onGreenTx([content]);
     }
   }
 
-  async verifyTx(tx: Tx, strPubKey: string): Promise<boolean> {
-    const targetOutputs = tx.outputs;
-    const targetJson = JSON.stringify(targetOutputs);
+  async verifyTx(
+    sig: string,
+    strPubKey: string,
+    con: SenderSigContent,
+  ): Promise<boolean> {
+    const targetJson = JSON.stringify(con);
     const encoder = new TextEncoder();
-    const jsonBuf = encoder.encode(targetJson);
+    const targetBuf = encoder.encode(targetJson);
     const pubKey = await str2vrfyPubKey(strPubKey);
-    // FIXME: - 全てのサインに対して実施する
-    const signatureBuf = await str2buf(tx.inputs[0].signature);
+    const sigBuf = await str2buf(sig);
     const result = await crypto.subtle.verify(
       {
         name: "RSA-PSS",
         saltLength: 32,
       },
       pubKey,
-      signatureBuf,
-      jsonBuf,
+      sigBuf,
+      targetBuf,
     );
     return result;
-  }
-
-  // UTXO から 残高を求める
-  async calcBalance(addr: string): Promise<number> {
-    // FIXME: - 計算
-    return 80;
   }
 
   async savePubKey(addr: string, strPubKey: string): Promise<void> {

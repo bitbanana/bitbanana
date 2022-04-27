@@ -34,7 +34,7 @@ async function main() {
   await fullNode.savePubKey(w.address, strPubKey);
 
   // 残高を確認
-  const balance = await fullNode.calcBalance(w.address);
+  const balance = 0; // 未実装
 
   // fruit server 立ち上げ
   const fServer = new BitFruit();
@@ -51,11 +51,11 @@ async function main() {
   const itemCount = 3;
 
   // 支払いのトランザクションを作成
-  const tx = await w.createTx();
+  const con = await w.createTx();
 
   // 購入開始
-  await fServer.userBuyItem(w.address, itemId, 3, tx.id);
+  await fServer.userBuyItem(w.address, itemId, 3, con.tx_id);
 
   // 支払い
-  await fullNode.onReceiveWhiteTx(tx, w.pubKey!);
+  await fullNode.onReceiveWhiteTx("これは私の署名です", con, w.pubKey!);
 }

@@ -3,19 +3,16 @@
 //
 
 // utils
-import * as base58 from "../../utils/base58.ts";
-import * as hash from "../../utils/sha256.ts";
+import { base58 } from "../../utils/base58.ts";
+import { sha256ary } from "../../utils/sha256.ts";
 
-// 公開鍵からアドレスを作成 Bitcoin形式 の超簡略バージョン
+// 公開鍵からアドレスを作成
 export async function calcAddress(pubKeyB64: string): Promise<string> {
-  // hash
-  const hashArray = await hash.sha256ary(pubKeyB64);
-  // base58
-  const base58Str = await base58.base58(hashArray);
-  return base58Str;
+  const hashAry = await sha256ary(pubKeyB64);
+  return await base58(hashAry);
 }
 
-export async function addrIsValid(address: string, pubKeyB64: string) {
+export async function addrIsValid(addr: string, pubKeyB64: string) {
   const correct = await calcAddress(pubKeyB64);
-  return address == correct;
+  return addr == correct;
 }

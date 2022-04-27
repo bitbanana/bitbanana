@@ -2,21 +2,20 @@
 import { buf2str } from "../utils/buf_base64.ts";
 
 // blockchain
-import { Input, Output, Tx } from "../blockchain/mod.ts";
+import { SenderSigContent } from "../blockchain/mod.ts";
 
 /// トランザクションを作成
 async function createTx(
   pvtKey: CryptoKey,
   myAddr: string,
-  outputs: Output[],
-): Promise<Tx> {
+): Promise<SenderSigContent> {
   const txId = crypto.randomUUID();
   const now = new Date().toISOString();
   // output を Json -> エンコード -> 署名
-  const outputsJson = JSON.stringify(outputs);
+  const outputsJson = "ここには完成したsSigCntentが入ります";
   const encoder = new TextEncoder();
   const data = encoder.encode(outputsJson);
-  const signatureBuf = await crypto.subtle.sign(
+  const sigBuf = await crypto.subtle.sign(
     {
       name: "RSA-PSS",
       saltLength: 32, // ダイジェストアルゴリズムにSHA256を選んだ時は32がおすすめらしい
@@ -24,18 +23,15 @@ async function createTx(
     pvtKey!,
     data,
   );
-  const signature = buf2str(signatureBuf);
-  const inputs: Input[] = [
-    {
-      time: now,
-      from: myAddr,
-      signature: signature,
-    },
-  ];
-  const tx: Tx = {
-    id: txId,
-    inputs: inputs,
-    outputs: outputs,
+  const sig = buf2str(sigBuf);
+
+  const con: SenderSigContent = {
+    tx_id: txId,
+    tx_page: 0,
+    tx_all_pages: 0,
+    r_addr: "これは私のアドレスです",
+    amount: 0,
+    fee: 0,
   };
-  return tx;
+  return con;
 }
