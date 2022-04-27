@@ -7,12 +7,15 @@ import { fullNode } from "./FullNode.ts";
 
 import { Tx } from "./types/Tx.ts";
 
+// 初期化
+await fullNode.init();
+// ここでサーバー起動
+// サーバーを介さずに直接呼び出しテスト
 startBonus("rubydog", "Rubydog.Free.Adrress");
 
 // 初回限定ボーナスをもらう
 // 公開鍵をサーバーに登録する
 export async function startBonus(addr: string, pubKey: string): Promise<void> {
-  await fullNode.init();
   const con = await fullNode.createStartBonusTx(addr, pubKey);
   const sSig = fullNode.sSig(con);
   const sAddr = fullNode.wallet!.addr;
