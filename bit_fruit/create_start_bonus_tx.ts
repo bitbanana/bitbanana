@@ -2,25 +2,18 @@
 import { buf2str } from "../utils/buf_base64.ts";
 
 // blockchain
-import { Input, Output, Tx } from "../blockchain/mod.ts";
+import { SenderSigContent } from "../blockchain/mod.ts";
 
 /// トランザクションを作成
 export async function createStartBonusTx(
   pvtKey: CryptoKey,
   myAddr: string,
   toAddr: string,
-): Promise<Tx> {
+): Promise<SenderSigContent> {
   const txId = crypto.randomUUID();
   const now = new Date().toISOString();
-  const outputs: Output[] = [
-    {
-      to: toAddr,
-      amount: 500,
-      fee: 0,
-    },
-  ];
   // output を Json -> エンコード -> 署名
-  const outputsJson = JSON.stringify(outputs);
+  const outputsJson = JSON.stringify("ここにContent");
   const encoder = new TextEncoder();
   const data = encoder.encode(outputsJson);
   const signatureBuf = await crypto.subtle.sign(
@@ -32,17 +25,13 @@ export async function createStartBonusTx(
     data,
   );
   const signature = buf2str(signatureBuf);
-  const inputs: Input[] = [
-    {
-      time: now,
-      from: myAddr,
-      signature: signature,
-    },
-  ];
-  const tx: Tx = {
-    id: txId,
-    inputs: inputs,
-    outputs: outputs,
+  const con: SenderSigContent = {
+    tx_id: "",
+    tx_page: 0,
+    tx_all_pages: 0,
+    r_addr: "",
+    amount: 0,
+    fee: 0,
   };
-  return tx;
+  return con;
 }

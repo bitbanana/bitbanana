@@ -8,9 +8,8 @@ import { Wallet } from "../wallet/wallet.ts";
 import {
   Block,
   createBlock as newBlock,
+  SenderSigContent,
   Stake,
-  Tx,
-  Validator,
 } from "../blockchain/mod.ts";
 import { signature } from "../validator_node/signature.ts";
 import { createStartBonusTx as startBonusTx } from "./create_start_bonus_tx.ts";
@@ -29,12 +28,12 @@ export class BitFruit implements Follower {
     );
   }
 
-  onRedTx(tx: Tx): void {
+  onRedTx(contents: SenderSigContent[]): void {
     throw new Error("トランザクション拒否時の処理がありません");
   }
 
-  onGreenTx(tx: Tx): void {
-    const greenPo = whitePoList.filter((po) => po.id === tx.id);
+  onGreenTx(contents: SenderSigContent[]): void {
+    const greenPo = whitePoList.filter((po) => po.id === contents[0].tx_id);
     if (greenPo.length > 1) {
       throw new Error("重複した支払い請求が存在します");
     }
@@ -57,7 +56,7 @@ export class BitFruit implements Follower {
   }
 
   // スタートボーナス用のTxを発行
-  async createStartBonusTx(toAddr: string): Promise<Tx> {
+  async createStartBonusTx(toAddr: string): Promise<SenderSigContent> {
     const tx = await startBonusTx(
       this.wallet.pvtKey!,
       this.wallet.address,
@@ -66,14 +65,20 @@ export class BitFruit implements Follower {
     return tx;
   }
   // バリデーターとしてブロックを作成
-  async createBlock(prevBlock: Block, tx: Tx, stake: Stake): Promise<Block> {
-    const s = await signature(tx.id, this.wallet.pvtKey!);
-    const v: Validator = {
-      address: stake.address,
-      signature: s,
-      token: stake.token,
-    };
-    const block = await newBlock(prevBlock, tx, v);
+  async createBlock(
+    prevBlock: Block,
+    con: SenderSigContent,
+    stake: Stake,
+  ): Promise<Block> {
+    const s = await signature(con.tx_id, this.wallet.pvtKey!);
+    const block = await newBlock(
+      prevBlock,
+      con,
+      "Adress",
+      s,
+      stake,
+      "MySig",
+    );
     return block;
   }
 
@@ -134,4 +139,16 @@ export class BitFruit implements Follower {
 async function priceOfItem(itemId: number): Promise<number> {
   const price = await 5;
   return price;
+}
+
+function v(prevBlock: Block, tx: any, v: any) {
+  throw new Error("Function not implemented.");
+}
+
+function tx(
+  prevBlock: Block,
+  tx: any,
+  v: (prevBlock: Block, tx: any, v: any) => void,
+) {
+  throw new Error("Function not implemented.");
 }
