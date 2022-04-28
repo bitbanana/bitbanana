@@ -14,9 +14,9 @@ import {
 import { signature } from "../validator_node/signature.ts";
 import { createStartBonusTx as startBonusTx } from "./create_start_bonus_tx.ts";
 import { Follower } from "../full_node/follower.ts";
-import { PurchaceOrder } from "./types/purchace_order.ts";
+import { Bill } from "./types/Bill.ts";
 
-const whitePoList: PurchaceOrder[] = [];
+const whiteBills: Bill[] = [];
 
 export class BitFruit implements Follower {
   wallet: Wallet;
@@ -33,9 +33,9 @@ export class BitFruit implements Follower {
   }
 
   onGreenTx(contents: SenderSigContent[]): void {
-    const greenPo = whitePoList.filter((po) => po.id === contents[0].tx_id);
+    const greenPo = whiteBills.filter((bo) => bo.tx_id === contents[0].tx_id);
     if (greenPo.length > 1) {
-      throw new Error("重複した支払い請求が存在します");
+      throw new Error("重複した購入注文が存在します");
     }
     if (greenPo.length === 1) {
       console.warn("[!] 支払いを確認しました 続きは未実装です");

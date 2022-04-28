@@ -1,15 +1,19 @@
-// ユーザー登録をする
-export function createUser() {
+import { Bitfruit } from "./types/Bitfruit.ts";
+import { BuyOrder } from "./types/BuyOrder.ts";
+import { SellOrder } from "./types/SellOrder.ts";
+import { Bill } from "./types/Bill.ts";
+
+// ビットフルーツ一覧を見る
+export function seeBitfruits(): Bitfruit[] {
+  return [];
 }
 
-// アイテム価格一覧を見る
-export function seeItemPrices() {
+// ビットフルーツの購入注文
+export function buyBitfruits(order: BuyOrder): Bill {
+       // 請求書
+       c
 }
 
-// アイテムの購入申請
-export function buyItems() {
-}
-
-// アイテムを売却申請
-export function sellItems() {
+// ビットフルーツを売却注文
+export function sellBitFruits(order: SellOrder) {
 }
