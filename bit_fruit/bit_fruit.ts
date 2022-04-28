@@ -3,7 +3,9 @@
 //
 
 import { UserRepository } from "./user_repository.ts";
+import { BitfruitRepository } from "./bitfruitRepository.ts";
 import { User } from "./user.ts";
+import { Bitfruit } from "./types/BitFruit.ts";
 import { Wallet } from "../wallet/wallet.ts";
 import {
   Block,
@@ -15,11 +17,12 @@ import { signature } from "../validator_node/signature.ts";
 import { createStartBonusTx as startBonusTx } from "./create_start_bonus_tx.ts";
 import { Follower } from "../full_node/follower.ts";
 import { Bill } from "./types/Bill.ts";
-
-const whiteBills: Bill[] = [];
+import { WhiteBillRepo } from "./WhiteBillRepo.ts";
 
 export class BitFruit implements Follower {
   wallet: Wallet;
+  whiteBills: Bill[] = [];
+  bitfruits: Bitfruit[] = [];
 
   constructor() {
     this.wallet = new Wallet(
@@ -28,12 +31,21 @@ export class BitFruit implements Follower {
     );
   }
 
+  async init(): Promise<void> {
+    const bRepo = new BitfruitRepository();
+    this.bitfruits = await bRepo.loadBitfruits();
+    const wbRepo = new WhiteBillRepo();
+    this.whiteBills = await wbRepo.loadWhiteBills();
+  }
+
   onRedTx(contents: SenderSigContent[]): void {
     throw new Error("トランザクション拒否時の処理がありません");
   }
 
   onGreenTx(contents: SenderSigContent[]): void {
-    const greenPo = whiteBills.filter((bo) => bo.tx_id === contents[0].tx_id);
+    const greenPo = this.whiteBills.filter((bo) =>
+      bo.tx_id === contents[0].tx_id
+    );
     if (greenPo.length > 1) {
       throw new Error("重複した購入注文が存在します");
     }
@@ -152,3 +164,5 @@ function tx(
 ) {
   throw new Error("Function not implemented.");
 }
+
+export const bitfruitServer = new BitFruit();
