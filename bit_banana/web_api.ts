@@ -17,7 +17,7 @@ import { calcBalance } from "./calcBalance.ts";
 await fullNode.init();
 // ここでサーバー起動
 // サーバーを介さずに直接呼び出しテスト
-startBonus("rubydog", "Rubydog.Free.Adrress");
+await startBonus("rubydog", "Rubydog.Free.Adrress");
 
 const balance = await balanceInquiry("rubydog");
 console.log(`rubydogの 残高は ${balance}`);

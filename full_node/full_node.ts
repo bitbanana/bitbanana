@@ -108,7 +108,7 @@ export class FullNode {
     const isValidAddr = await addrIsValid(addr, strPubKey);
     if (isValidAddr) {
       const pkr = new PubKeyRepository();
-      pkr.savePubKey(addr, strPubKey);
+      await pkr.savePubKey(addr, strPubKey);
     } else {
       console.log("公開鍵とアドレスが矛盾しています");
     }

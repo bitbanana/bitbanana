@@ -49,8 +49,8 @@ export class Wallet {
   private async createNewKeyPair(): Promise<void> {
     const r = new KeyRepository(this.keychainPath);
     const keyPair = await createSigningKeyPair();
-    r.saveSignPvtKey(keyPair.privateKey);
-    r.saveVrfyPubKey(keyPair.publicKey);
+    await r.saveSignPvtKey(keyPair.privateKey);
+    await r.saveVrfyPubKey(keyPair.publicKey);
     this.pvtKey = keyPair.privateKey;
     this.pubKey = keyPair.publicKey;
   }
