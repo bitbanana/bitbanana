@@ -16,7 +16,7 @@ export async function createStartBonusTx(
   const outputsJson = JSON.stringify("ここにContent");
   const encoder = new TextEncoder();
   const data = encoder.encode(outputsJson);
-  const signatureBuf = await crypto.subtle.sign(
+  const sigBuf = await crypto.subtle.sign(
     {
       name: "RSA-PSS",
       saltLength: 32, // ダイジェストアルゴリズムにSHA256を選んだ時は32がおすすめらしい
@@ -24,7 +24,7 @@ export async function createStartBonusTx(
     pvtKey!,
     data,
   );
-  const signature = buf2str(signatureBuf);
+  const sig = buf2str(sigBuf);
   const con: SenderSigContent = {
     tx_id: "",
     tx_page: 0,
