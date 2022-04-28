@@ -24,4 +24,11 @@ export class BlockchainRepository {
     const opt = { append: false, create: false };
     await Deno.writeTextFile(this.filePath, text, opt);
   }
+
+  // このインデックスを含まない
+  async findAfterIndex(index: number): Promise<Block[]> {
+    let chain = await this.loadLocalBlockchain();
+    chain = chain.filter((e) => e.index > index);
+    return chain;
+  }
 }

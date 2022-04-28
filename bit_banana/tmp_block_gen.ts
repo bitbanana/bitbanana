@@ -4,7 +4,7 @@ import { BlockchainRepository } from "./BlockchainRepository.ts";
 
 const block: Block = {
   index: 0,
-  time: "1995-01-01T00:00:00.000Z",
+  time: "2022-01-01T00:00:00.000Z",
   tx_id: "",
   tx_page: 0,
   tx_all_pages: 0,
