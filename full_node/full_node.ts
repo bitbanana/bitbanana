@@ -68,7 +68,7 @@ export class FullNode {
       const block = await bitFruit.createBlock(prevBlock, con, winnerStake);
       this.blockchain.push(block);
       const r = new BlockchainRepository();
-      r.saveLocalBlockchain(this.blockchain);
+      await r.saveLocalBlockchain(this.blockchain);
       this.notifyGreenTx(con);
       // FIXME: - ここで他のノードへ新しいチェーンを共有
     } else {

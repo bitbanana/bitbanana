@@ -67,7 +67,7 @@ export async function balanceInquiry(addr: string): Promise<number> {
   }
   snapshot = calcBalance(blocks, snapshot!, addr);
   // スナップショットを更新
-  sRepo.saveSnapshot(snapshot);
+  await sRepo.saveSnapshot(snapshot);
   return snapshot.balance;
 }
 

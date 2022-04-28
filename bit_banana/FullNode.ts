@@ -66,7 +66,7 @@ export class FullNode {
     );
     this.blockchain.push(block);
     const r = new BlockchainRepository();
-    r.saveLocalBlockchain(this.blockchain);
+    await r.saveLocalBlockchain(this.blockchain);
     this.notifyGreenTx(tx.con);
   }
 

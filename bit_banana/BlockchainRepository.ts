@@ -28,7 +28,10 @@ export class BlockchainRepository {
   // このインデックスを含まない
   async findAfterIndex(index: number): Promise<Block[]> {
     let chain = await this.loadLocalBlockchain();
+    console.log(`chain 前: ${chain.length}`);
+    console.log(`index これ以上で計算します: ${index}`);
     chain = chain.filter((e) => e.index > index);
+    console.log(`chain 後: ${chain.length}`);
     return chain;
   }
 }
