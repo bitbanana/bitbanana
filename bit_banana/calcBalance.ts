@@ -14,6 +14,17 @@ export function calcBalance(
   snapshot: AccountSnapshot,
   addr: string,
 ): AccountSnapshot {
+  if (blocks.length <= 0) {
+    const tmpSnapshot: AccountSnapshot = {
+      latest_block_index: 0,
+      // ジェネシスブロック
+      latest_block_hash:
+        "cd4b506b735bc5fbe99c74bd5c45eeb3005b3a25a675f1a8c45a5233e04f3592",
+      addr: addr,
+      balance: 0,
+    };
+    return tmpSnapshot;
+  }
   // 最古のブロック
   const oldestB = blocks[0];
   // 最新のブロック

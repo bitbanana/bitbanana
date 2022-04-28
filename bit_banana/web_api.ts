@@ -22,9 +22,14 @@ startBonus("rubydog", "Rubydog.Free.Adrress");
 const balance = await balanceInquiry("rubydog");
 console.log(`rubydogの 残高は ${balance}`);
 
-// 初回限定ボーナスをもらう
+// 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
 // 公開鍵をサーバーに登録する
 export async function startBonus(addr: string, pubKey: string): Promise<void> {
+  const balance = await balanceInquiry(addr);
+  if (balance !== 0) {
+    console.log("すでに残高が存在するためスタートボーナスはもらえません");
+    return;
+  }
   const con = await fullNode.createStartBonusTx(addr, pubKey);
   const sSig = fullNode.sSig(con);
   const sAddr = fullNode.wallet!.addr;

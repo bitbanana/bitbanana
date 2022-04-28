@@ -1,7 +1,7 @@
 import { AccountSnapshot } from "./types/AccountSnapshot.ts";
 
 export class AccountSnapShotRepository {
-  file = "./bit_banana/storage/bitbanana_wallet.json";
+  file = "./bit_banana/db/AccountSnapshots.json";
 
   // 読み込み
   async findSnapshot(addr: string): Promise<AccountSnapshot | null> {
