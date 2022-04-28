@@ -2,6 +2,15 @@ V1計画
   - WebSocketのプル版で運用開始する。PullOnGreeTxみたいな
   - アクセス過多をどうするか ブラウザで クライアントID の隠蔽できるんかな?
 
+Next
+  - 価格変動アルゴリズム
+  - 購入
+  - 所持ビットフルーツ確認
+  - 売却
+  <Bitfruit 完了>
+  - HTTPサーバー実装
+  - 最終調整 デプロイ
+
 WebAPI (Bit Banana Server)
 
   - start-bonus
