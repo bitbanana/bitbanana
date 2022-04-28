@@ -1,5 +1,6 @@
 import { BitbananaWallet } from "./types/BitBananaWallet.ts";
 import { BlockchainRepository } from "./BlockchainRepository.ts";
+import { BitbananaWalletRepository } from "./BitbananaWalletRepository.ts";
 
 import { createWallet } from "./createWallet.ts";
 import {
@@ -19,15 +20,27 @@ export class FullNode {
   // 抽選に参加しているバリデーターのステーク
   stakes: Stake[] = [
     {
-      addr: "Validator.V1.Free.Adrress",
+      addr: "Validator.V1.Free.Addr",
       token: 1,
     },
   ];
 
   async init(): Promise<void> {
-    this.wallet = await createWallet();
-    const r = new BlockchainRepository();
-    this.blockchain = await r.loadLocalBlockchain();
+    // Walletの読み込み
+    const wRepo = new BitbananaWalletRepository();
+    this.wallet = await wRepo.loadWallet();
+    if (this.wallet == null) {
+      console.log("Walletファイルが存在しません V1用に作成します");
+      const v1Wallet: BitbananaWallet = {
+        addr: "Coinbase.V1.Free.Addr",
+        pvtKey: "Coinbase.V1.Free.PvtKey",
+        pubKey: "Coinbase.V1.Free.PubKey",
+      };
+      this.wallet = v1Wallet;
+    }
+    // ブロックチェーンの読み込み
+    const bcRepo = new BlockchainRepository();
+    this.blockchain = await bcRepo.loadLocalBlockchain();
   }
 
   createStartBonusTx(addr: string, pubKey: string): SenderSigContent {

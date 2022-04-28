@@ -25,11 +25,13 @@ WebAPI (Bit Banana Server)
       txが拒否されたとき
       本人たちにだけ通知するようにする
       Followerに addr を追加予定
+  - それの pull バージョン
 
   - on-green-tx (WebSocket サーバー > クライアント)
       txがブロックとしてチェーンに追加されたとき
       本人たちにだけ通知するようにする
       Followerに addr を追加予定
+  - それの pull バージョン
 
 Web API (Bit Fruit Server)
 
