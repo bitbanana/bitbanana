@@ -54,6 +54,7 @@ export async function balanceInquiry(addr: string): Promise<number> {
 
   // スナップショットがない場合は作成
   if (snapshot == null) {
+    console.log("スナップショットを作成します");
     const newSnapshot: AccountSnapshot = {
       latest_block_index: 0,
       // ジェネシスブロック

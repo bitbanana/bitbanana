@@ -15,6 +15,7 @@ export function calcBalance(
   addr: string,
 ): AccountSnapshot {
   if (blocks.length <= 0) {
+    console.log("計算するブロックがありません。残高は0です。");
     const tmpSnapshot: AccountSnapshot = {
       latest_block_index: 0,
       // ジェネシスブロック
