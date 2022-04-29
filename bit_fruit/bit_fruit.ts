@@ -2,27 +2,30 @@
 //
 //
 
-import { UserRepository } from "./user_repository.ts";
-import { BitfruitRepository } from "./bitfruitRepository.ts";
-import { User } from "./user.ts";
-import { Bitfruit } from "./types/BitFruit.ts";
+import { DayFruitRepo } from "./DayFruitRepo.ts";
+import { DayFruit } from "./types/DayFruit.ts";
+import { createDayFruits } from "./createDayFruits.ts";
 import { Wallet } from "../wallet/wallet.ts";
+import { FruitPocket } from "./types/FruitPocket.ts";
+import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import {
   Block,
   createBlock as newBlock,
   SenderSigContent,
   Stake,
 } from "../blockchain/mod.ts";
+import { yyyyMMdd } from "../utils/date_format.ts";
 import { signature } from "../validator_node/signature.ts";
 import { createStartBonusTx as startBonusTx } from "./create_start_bonus_tx.ts";
 import { Follower } from "../full_node/follower.ts";
 import { Bill } from "./types/Bill.ts";
+import { SellOrder } from "./types/SellOrder.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
 
 export class BitFruit implements Follower {
   wallet: Wallet;
   whiteBills: Bill[] = [];
-  bitfruits: Bitfruit[] = [];
+  fruits: DayFruit[] = [];
 
   constructor() {
     this.wallet = new Wallet(
@@ -32,8 +35,10 @@ export class BitFruit implements Follower {
   }
 
   async init(): Promise<void> {
-    const bRepo = new BitfruitRepository();
-    this.bitfruits = await bRepo.loadBitfruits();
+    await createDayFruits();
+    const dt = yyyyMMdd(new Date());
+    const dfRepo = new DayFruitRepo();
+    this.fruits = await dfRepo.loadFruitsByDate(dt);
     const wbRepo = new WhiteBillRepo();
     this.whiteBills = await wbRepo.loadWhiteBills();
   }
@@ -43,114 +48,69 @@ export class BitFruit implements Follower {
   }
 
   onGreenTx(contents: SenderSigContent[]): void {
-    const greenPo = this.whiteBills.filter((bo) =>
+    const greenBills = this.whiteBills.filter((bo) =>
       bo.tx_id === contents[0].tx_id
     );
-    if (greenPo.length > 1) {
+    if (greenBills.length > 1) {
       throw new Error("重複した購入注文が存在します");
     }
-    if (greenPo.length === 1) {
-      console.warn("[!] 支払いを確認しました 続きは未実装です");
+    if (greenBills.length === 1) {
+      console.warn("[!] 支払いを確認しました");
+      const bill = greenBills[0];
+      // 未払いのBillから削除
+      this.whiteBills = this.whiteBills.filter((e) => e.id === bill.id);
+      this.onGreenBill(bill);
     }
-    console.warn("支払いに無関係のTxを受け取りました");
+    console.warn("管理外のTxを受け取りました");
   }
 
-  // ユーザー登録
-  async createUser(userAddr: string): Promise<void> {
-    const r = new UserRepository();
-    let user: User | null = await r.getUser(userAddr);
-    if (user != null) {
-      console.log("すでに登録されているユーザーです");
-      return;
+  // 支払いが確認できた時
+  async onGreenBill(bill: Bill) {
+    // 集計 買われた数を1増やす
+    const dfRepo = new DayFruitRepo();
+    const date = yyyyMMdd(new Date());
+    const dayFruit = await dfRepo.loadFruit(bill.buy_order.fruit_id, date);
+    dayFruit.buy_count += bill.buy_order.count;
+    await dfRepo.updateFruit(dayFruit);
+    // 購入者の所有数を増やす
+    const pRepo = new FruitPocketRepo();
+    const pockets = await pRepo.loadPockets(bill.buy_order.addr);
+    let pocket = pockets.find((e) => e.fruit_id === bill.buy_order.fruit_id);
+    if (pocket === undefined) {
+      const newPocket: FruitPocket = {
+        owner_addr: bill.buy_order.addr,
+        fruit_id: bill.buy_order.fruit_id,
+        count: bill.buy_order.order.count,
+      };
+      pocket = newPocket;
     }
-    user = { addr: userAddr, items: {} };
-    await r.upsertUser(user);
+    pocket!.count += bill.buy_order.count;
+    await pRepo.savePocket(pocket!);
   }
 
-  // スタートボーナス用のTxを発行
-  async createStartBonusTx(toAddr: string): Promise<SenderSigContent> {
-    const tx = await startBonusTx(
-      this.wallet.pvtKey!,
-      this.wallet.address,
-      toAddr,
-    );
-    return tx;
-  }
-  // バリデーターとしてブロックを作成
-  async createBlock(
-    prevBlock: Block,
-    con: SenderSigContent,
-    stake: Stake,
-  ): Promise<Block> {
-    const s = await signature(con.tx_id, this.wallet.pvtKey!);
-    const block = await newBlock(
-      prevBlock,
-      con,
-      "Adress",
-      s,
-      stake,
-      "MySig",
-    );
-    return block;
-  }
-
-  // ユーザーがアイテムを購入
-  async userBuyItem(
-    userAddr: string,
-    itemId: number,
-    itemCount: number,
-    txId: string,
-  ): Promise<void> {
-    const r = new UserRepository();
-    const user = await r.getUser(userAddr);
-    if (user == null) {
-      console.log("登録されていないユーザーです");
-      return;
+  // 売却されたとき
+  async onUserSellFruits(order: SellOrder) {
+    // 集計 売られた数を1増やす
+    const dfRepo = new DayFruitRepo();
+    const date = yyyyMMdd(new Date());
+    const dayFruit = await dfRepo.loadFruit(order.fruit_id, date);
+    dayFruit.sell_count += order.count;
+    await dfRepo.updateFruit(dayFruit);
+    // 購入者の所有数を減らす
+    const pRepo = new FruitPocketRepo();
+    const pockets = await pRepo.loadPockets(order.addr);
+    let pocket = pockets.find((e) => e.fruit_id === order.fruit_id);
+    if (pocket === undefined) {
+      const newPocket: FruitPocket = {
+        owner_addr: order.addr,
+        fruit_id: order.fruit_id,
+        count: order.count,
+      };
+      pocket = newPocket;
     }
-    const onePrice = await priceOfItem(itemId);
-    const totalPrice = onePrice * itemCount;
-    const count = user.items[itemId] ?? 0;
-    // FIXME: - 入金を確認する
-    user.items[itemId] = count + itemCount; // アイテムが増える
-    await r.upsertUser(user);
+    pocket!.count -= order.count;
+    await pRepo.savePocket(pocket!);
   }
-
-  // ユーザーがアイテムを売却
-  async userSellItem(
-    userAddr: string,
-    itemId: number,
-    itemCount: number,
-    txId: string,
-  ): Promise<void> {
-    const r = new UserRepository();
-    const user = await r.getUser(userAddr);
-    if (user == null) {
-      console.log("登録されていないユーザーです");
-      return;
-    }
-    const onePrice = await priceOfItem(itemId);
-    const totalPrice = onePrice * itemCount;
-    const count = user.items[itemId] ?? 0;
-    // FIXME: - 送金を確認する
-    user.items[itemId] = count - itemCount; // アイテムが減る
-    await r.upsertUser(user);
-  }
-
-  // アイテムの価格一覧を取得
-  async getItemPrices(): Promise<any> {
-    // FIXME: - 実装
-    return {
-      "0": 50,
-      "1": 70,
-      "2:": 30,
-      "3": 25,
-    };
-  }
-}
-
-async function priceOfItem(itemId: number): Promise<number> {
-  const price = await 5;
-  return price;
 }
 
 function v(prevBlock: Block, tx: any, v: any) {

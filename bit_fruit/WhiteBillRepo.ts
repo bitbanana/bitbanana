@@ -6,7 +6,7 @@ import { Bill } from "./types/Bill.ts";
 
 export class WhiteBillRepo {
   // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./bit_fruit/db/Bills.json";
+  filePath = "./bit_fruit/db/whitebills.json";
   // 取得
   async loadWhiteBills(): Promise<Bill[]> {
     const text = await Deno.readTextFile(this.filePath);

@@ -1,3 +1,5 @@
+import { BuyOrder } from "./typs/BuyOrder.ts";
+
 // 請求書
 export type Bill = {
   // ID
@@ -12,4 +14,6 @@ export type Bill = {
   created_at: string;
   // 金額
   amount: number;
+  // 購入注文
+  buy_order: BuyOrder;
 };
