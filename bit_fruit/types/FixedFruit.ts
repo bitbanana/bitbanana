@@ -2,7 +2,7 @@
 // データ送信はせずにローカル保存
 export type FixedFruit = {
   // ID
-  bitfruit_id: number;
+  fruit_id: number;
   // 名称
   nickname: string;
   // 画像URL

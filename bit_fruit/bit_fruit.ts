@@ -80,7 +80,7 @@ export class BitFruit implements Follower {
       const newPocket: FruitPocket = {
         owner_addr: bill.buy_order.addr,
         fruit_id: bill.buy_order.fruit_id,
-        count: bill.buy_order.order.count,
+        count: bill.buy_order.count,
       };
       pocket = newPocket;
     }
@@ -111,10 +111,6 @@ export class BitFruit implements Follower {
     pocket!.count -= order.count;
     await pRepo.savePocket(pocket!);
   }
-}
-
-function v(prevBlock: Block, tx: any, v: any) {
-  throw new Error("Function not implemented.");
 }
 
 function tx(

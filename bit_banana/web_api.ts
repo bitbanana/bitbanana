@@ -8,10 +8,11 @@ import { fullNode } from "./FullNode.ts";
 import { Tx } from "./types/Tx.ts";
 
 import { AccountSnapshot } from "./types/AccountSnapshot.ts";
-import { AccountSnapShotRepository } from "./AccountSnapShotRepository.ts";
+import { AccountSnapShotRepository } from "./AccountSnapshotRepository.ts";
 import { BlockchainRepository } from "./BlockchainRepository.ts";
 
 import { calcBalance } from "./calcBalance.ts";
+import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
 
 // 初期化
 await fullNode.init();
@@ -24,22 +25,21 @@ console.log(`rubydogの 残高は ${balance}`);
 
 // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
 // 公開鍵をサーバーに登録する
-export async function startBonus(addr: string, pubKey: string): Promise<void> {
+export async function startBonus(
+  addr: string,
+  pubKey: string,
+): Promise<StartBonusRes> {
   const balance = await balanceInquiry(addr);
   console.log(`スタートボーナスをもらいに来た時の残高: ${balance}`);
   if (balance !== 0) {
-    console.log("すでに残高が存在するためスタートボーナスはもらえません");
-    return;
+    throw new Error("すでに残高が存在するためスタートボーナスはもらえません");
   }
-  const con = await fullNode.createStartBonusTx(addr, pubKey);
-  const sSig = fullNode.sSig(con);
-  const sAddr = fullNode.wallet!.addr;
-  const tx: Tx = {
-    sAddr: sAddr,
-    con: con,
-    sSig: sSig,
-  };
+  const tx = fullNode.createStartBonusTx(addr, pubKey);
   await addWhiteTx(tx);
+  const req: StartBonusRes = {
+    new_balance: 5000,
+  };
+  return req;
 }
 
 // 残高照会 (全レコード参照)

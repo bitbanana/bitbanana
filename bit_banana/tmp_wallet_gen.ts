@@ -14,11 +14,14 @@ const keyPair = await createSigningKeyPair();
 const pubKey = await pubKey2str(keyPair.publicKey);
 const pvtKey = await pvtKey2str(keyPair.privateKey);
 const addr = await calcAddress(pubKey);
-
+const now = new Date().toISOString();
 const wallet: BitbananaWallet = {
   addr: addr,
-  pvtKey: pvtKey,
-  pubKey: pubKey,
+  jwk: "",
+  balance_memo: 0,
+  nickname: "",
+  created_at: now,
+  version: "0.0.1",
 };
 
 const r = new BitbananaWalletRepository();

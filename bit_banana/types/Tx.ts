@@ -1,13 +1,11 @@
 import { SenderSigContent } from "../../blockchain/mod.ts";
 
 export type Tx = {
-  sAddr: string;
-  // FIXME: - pages: TxPage[] へ変更する
-  con: SenderSigContent;
-  sSig: string;
+  s_addr: string;
+  pages: TxPage[];
 };
 
 export type TxPage = {
-  con: SenderSigContent;
+  cont: SenderSigContent;
   s_sig: string;
 };

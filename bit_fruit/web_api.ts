@@ -8,7 +8,7 @@ import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import { SenderSigContent } from "../blockchain/types/SenderSigContent.ts";
 import { addWhiteTx } from "../bit_banana/web_api.ts";
-import { Tx } from "../bit_banana/types/Tx.ts";
+import { Tx, TxPage } from "../bit_banana/types/Tx.ts";
 
 await bitfruitServer.init();
 
@@ -18,7 +18,7 @@ export function seeFruits(): DayFruit[] {
 }
 
 // 所有数を確認
-export async function seeFruitPockets(addr: string): Promise<FruitPocket[]> {
+export async function seePockets(addr: string): Promise<FruitPocket[]> {
   const repo = new FruitPocketRepo();
   const pockets = await repo.loadPockets(addr);
   return pockets;
@@ -61,7 +61,7 @@ export async function sellFruits(order: SellOrder): Promise<void> {
   }
   const amount = dayFruit!.price * order.count;
   const uuid = crypto.randomUUID();
-  const con: SenderSigContent = {
+  const cont: SenderSigContent = {
     tx_id: uuid,
     tx_page: 1,
     tx_all_pages: 1,
@@ -69,10 +69,13 @@ export async function sellFruits(order: SellOrder): Promise<void> {
     amount: amount,
     fee: 0,
   };
+  const txPage: TxPage = {
+    cont: cont,
+    s_sig: "BitFruit.V1.Free.Sig",
+  };
   const tx: Tx = {
-    sAddr: "BitFruit.V1.Free.Addr",
-    con: con,
-    sSig: "BitFruit.V1.Free.Sig",
+    s_addr: "BitFruit.V1.Free.Addr",
+    pages: [txPage],
   };
   // 送金
   await addWhiteTx(tx);

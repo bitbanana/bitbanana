@@ -1,4 +1,4 @@
-import { BuyOrder } from "./typs/BuyOrder.ts";
+import { BuyOrder } from "./BuyOrder.ts";
 
 // 請求書
 export type Bill = {
