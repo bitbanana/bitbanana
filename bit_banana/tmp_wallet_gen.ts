@@ -2,7 +2,7 @@
 import { Block, calcBlockHash } from "../blockchain/mod.ts";
 import { BlockchainRepository } from "./BlockchainRepository.ts";
 import { BitbananaWalletRepository } from "./BitbananaWalletRepository.ts";
-import { BitbananaWallet } from "./types/BitBananaWallet.ts";
+import { BitbananaWallet } from "./types/BitbananaWallet.ts";
 import {
   createSigningKeyPair,
   pubKey2str,
