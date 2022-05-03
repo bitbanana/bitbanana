@@ -11,5 +11,5 @@ export function timeReadable(time: string): string {
 
 export function yyyyMMdd(date: Date): string {
   const dt = datetime(date);
-  return dt.format("YYYY-MM-dd HH:mm");
+  return dt.format("YYYYMMdd");
 }
