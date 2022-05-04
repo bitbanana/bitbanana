@@ -9,12 +9,19 @@ import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import { SenderSigContent } from "../blockchain/types/SenderSigContent.ts";
 import { addWhiteTx } from "../bit_banana/web_api.ts";
 import { Tx, TxPage } from "../bit_banana/types/Tx.ts";
+import { Collection } from "../mongo/Collection.ts";
+import { yyyyMMdd } from "../utils/date_format.ts";
 
 await bitfruitServer.init();
 
 // ビットフルーツ一覧を見る
-export function seeFruits(): DayFruit[] {
-  return bitfruitServer.fruits;
+export async function seeFruits(): Promise<DayFruit[]> {
+  const today = new Date();
+  const todayYyyymmdd = yyyyMMdd(today);
+  // 通信
+  const c = new Collection<DayFruit>("dayfruits");
+  const fruits = await c.find({ "yyyymmdd": todayYyyymmdd });
+  return fruits;
 }
 
 // 所有数を確認
@@ -28,7 +35,7 @@ export async function seePockets(addr: string): Promise<FruitPocket[]> {
 export async function buyFruits(order: BuyOrder): Promise<Bill> {
   const id = crypto.randomUUID();
   const now = new Date().toISOString();
-  const bitfruits = seeFruits();
+  const bitfruits = await seeFruits();
   const bitfruit = bitfruits.find((e) => e.fruit_id === order.fruit_id);
   if (bitfruit == null) {
     throw new Error("存在しないビットフルーツです");
@@ -55,7 +62,8 @@ export async function buyFruits(order: BuyOrder): Promise<Bill> {
 // ビットフルーツを売却注文
 export async function sellFruits(order: SellOrder): Promise<void> {
   // txを作成
-  const dayFruit = seeFruits().find((e) => e.fruit_id == order.fruit_id);
+  const fruits = await seeFruits();
+  const dayFruit = fruits.find((e) => e.fruit_id == order.fruit_id);
   if (dayFruit === undefined) {
     console.log("現在の価格が不明です");
   }

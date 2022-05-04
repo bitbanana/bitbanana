@@ -26,9 +26,30 @@ export class Collection<DocType> {
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
     const res = await fetch(BASE_URI + path, options);
-    console.log(`レスポンスを受け取りました`);
     const resJson = await res.json();
     return resJson.document;
+  }
+
+  async findCustom(
+    filter: Object,
+    sort: Object,
+    limit: number,
+  ): Promise<DocType[]> {
+    const method = "POST";
+    const path = "/action/find";
+    const query = {
+      collection: this.name,
+      database: DATABASE,
+      dataSource: DATA_SOURCE,
+      filter: filter,
+      sort: sort,
+      limit: limit,
+    };
+    const queryJson = JSON.stringify(query);
+    const options = createOptions(method, queryJson);
+    const res = await fetch(BASE_URI + path, options);
+    const resJson = await res.json();
+    return resJson.documents;
   }
 
   async find(filter: Object): Promise<DocType[]> {
@@ -43,7 +64,6 @@ export class Collection<DocType> {
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
     const res = await fetch(BASE_URI + path, options);
-    console.log(`レスポンスを受け取りました`);
     const resJson = await res.json();
     return resJson.documents;
   }

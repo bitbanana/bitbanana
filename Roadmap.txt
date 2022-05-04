@@ -49,15 +49,18 @@ WebAPI (Bit Banana Server)
 
 Web API (Bit Fruit Server)
 
-  - see-item-prices
+  - see-fruits
       ビットフルーツ価格一覧を見る
+  
+  - see-pockets
+      所有フルーツを見る
 
-  - buy-items
+  - buy-fruits
       ビットフルーツの購入申請
       White PO List へ 支払い待ちPO(purchace-order) を追加
       支払い用の Tx ID を発行
 
-  - sell-items
+  - sell-fruits
       ビットフルーツを売却申請
 
 
@@ -99,3 +102,5 @@ V1.0.0リリース後の実装予定
 - 送金 Google連携後
 - ビットフルーツの分離
 - 過去の変動データ取得APIを作成 => 外部に実装依頼
+- DayFruits等はメモリにキャッシュとして持っておく
+- AccountSnapshotは変更がなかった時は保存通信しない DayFruitも

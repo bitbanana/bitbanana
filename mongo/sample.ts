@@ -7,7 +7,7 @@ const DATA_SOURCE = "xxxx";
 const DATABASE = "xxxx";
 const COLLECTION = "xxxx";
 
-// 操作
+// 操作内容
 const HTTP_METHOD = "POST";
 const PATH = "/action/find";
 const filter = { "id": "777" };

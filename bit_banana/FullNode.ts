@@ -48,7 +48,7 @@ export class FullNode {
     }
   }
 
-  createStartBonusTx(addr: string, pubKey: string): Tx {
+  createStartBonusTx(addr: string): Tx {
     const txId = crypto.randomUUID();
     const cont: SenderSigContent = {
       tx_id: txId,

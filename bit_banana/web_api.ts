@@ -14,27 +14,17 @@ import { BlockchainRepository } from "./BlockchainRepository.ts";
 import { calcBalance } from "./calcBalance.ts";
 import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
 
-// 初期化
-await fullNode.init();
-// ここでサーバー起動
-// サーバーを介さずに直接呼び出しテスト
-await startBonus("rubydog", "Rubydog.Free.Adrress");
-
-const balance = await balanceInquiry("rubydog");
-console.log(`rubydogの 残高は ${balance}`);
-
 // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
 // 公開鍵をサーバーに登録する
 export async function startBonus(
   addr: string,
-  pubKey: string,
 ): Promise<StartBonusRes> {
   const balance = await balanceInquiry(addr);
   console.log(`スタートボーナスをもらいに来た時の残高: ${balance}`);
   if (balance !== 0) {
     throw new Error("すでに残高が存在するためスタートボーナスはもらえません");
   }
-  const tx = fullNode.createStartBonusTx(addr, pubKey);
+  const tx = fullNode.createStartBonusTx(addr);
   await addWhiteTx(tx);
   const req: StartBonusRes = {
     new_balance: 5000,
@@ -48,11 +38,9 @@ export async function balanceInquiry(addr: string): Promise<number> {
   let snapshot = await sRepo.findSnapshot(addr);
   // 必要なブロックの最小インデックス(このindexを含まない)
   let minIndex = snapshot?.latest_block_index ?? 0;
-
   // ブロックを取得
   const bcRepo = new BlockchainRepository();
   const blocks = await bcRepo.findAfterIndex(minIndex);
-
   // スナップショットがない場合は作成
   if (snapshot == null) {
     console.log("スナップショットを作成します");
