@@ -35,7 +35,7 @@ export class Collection<DocType> {
   async findCustom(
     filter: Object,
     sort: Object,
-    limit: number,
+    limit?: number,
   ): Promise<DocType[]> {
     const method = "POST";
     const path = "/action/find";

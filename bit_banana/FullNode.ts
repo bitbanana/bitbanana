@@ -1,6 +1,8 @@
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
 import { BlockchainRepo } from "./BlockchainRepo.ts";
 import { BitbananaWalletRepo } from "./BitbananaWalletRepo.ts";
+import { Collection } from "../mongo/Collection.ts";
+import { getLastBlock } from "./getLastBlock.ts";
 
 import { createWallet } from "./createWallet.ts";
 import {
@@ -15,8 +17,6 @@ import { Tx, TxPage } from "./types/Tx.ts";
 export class FullNode {
   wallet: BitbananaWallet | null = null;
   whiteTxList: Tx[] = [];
-  // 検証済みの全ブロック
-  blockchain: Block[] = [];
   // 抽選に参加しているバリデーターのステーク
   stakes: Stake[] = [
     {
@@ -41,10 +41,6 @@ export class FullNode {
         version: "0.0.1",
       };
       this.wallet = v1Wallet;
-
-      // ブロックチェーンの読み込み
-      const bcRepo = new BlockchainRepo();
-      this.blockchain = await bcRepo.loadLocalBlockchain();
     }
   }
 
@@ -80,7 +76,7 @@ export class FullNode {
   async onReceiveWhiteTx(): Promise<void> {
     const tx = this.whiteTxList[this.whiteTxList.length - 1];
     const winnerStake = pickWinner(this.stakes);
-    const prevBlock = this.blockchain[this.blockchain.length - 1];
+    const prevBlock = await getLastBlock();
     if (tx.pages.length > 1) {
       throw new Error("複数ページのTxは未対応です");
     }
@@ -97,9 +93,8 @@ export class FullNode {
       winnerStake,
       vSig,
     );
-    this.blockchain.push(block);
     const r = new BlockchainRepo();
-    await r.saveLocalBlockchain(this.blockchain);
+    await r.saveBlock(block);
     this.notifyGreenTx(tx);
   }
 

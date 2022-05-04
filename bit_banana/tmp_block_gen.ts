@@ -24,6 +24,6 @@ const hash = await calcBlockHash(block);
 block.hash = hash;
 
 const r = new BlockchainRepo();
-await r.saveLocalBlockchain([block]);
+await r.saveBlock(block);
 
 // deno run --allow-read --allow-write bit_banana/tmp_block_gen.ts

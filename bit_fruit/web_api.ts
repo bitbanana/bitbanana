@@ -52,10 +52,8 @@ export async function buyFruits(order: BuyOrder): Promise<Bill> {
     buy_order: order,
   };
   // 未処理のBillを追加
-  bitfruitServer.whiteBills.push(bill);
-  // データベースにも追加
   const wbRepo = new WhiteBillRepo();
-  await wbRepo.saveWhiteBills(bitfruitServer.whiteBills);
+  await wbRepo.insertWhiteBill(bill);
   return bill;
 }
 

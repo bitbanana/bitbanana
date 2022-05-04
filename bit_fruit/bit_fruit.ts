@@ -24,8 +24,6 @@ import { WhiteBillRepo } from "./WhiteBillRepo.ts";
 
 export class BitFruit implements Follower {
   wallet: Wallet;
-  whiteBills: Bill[] = [];
-  fruits: DayFruit[] = [];
 
   constructor() {
     this.wallet = new Wallet(
@@ -36,21 +34,16 @@ export class BitFruit implements Follower {
 
   async init(): Promise<void> {
     await createDayFruits();
-    const dt = yyyyMMdd(new Date());
-    const dfRepo = new DayFruitRepo();
-    this.fruits = await dfRepo.loadFruitsByDate(dt);
-    const wbRepo = new WhiteBillRepo();
-    this.whiteBills = await wbRepo.loadWhiteBills();
   }
 
   onRedTx(contents: SenderSigContent[]): void {
     throw new Error("トランザクション拒否時の処理がありません");
   }
 
-  onGreenTx(contents: SenderSigContent[]): void {
-    const greenBills = this.whiteBills.filter((bo) =>
-      bo.tx_id === contents[0].tx_id
-    );
+  async onGreenTx(contents: SenderSigContent[]): Promise<void> {
+    const billRepo = new WhiteBillRepo();
+    const allBills = await billRepo.loadWhiteBills();
+    const greenBills = allBills.filter((bo) => bo.tx_id === contents[0].tx_id);
     if (greenBills.length > 1) {
       throw new Error("重複した購入注文が存在します");
     }
@@ -58,7 +51,7 @@ export class BitFruit implements Follower {
       console.warn("[!] 支払いを確認しました");
       const bill = greenBills[0];
       // 未払いのBillから削除
-      this.whiteBills = this.whiteBills.filter((e) => e.id === bill.id);
+      await billRepo.removeWhiteBill(bill);
       this.onGreenBill(bill);
     }
     console.warn("管理外のTxを受け取りました");
