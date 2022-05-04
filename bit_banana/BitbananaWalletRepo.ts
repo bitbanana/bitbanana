@@ -1,6 +1,6 @@
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
 
-export class BitbananaWalletRepository {
+export class BitbananaWalletRepo {
   file = "./bit_banana/storage/bitbanana_wallet.json";
 
   // 読み込み

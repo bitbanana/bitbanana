@@ -5,7 +5,7 @@
 // blockchain
 import { Block } from "../blockchain/mod.ts";
 
-export class BlockchainRepository {
+export class BlockchainRepo {
   // データベースの代わりにするjsonファイル プロジェクトルートからのパス
   filePath = "./bit_banana/db/blockchain.json";
   async loadLocalBlockchain(): Promise<Block[]> {

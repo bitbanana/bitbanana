@@ -1,6 +1,6 @@
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
-import { BlockchainRepository } from "./BlockchainRepository.ts";
-import { BitbananaWalletRepository } from "./BitbananaWalletRepository.ts";
+import { BlockchainRepo } from "./BlockchainRepo.ts";
+import { BitbananaWalletRepo } from "./BitbananaWalletRepo.ts";
 
 import { createWallet } from "./createWallet.ts";
 import {
@@ -27,7 +27,7 @@ export class FullNode {
 
   async init(): Promise<void> {
     // Walletの読み込み
-    const wRepo = new BitbananaWalletRepository();
+    const wRepo = new BitbananaWalletRepo();
     this.wallet = await wRepo.loadWallet();
     if (this.wallet == null) {
       console.log("Walletファイルが存在しません V1用に作成します");
@@ -43,7 +43,7 @@ export class FullNode {
       this.wallet = v1Wallet;
 
       // ブロックチェーンの読み込み
-      const bcRepo = new BlockchainRepository();
+      const bcRepo = new BlockchainRepo();
       this.blockchain = await bcRepo.loadLocalBlockchain();
     }
   }
@@ -98,7 +98,7 @@ export class FullNode {
       vSig,
     );
     this.blockchain.push(block);
-    const r = new BlockchainRepository();
+    const r = new BlockchainRepo();
     await r.saveLocalBlockchain(this.blockchain);
     this.notifyGreenTx(tx);
   }

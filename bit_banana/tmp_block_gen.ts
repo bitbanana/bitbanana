@@ -1,6 +1,6 @@
 // blockchain
 import { Block, calcBlockHash } from "../blockchain/mod.ts";
-import { BlockchainRepository } from "./BlockchainRepository.ts";
+import { BlockchainRepo } from "./BlockchainRepo.ts";
 
 const block: Block = {
   index: 0,
@@ -23,7 +23,7 @@ const block: Block = {
 const hash = await calcBlockHash(block);
 block.hash = hash;
 
-const r = new BlockchainRepository();
+const r = new BlockchainRepo();
 await r.saveLocalBlockchain([block]);
 
 // deno run --allow-read --allow-write bit_banana/tmp_block_gen.ts

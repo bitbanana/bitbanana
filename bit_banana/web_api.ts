@@ -8,8 +8,8 @@ import { fullNode } from "./FullNode.ts";
 import { Tx } from "./types/Tx.ts";
 
 import { AccountSnapshot } from "./types/AccountSnapshot.ts";
-import { AccountSnapShotRepository } from "./AccountSnapshotRepository.ts";
-import { BlockchainRepository } from "./BlockchainRepository.ts";
+import { AccountSnapshotRepo } from "./AccountSnapshotRepo.ts";
+import { BlockchainRepo } from "./BlockchainRepo.ts";
 
 import { calcBalance } from "./calcBalance.ts";
 import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
@@ -34,12 +34,12 @@ export async function startBonus(
 
 // 残高照会 (全レコード参照)
 export async function balanceInquiry(addr: string): Promise<number> {
-  let sRepo = new AccountSnapShotRepository();
+  let sRepo = new AccountSnapshotRepo();
   let snapshot = await sRepo.findSnapshot(addr);
   // 必要なブロックの最小インデックス(このindexを含まない)
   let minIndex = snapshot?.latest_block_index ?? 0;
   // ブロックを取得
-  const bcRepo = new BlockchainRepository();
+  const bcRepo = new BlockchainRepo();
   const blocks = await bcRepo.findAfterIndex(minIndex);
   // スナップショットがない場合は作成
   if (snapshot == null) {

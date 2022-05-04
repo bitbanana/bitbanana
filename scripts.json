@@ -24,17 +24,6 @@
       ],
       "watch": false
     },
-    "fullnode": {
-      "cmd": "deno run full_node/server.ts",
-      "desc": "run full node server",
-      "allow": [
-        "env",
-        "net",
-        "read",
-        "write"
-      ],
-      "watch": false
-    },
     "fruit": {
       "cmd": "deno run bit_fruit/server.ts",
       "desc": "run bit fruit server",

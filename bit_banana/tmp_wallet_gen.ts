@@ -1,7 +1,7 @@
 // blockchain
 import { Block, calcBlockHash } from "../blockchain/mod.ts";
-import { BlockchainRepository } from "./BlockchainRepository.ts";
-import { BitbananaWalletRepository } from "./BitbananaWalletRepository.ts";
+import { BlockchainRepo } from "./BlockchainRepo.ts";
+import { BitbananaWalletRepo } from "./BitbananaWalletRepo.ts";
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
 import {
   createSigningKeyPair,
@@ -24,7 +24,7 @@ const wallet: BitbananaWallet = {
   version: "0.0.1",
 };
 
-const r = new BitbananaWalletRepository();
+const r = new BitbananaWalletRepo();
 await r.saveWallet(wallet);
 
 // deno run --allow-read --allow-write bit_banana/tmp_wallet_gen.ts

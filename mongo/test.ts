@@ -9,20 +9,8 @@ export async function test() {
     console.log(found);
     await c.replaceOne({ "test": "1_2" }, { "test": "1_2s" });
     // await c.deleteMany({});
-
-    //     response.status = 201;
-    //     response.body = {
-    //       success: true,
-    //       data: "ここにレスポンスボディ",
-    //       insertedId,
-    //     };
   } catch (err) {
     console.log(err.toString());
-    //     response.status = 400;
-    //     response.body = {
-    //       success: false,
-    //       msg: err.toString(),
-    //     };
   }
 }
 

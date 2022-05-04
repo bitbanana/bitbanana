@@ -1,6 +1,6 @@
 import { AccountSnapshot } from "./types/AccountSnapshot.ts";
 
-export class AccountSnapShotRepository {
+export class AccountSnapshotRepo {
   file = "./bit_banana/db/AccountSnapshots.json";
 
   // 読み込み

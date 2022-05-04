@@ -2,60 +2,156 @@
 //
 //
 
-// PosServer
-import { FullNode } from "./full_node/full_node.ts";
+import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
+import { balanceInquiry, startBonus } from "./bit_banana/web_api.ts";
+import {
+  buyFruits,
+  seeFruits,
+  seePockets,
+  sellFruits,
+} from "./bit_fruit/web_api.ts";
+import { fullNode } from "./bit_banana/FullNode.ts";
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
+import type { RouterContext as XContext } from "https://deno.land/x/oak/mod.ts";
+type RouterContext = XContext<any, any, any>;
+// cors用のmodule
+import { oakCors } from "https://deno.land/x/cors/mod.ts";
+import { BuyOrder } from "./bit_fruit/types/BuyOrder.ts";
+import { SellOrder } from "./bit_fruit/types/SellOrder.ts";
+import { updateDayFruits } from "./bit_fruit/updateDayFruits.ts";
+import { createDayFruits } from "./bit_fruit/createDayFruits.ts";
+import { Cron } from "https://cdn.jsdelivr.net/gh/hexagon/croner@4/src/croner.js";
 
-// Fruit Server
-import { BitFruit } from "./bit_fruit/bit_fruit.ts";
+// 初期化
+await fullNode.init();
 
-// Wallet
-import { Wallet } from "./wallet/wallet.ts";
+const router = new Router();
+router
+  .get("/", (ctx: RouterContext) => {
+    console.log("ルートアクセス");
+    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
+    ctx.response.body = "Hello Bit Banana!";
+  })
+  .post("/start-bonus", async (ctx: RouterContext) => {
+    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
+    console.log("初回登録ボーナスアクセス");
 
-// utils
-import { pubKey2str } from "./utils/signing_key_pair.ts";
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const json = JSON.parse(string);
+    const addr: string = json["addr"];
 
-import { startBonus } from "./full_node/web_api.ts";
+    console.log(`あなたのアドレスは ${addr}`);
 
-await startBonus("rbdog");
+    // 本体処理を実行
+    const res = await startBonus(addr);
+    console.log(`あなたの新しい残高は ${res.new_balance}`);
 
-// main();
+    // レスポンスを返す
+    ctx.response.body = {
+      new_balance: res.new_balance,
+    };
+  })
+  .post("/balance-inquiry", async (ctx: RouterContext) => {
+    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
 
-async function main() {
-  // 鍵とアドレスを保持
-  const w = new Wallet("./wallet/keychain", "./wallet/storage/key_value.json");
-  await w.initialize();
+    console.log("残高照会アクセス");
 
-  // full node server 立ち上げ
-  const fullNode = new FullNode();
-  await fullNode.startServer();
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const json = JSON.parse(string);
+    const addr: string = json["addr"];
 
-  // full node に 公開鍵 を登録
-  const strPubKey = await pubKey2str(w.pubKey!);
-  await fullNode.savePubKey(w.address, strPubKey);
+    console.log(`あなたのアドレスは ${addr}`);
 
-  // 残高を確認
-  const balance = 0; // 未実装
+    // 本体処理を実行
+    const balance = await balanceInquiry(addr);
+    console.log(`あなたの残高は ${balance}`);
 
-  // fruit server 立ち上げ
-  const fServer = new BitFruit();
+    // レスポンスを返す
+    ctx.response.body = {
+      balance: balance,
+    };
+  })
+  .post("/see-fruits", async (ctx: RouterContext) => {
+    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
+    console.log("フルーツ価格を見るアクセス");
+    // 本体処理を実行
+    const fruits = await seeFruits();
+    // レスポンスを返す
+    ctx.response.body = {
+      fruits: fruits,
+    };
+  })
+  .post("/see-pockets", async (ctx: RouterContext) => {
+    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
+    console.log("所有フルーツを見るアクセス");
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const json = JSON.parse(string);
+    const addr: string = json["addr"];
+    console.log(`あなたのアドレスは ${addr}`);
+    // 本体処理を実行
+    const pockets = await seePockets(addr);
+    // レスポンスを返す
+    ctx.response.body = {
+      pockets: pockets,
+    };
+  })
+  .post("/buy-fruits", async (ctx: RouterContext) => {
+    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
+    console.log("フルーツを購入するアクセス");
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const order: BuyOrder = JSON.parse(string);
+    console.log(`購入注文: ${order}`);
+    // 本体処理を実行
+    const bill = await buyFruits(order);
+    // レスポンスを返す
+    ctx.response.body = {
+      bill: bill,
+    };
+  })
+  .post("/sell-fruits", async (ctx: RouterContext) => {
+    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
+    console.log("フルーツを売却するアクセス");
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const order: SellOrder = JSON.parse(string);
+    console.log(`売却注文: ${order}`);
+    // 本体処理を実行
+    await sellFruits(order);
+    // レスポンスを返す
+    ctx.response.body = {};
+  });
 
-  // fruit server 利用者登録
-  await fServer.createUser(w.address);
+const app = new Application();
 
-  // 現在のアイテム価格一覧を取得
-  const itemPrices = await fServer.getItemPrices();
+app.use(oakCors());
+app.use(router.routes());
+// routerの設定を読み取り、許可するHTTPメソッドを自動設定
+app.use(router.allowedMethods());
 
-  // 購入アイテムを決定
-  const itemId = 0;
-  const onePrice = itemPrices["0"];
-  const itemCount = 3;
+// 8000 ポートで起動
+const PORT = 8000;
+app.listen({ port: PORT });
+console.log(`Bitbanana: Listening at PORT ${PORT}...`);
 
-  // 支払いのトランザクションを作成
-  const con = await w.createTx();
+// 毎日 6,12,18時に実行
+const _ = new Cron("0 0 6,12,18 * * *", {
+  timezone: "Asia/Tokyo",
+}, () => {
+  updateDayFruits();
+});
 
-  // 購入開始
-  await fServer.userBuyItem(w.address, itemId, 3, con.tx_id);
-
-  // 支払い
-  await fullNode.onReceiveWhiteTx("これは私の署名です", con, w.pubKey!);
-}
+// 毎日 0時に実行
+const __ = new Cron("0 0 0 * * *", {
+  timezone: "Asia/Tokyo",
+}, () => {
+  createDayFruits();
+});

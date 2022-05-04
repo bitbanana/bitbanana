@@ -17,7 +17,7 @@ import {
 import { yyyyMMdd } from "../utils/date_format.ts";
 import { signature } from "../validator_node/signature.ts";
 import { createStartBonusTx as startBonusTx } from "./create_start_bonus_tx.ts";
-import { Follower } from "../full_node/follower.ts";
+import { Follower } from "../bit_banana/follower.ts";
 import { Bill } from "./types/Bill.ts";
 import { SellOrder } from "./types/SellOrder.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
