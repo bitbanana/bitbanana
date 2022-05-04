@@ -36,9 +36,6 @@ export class DayFruitRepo {
     // const text = await Deno.readTextFile(this.filePath);
     // let fruits: DayFruit[] = JSON.parse(text);
     // fruits = fruits.filter((e) => e.yyyymmdd === yyyyMMdd);
-    // if (fruits.length === 0) {
-    //   console.log("現在のDayFruitsが 0件 でした");
-    // }
     // return fruits;
   }
   // 作成/更新

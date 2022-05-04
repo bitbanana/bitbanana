@@ -9,11 +9,11 @@ import { dayFruitConfigs } from "./dayFruitConfigs.ts";
 export async function updateDayFruits() {
   const today = new Date();
   const todayYyyymmdd = yyyyMMdd(today);
-  console.log(`DayFruits 定期更新を開始します ${todayYyyymmdd}`);
+  console.log(`DayFruits Update ${todayYyyymmdd}`);
   // 通信
   const c = new Collection<DayFruit>("dayfruits");
   const fruits = await c.find({ "yyyymmdd": todayYyyymmdd });
-  console.log(`取得通信完了 取得フルーツ件数: ${fruits.length}`);
+  console.log(`Step 1`);
   const updatedFruits: DayFruit[] = [];
   for await (const f of fruits) {
     const conf = dayFruitConfigs.find((e) => e.fruit_id === f.fruit_id);
@@ -33,8 +33,8 @@ export async function updateDayFruits() {
 
     // 通信
     await c.replaceOne({ "fruit_id": f.fruit_id }, todayF);
-    console.log(`フルーツ ${f.fruit_id} 保存通信完了`);
+    console.log(`Step 2 Fruit ${f.fruit_id}`);
   }
 
-  console.log(`DayFruits 定期更新を終了します ${todayYyyymmdd}`);
+  console.log(`Step Complete`);
 }

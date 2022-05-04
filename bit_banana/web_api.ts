@@ -20,7 +20,6 @@ export async function startBonus(
   addr: string,
 ): Promise<StartBonusRes> {
   const balance = await balanceInquiry(addr);
-  console.log(`スタートボーナスをもらいに来た時の残高: ${balance}`);
   if (balance !== 0) {
     throw new Error("すでに残高が存在するためスタートボーナスはもらえません");
   }

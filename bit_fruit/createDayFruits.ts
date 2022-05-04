@@ -10,7 +10,7 @@ import { defaultDayFruits } from "./defaultDayFruits.ts";
 export async function createDayFruits() {
   const today = new Date();
   const todayYyyymmdd = yyyyMMdd(today);
-  console.log(`DayFruits 定期作成を開始します ${todayYyyymmdd}`);
+  console.log(`DayFruits Create ${todayYyyymmdd}`);
   const ytd = new Date(
     today.getFullYear(),
     today.getMonth(),
@@ -20,20 +20,20 @@ export async function createDayFruits() {
 
   const c = new Collection<DayFruit>("dayfruits");
   const todayFruits = await c.find({ "yyyymmdd": todayYyyymmdd });
-  console.log(`DayFruits 本日のフルーツ確認通信が完了しました ${todayYyyymmdd}`);
+  console.log(`Step 1...}`);
 
   // ローカル版
   // const dfRepo = new DayFruitRepo();
   // const todayFruits = await dfRepo.loadFruitsByDate(todayYyyymmdd);
   if (todayFruits.length > 0) {
-    console.log("すでに本日のDayFruitsが作成されていたため処理を停止します");
+    console.log(`DayFruits Already Exist}`);
     return;
   }
   // const ytdFruits = await dfRepo.loadFruitsByDate(ytdYyyymmdd);
   let ytdFruits = await c.find({ "yyyymmdd": ytdYyyymmdd });
-  console.log(`DayFruits 昨日のフルーツ確認通信が完了しました ${todayYyyymmdd}`);
+  console.log(`Step 2...}`);
   if (ytdFruits.length === 0) {
-    console.log(`DayFruits 昨日のフルーツが0個だったため、デフォルトで作成し直します`);
+    console.log(`Yesterday Fruits Not Exist`);
     ytdFruits = defaultDayFruits(todayYyyymmdd);
   }
   for (const ytdF of ytdFruits) {
@@ -48,7 +48,6 @@ export async function createDayFruits() {
     todayFruits.push(todayF);
   }
   // 保存
-  // await dfRepo.saveFruits(todayFruits);
   await c.insertMany(todayFruits);
-  console.log(`DayFruits 定期作成を終了します ${todayYyyymmdd}`);
+  console.log(`Step Complete`);
 }

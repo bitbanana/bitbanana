@@ -15,7 +15,6 @@ export function calcBalance(
   addr: string,
 ): AccountSnapshot {
   if (blocks.length <= 0) {
-    console.log("計算するブロックがありません");
     return snapshot;
   }
   // 最古のブロック

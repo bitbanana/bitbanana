@@ -9,6 +9,7 @@ import {
   pvtKey2str,
 } from "../utils/signing_key_pair.ts";
 import { calcAddress } from "../blockchain/functions/calc_address.ts";
+import { VERSION } from "../bit_banana/config.ts";
 
 const keyPair = await createSigningKeyPair();
 const pubKey = await pubKey2str(keyPair.publicKey);
@@ -21,7 +22,7 @@ const wallet: BitbananaWallet = {
   balance_memo: 0,
   nickname: "",
   created_at: now,
-  version: "0.0.1",
+  version: VERSION,
 };
 
 const r = new BitbananaWalletRepo();

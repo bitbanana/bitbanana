@@ -21,6 +21,8 @@ import { SellOrder } from "./bit_fruit/types/SellOrder.ts";
 import { updateDayFruits } from "./bit_fruit/updateDayFruits.ts";
 import { createDayFruits } from "./bit_fruit/createDayFruits.ts";
 import { Cron } from "https://cdn.jsdelivr.net/gh/hexagon/croner@4/src/croner.js";
+import { datetime } from "./deps.ts";
+import { VERSION } from "./bit_banana/config.ts";
 
 // 初期化
 await fullNode.init();
@@ -28,26 +30,20 @@ await fullNode.init();
 const router = new Router();
 router
   .get("/", (ctx: RouterContext) => {
-    console.log("ルートアクセス");
     // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
-    ctx.response.body = "Hello Bit Banana!";
+    ctx.response.body = `Hello Bit Banana! ${VERSION}`;
   })
   .post("/start-bonus", async (ctx: RouterContext) => {
     // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
-    console.log("初回登録ボーナスアクセス");
+    console.log("Req: start-bonus");
 
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
     const json = JSON.parse(string);
     const addr: string = json["addr"];
-
-    console.log(`あなたのアドレスは ${addr}`);
-
     // 本体処理を実行
     const res = await startBonus(addr);
-    console.log(`あなたの新しい残高は ${res.new_balance}`);
-
     // レスポンスを返す
     ctx.response.body = {
       new_balance: res.new_balance,
@@ -55,21 +51,15 @@ router
   })
   .post("/balance-inquiry", async (ctx: RouterContext) => {
     // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
-
-    console.log("残高照会アクセス");
+    console.log("Req: balance-inquiry");
 
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
     const json = JSON.parse(string);
     const addr: string = json["addr"];
-
-    console.log(`あなたのアドレスは ${addr}`);
-
     // 本体処理を実行
     const balance = await balanceInquiry(addr);
-    console.log(`あなたの残高は ${balance}`);
-
     // レスポンスを返す
     ctx.response.body = {
       balance: balance,
@@ -77,7 +67,7 @@ router
   })
   .post("/see-fruits", async (ctx: RouterContext) => {
     // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
-    console.log("フルーツ価格を見るアクセス");
+    console.log("Req: see-fruits");
     // 本体処理を実行
     const fruits = await seeFruits();
     // レスポンスを返す
@@ -87,13 +77,12 @@ router
   })
   .post("/see-pockets", async (ctx: RouterContext) => {
     // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
-    console.log("所有フルーツを見るアクセス");
+    console.log("Req: see-pockets");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
     const json = JSON.parse(string);
     const addr: string = json["addr"];
-    console.log(`あなたのアドレスは ${addr}`);
     // 本体処理を実行
     const pockets = await seePockets(addr);
     // レスポンスを返す
@@ -103,12 +92,11 @@ router
   })
   .post("/buy-fruits", async (ctx: RouterContext) => {
     // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
-    console.log("フルーツを購入するアクセス");
+    console.log("Req: buy-fruits");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
     const order: BuyOrder = JSON.parse(string);
-    console.log(`購入注文: ${order}`);
     // 本体処理を実行
     const bill = await buyFruits(order);
     // レスポンスを返す
@@ -118,12 +106,11 @@ router
   })
   .post("/sell-fruits", async (ctx: RouterContext) => {
     // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
-    console.log("フルーツを売却するアクセス");
+    console.log("Req: sell-fruits");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
     const order: SellOrder = JSON.parse(string);
-    console.log(`売却注文: ${order}`);
     // 本体処理を実行
     await sellFruits(order);
     // レスポンスを返す
@@ -140,7 +127,6 @@ app.use(router.allowedMethods());
 // 8000 ポートで起動
 const PORT = 8000;
 app.listen({ port: PORT });
-console.log(`Bitbanana: Listening at PORT ${PORT}...`);
 
 // 毎日 6,12,18時に実行
 const _ = new Cron("0 0 6,12,18 * * *", {
@@ -155,3 +141,7 @@ const __ = new Cron("0 0 0 * * *", {
 }, () => {
   createDayFruits();
 });
+
+const now = datetime().toZonedTime("Asia/Tokyo");
+const nowStr = now.format("YY/MM/dd HH:mm");
+console.log(`✨ NewDeploy [${nowStr}] PORT:${PORT}...`);

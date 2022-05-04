@@ -3,10 +3,9 @@ import {
   pubKey2str,
   pvtKey2str,
 } from "../utils/signing_key_pair.ts";
-
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
-
 import { calcAddress } from "../blockchain/functions/calc_address.ts";
+import { VERSION } from "../bit_banana/config.ts";
 
 export async function createWallet(): Promise<BitbananaWallet> {
   const pair = await createSigningKeyPair();
@@ -19,7 +18,7 @@ export async function createWallet(): Promise<BitbananaWallet> {
     balance_memo: 0,
     nickname: "BitBananaServerWallet",
     created_at: now,
-    version: "0.0.1",
+    version: VERSION,
   };
   return wallet;
 }

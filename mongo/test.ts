@@ -1,21 +1,5 @@
 import { Collection } from "./Collection.ts";
 
-export async function test() {
-  try {
-    const c = new Collection<{ test: string }>("blockchain");
-    await c.insertOne({ test: "1" });
-    await c.insertMany([{ test: "1_1" }, { test: "1_2" }]);
-    const found = await c.find({ "test": "1_1" });
-    console.log(found);
-    await c.replaceOne({ "test": "1_2" }, { "test": "1_2s" });
-    // await c.deleteMany({});
-  } catch (err) {
-    console.log(err.toString());
-  }
-}
-
-await test();
-
 // obj は id を持っている
 //
 // create 作る => アプリ

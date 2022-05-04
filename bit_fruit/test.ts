@@ -6,6 +6,5 @@ import { updateDayFruits } from "./updateDayFruits.ts";
 const _ = new Cron("0 30 18 * * *", {
   timezone: "Asia/Tokyo",
 }, () => {
-  console.log("価格を作成します");
   updateDayFruits();
 });

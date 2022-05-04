@@ -3,7 +3,6 @@ import { BlockchainRepo } from "./BlockchainRepo.ts";
 import { BitbananaWalletRepo } from "./BitbananaWalletRepo.ts";
 import { Collection } from "../mongo/Collection.ts";
 import { getLastBlock } from "./getLastBlock.ts";
-
 import { createWallet } from "./createWallet.ts";
 import {
   Block,
@@ -13,6 +12,7 @@ import {
   Stake,
 } from "../blockchain/mod.ts";
 import { Tx, TxPage } from "./types/Tx.ts";
+import { VERSION } from "../bit_banana/config.ts";
 
 export class FullNode {
   wallet: BitbananaWallet | null = null;
@@ -38,7 +38,7 @@ export class FullNode {
         balance_memo: 0,
         nickname: " My Wallet",
         created_at: now,
-        version: "0.0.1",
+        version: VERSION,
       };
       this.wallet = v1Wallet;
     }
@@ -99,7 +99,7 @@ export class FullNode {
   }
 
   notifyGreenTx(tx: Tx) {
-    console.log("フォロワーにBlock追加成功を知らせます");
+    console.log("No Impl: notifyGreenTx");
   }
 }
 

@@ -63,7 +63,7 @@ export async function sellFruits(order: SellOrder): Promise<void> {
   const fruits = await seeFruits();
   const dayFruit = fruits.find((e) => e.fruit_id == order.fruit_id);
   if (dayFruit === undefined) {
-    console.log("現在の価格が不明です");
+    console.log("sellFruits DayFruits Not Found");
   }
   const amount = dayFruit!.price * order.count;
   const uuid = crypto.randomUUID();
