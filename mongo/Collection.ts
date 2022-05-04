@@ -1,8 +1,10 @@
 import { config } from "https://deno.land/x/dotenv/mod.ts";
 
 // .env から
-const API_POINT = config({ path: "./private/.env" })["API_POINT"];
-const API_KEY = config({ path: "./private/.env" })["API_KEY"];
+// const API_POINT = config({ path: "./private/.env" })["API_POINT"];
+const API_POINT = Deno.env.get("API_POINT");
+// const API_KEY = config({ path: "./private/.env" })["API_KEY"];
+const API_KEY = Deno.env.get("API_KEY");
 console.log(`.env API_POINT: ${API_POINT}`);
 
 // 固定
