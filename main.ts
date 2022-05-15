@@ -131,7 +131,6 @@ router
     const string = JSON.stringify(body);
     const json: { api_key: string } = JSON.parse(string);
     const API_KEY = Deno.env.get("CRON_API_KEY");
-    console.log(`サーバー: ${API_KEY}, リクエスト: ${json.api_key}`);
     if (json.api_key !== API_KEY) {
       ctx.response.body = { message: "不正なAPIKeyです" };
       return;
