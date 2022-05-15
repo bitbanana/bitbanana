@@ -42,7 +42,6 @@ export async function balanceInquiry(addr: string): Promise<number> {
   const blocks = await bcRepo.findAfterIndex(minIndex);
   // スナップショットがない場合は作成
   if (snapshot == null) {
-    console.log("スナップショットを作成します");
     const newSnapshot: AccountSnapshot = {
       latest_block_index: 0,
       // ジェネシスブロック

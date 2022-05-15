@@ -30,11 +30,9 @@ await fullNode.init();
 const router = new Router();
 router
   .get("/", (ctx: RouterContext) => {
-    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     ctx.response.body = `Hello Bit Banana! ${VERSION}`;
   })
   .post("/start-bonus", async (ctx: RouterContext) => {
-    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     console.log("Req: start-bonus");
 
     // 必要なパラメータを取り出す
@@ -50,7 +48,6 @@ router
     };
   })
   .post("/balance-inquiry", async (ctx: RouterContext) => {
-    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     console.log("Req: balance-inquiry");
 
     // 必要なパラメータを取り出す
@@ -66,7 +63,6 @@ router
     };
   })
   .post("/see-fruits", async (ctx: RouterContext) => {
-    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     console.log("Req: see-fruits");
     // 本体処理を実行
     const fruits = await seeFruits();
@@ -76,7 +72,6 @@ router
     };
   })
   .post("/see-pockets", async (ctx: RouterContext) => {
-    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     console.log("Req: see-pockets");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
@@ -91,7 +86,6 @@ router
     };
   })
   .post("/buy-fruits", async (ctx: RouterContext) => {
-    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     console.log("Req: buy-fruits");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
@@ -105,7 +99,6 @@ router
     };
   })
   .post("/sell-fruits", async (ctx: RouterContext) => {
-    // ctx.response.headers.set("Access-Control-Allow-Origin", "*");
     console.log("Req: sell-fruits");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
@@ -115,6 +108,36 @@ router
     await sellFruits(order);
     // レスポンスを返す
     ctx.response.body = {};
+  })
+  .post("/update-day-fruits", async (ctx: RouterContext) => {
+    // 毎日 6,12,18時に実行
+    console.log("Req: update-day-fruits");
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const json: { api_key: string } = JSON.parse(string);
+    const API_KEY = Deno.env.get("CRON_API_KEY");
+    if (json.api_key !== API_KEY) {
+      ctx.response.body = { message: "不正なAPIKeyです" };
+      return;
+    }
+    await updateDayFruits();
+    ctx.response.body = { message: "UPDATE を実施しました" };
+  })
+  .post("/create-day-fruits", async (ctx: RouterContext) => {
+    // 毎日 0時に実行
+    console.log("Req: create-day-fruits");
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const json: { api_key: string } = JSON.parse(string);
+    const API_KEY = Deno.env.get("CRON_API_KEY");
+    if (json.api_key !== API_KEY) {
+      ctx.response.body = { message: "不正なAPIKeyです" };
+      return;
+    }
+    await createDayFruits();
+    ctx.response.body = { message: "CREATE を実施しました" };
   });
 
 const app = new Application();
@@ -128,20 +151,6 @@ app.use(router.allowedMethods());
 const PORT = 8000;
 app.listen({ port: PORT });
 
-// 毎日 6,12,18時に実行
-const _ = new Cron("0 0 6,12,18 * * *", {
-  timezone: "Asia/Tokyo",
-}, () => {
-  updateDayFruits();
-});
-
-// 毎日 0時に実行
-const __ = new Cron("0 0 0 * * *", {
-  timezone: "Asia/Tokyo",
-}, () => {
-  createDayFruits();
-});
-
 const now = datetime().toZonedTime("Asia/Tokyo");
 const nowStr = now.format("YY/MM/dd HH:mm");
-console.log(`✨ NewDeploy [${nowStr}] PORT:${PORT}...`);
+console.log(`✨Started at [${nowStr}] on PORT:${PORT}...`);

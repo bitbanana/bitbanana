@@ -1,4 +1,5 @@
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
+import { VERSION } from "../bit_banana/config.ts";
 
 export class BitbananaWalletRepo {
   file = "./bit_banana/storage/bitbanana_wallet.json";
@@ -12,7 +13,7 @@ export class BitbananaWalletRepo {
       balance_memo: 0,
       nickname: "Coinbase",
       created_at: "2022-05-03T00:00:00.000Z",
-      version: "0.0.1",
+      version: VERSION,
     };
     return wallet;
     // const text = await Deno.readTextFile(this.file);
