@@ -20,7 +20,6 @@ import { BuyOrder } from "./bit_fruit/types/BuyOrder.ts";
 import { SellOrder } from "./bit_fruit/types/SellOrder.ts";
 import { updateDayFruits } from "./bit_fruit/updateDayFruits.ts";
 import { createDayFruits } from "./bit_fruit/createDayFruits.ts";
-import { Cron } from "https://cdn.jsdelivr.net/gh/hexagon/croner@4/src/croner.js";
 import { datetime } from "./deps.ts";
 import { VERSION } from "./bit_banana/config.ts";
 
@@ -132,6 +131,7 @@ router
     const string = JSON.stringify(body);
     const json: { api_key: string } = JSON.parse(string);
     const API_KEY = Deno.env.get("CRON_API_KEY");
+    console.log(`サーバー: ${API_KEY}, リクエスト: ${json.api_key}`);
     if (json.api_key !== API_KEY) {
       ctx.response.body = { message: "不正なAPIKeyです" };
       return;
