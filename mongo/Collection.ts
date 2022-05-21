@@ -99,17 +99,24 @@ export class Collection<DocType> {
 
   async replaceOne(filter: object, doc: DocType): Promise<void> {
     console.log(
-      `try replaceOne by ${JSON.stringify(doc)}`,
+      `try repOne by doc ${JSON.stringify(doc)}`,
+    );
+
+    const anyDoc: any = doc;
+    delete anyDoc._id;
+
+    console.log(
+      `try repOne by anyDoc ${JSON.stringify(anyDoc)}`,
     );
 
     const method = "POST";
-    const path = "/action/updateOne";
+    const path = "/action/replaceOne";
     const query = {
       collection: this.name,
       database: DATABASE,
       dataSource: DATA_SOURCE,
       filter: filter,
-      update: { "$set": doc },
+      replacement: anyDoc,
       upsert: true,
     };
     const queryJson = JSON.stringify(query);
