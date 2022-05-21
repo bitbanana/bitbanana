@@ -99,12 +99,12 @@ export class FullNode {
     console.log("onReceiveWhiteTx: Step2");
     const r = new BlockchainRepo();
     await r.saveBlock(block);
-    this.notifyGreenTx(tx);
+    await this.notifyGreenTx(tx);
   }
 
-  notifyGreenTx(tx: Tx) {
+  async notifyGreenTx(tx: Tx) {
     for (const f of this.followers) {
-      f.onGreenTx(tx);
+      await f.onGreenTx(tx);
     }
   }
 }
