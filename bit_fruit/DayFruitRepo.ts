@@ -41,7 +41,10 @@ export class DayFruitRepo {
   // 作成/更新
   async updateFruit(fruit: DayFruit): Promise<void> {
     const c = new Collection<DayFruit>("dayfruits");
-    await c.replaceOne({ fruit_id: fruit.fruit_id }, fruit);
+    await c.replaceOne(
+      { "fruit_id": fruit.fruit_id, "yyyymmdd": fruit.yyyymmdd },
+      fruit,
+    );
 
     // let text = await Deno.readTextFile(this.filePath);
     // let fruits: DayFruit[] = JSON.parse(text);
