@@ -41,6 +41,9 @@ export class DayFruitRepo {
   // 作成/更新
   async updateFruit(fruit: DayFruit): Promise<void> {
     const c = new Collection<DayFruit>("dayfruits");
+    console.log(
+      `will update fruit id: ${fruit.fruit_id} yyyymmdd: ${fruit.yyyymmdd}`,
+    );
     await c.replaceOne(
       { "fruit_id": fruit.fruit_id, "yyyymmdd": fruit.yyyymmdd },
       fruit,
