@@ -105,7 +105,7 @@ router
     };
   })
   .post("/add-white-tx-bitfruit", async (ctx: RouterContext) => {
-    console.log("Req: buy-fruits");
+    console.log("Req: add-white-tx-bitfruit");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
