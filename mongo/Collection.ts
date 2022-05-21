@@ -98,6 +98,10 @@ export class Collection<DocType> {
   }
 
   async replaceOne(filter: object, doc: DocType): Promise<void> {
+    console.log(
+      `try replaceOne by ${doc}`,
+    );
+
     const method = "POST";
     const path = "/action/replaceOne";
     const query = {
