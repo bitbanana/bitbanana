@@ -43,14 +43,14 @@ export class BitFruit implements Follower {
       bo.tx_id === tx.pages[0].cont.tx_id
     );
     if (greenBills.length > 1) {
-      throw new Error("重複した購入注文が存在します");
+      throw new Error("[!] 重複した購入注文が存在します");
     }
     if (greenBills.length === 1) {
-      console.warn("[!] 支払いを確認しました");
       const bill = greenBills[0];
       // 未払いのBillから削除
       await billRepo.removeWhiteBill(bill);
       this.onGreenBill(bill);
+      return;
     }
     console.warn("管理外のTxを受け取りました");
   }
@@ -79,7 +79,7 @@ export class BitFruit implements Follower {
     await pRepo.savePocket(pocket!);
   }
 
-  // 売却されたとき
+  // 売却されたとき (pocketの管理のみ)
   async onUserSellFruits(order: SellOrder) {
     // 集計 売られた数を1増やす
     const dfRepo = new DayFruitRepo();
@@ -102,14 +102,6 @@ export class BitFruit implements Follower {
     pocket!.count -= order.count;
     await pRepo.savePocket(pocket!);
   }
-}
-
-function tx(
-  prevBlock: Block,
-  tx: any,
-  v: (prevBlock: Block, tx: any, v: any) => void,
-) {
-  throw new Error("Function not implemented.");
 }
 
 export const bitfruitServer = new BitFruit();
