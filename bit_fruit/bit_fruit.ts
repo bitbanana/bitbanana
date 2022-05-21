@@ -99,7 +99,9 @@ export class BitFruit implements Follower {
       };
       pocket = newPocket;
     }
+    console.log(`fid: ${order.fruit_id} count from: ${pocket!.count}`);
     pocket!.count -= order.count;
+    console.log(`fid: ${order.fruit_id} count to: ${pocket!.count}`);
     await pRepo.savePocket(pocket!);
   }
 }

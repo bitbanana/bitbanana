@@ -58,7 +58,7 @@ export async function buyFruits(order: BuyOrder): Promise<Bill> {
 // ビットフルーツを売却注文
 export async function sellFruits(order: SellOrder): Promise<void> {
   // pocketから減らす
-  bitfruitServer.onUserSellFruits(order);
+  await bitfruitServer.onUserSellFruits(order);
   // 支払いtxを作成
   const fruits = await seeFruits();
   const dayFruit = fruits.find((e) => e.fruit_id == order.fruit_id);
