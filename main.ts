@@ -3,7 +3,11 @@
 //
 
 import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
-import { balanceInquiry, startBonus } from "./bit_banana/web_api.ts";
+import {
+  addWhiteTx,
+  balanceInquiry,
+  startBonus,
+} from "./bit_banana/web_api.ts";
 import {
   buyFruits,
   seeFruits,
@@ -18,6 +22,7 @@ type RouterContext = XContext<any, any, any>;
 import { oakCors } from "https://deno.land/x/cors/mod.ts";
 import { BuyOrder } from "./bit_fruit/types/BuyOrder.ts";
 import { SellOrder } from "./bit_fruit/types/SellOrder.ts";
+import { Tx } from "./bit_banana/types/Tx.ts";
 import { updateDayFruits } from "./bit_fruit/updateDayFruits.ts";
 import { createDayFruits } from "./bit_fruit/createDayFruits.ts";
 import { datetime } from "./deps.ts";
@@ -98,6 +103,27 @@ router
     ctx.response.body = {
       bill: bill,
     };
+  })
+  .post("/add-white-tx-bitfruit", async (ctx: RouterContext) => {
+    console.log("Req: buy-fruits");
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const tx: Tx = JSON.parse(string);
+    // 取引が1つであることを確認
+    if (tx.pages.length != 1) {
+      ctx.response.body = { message: "複数の取引には現在対応しておりません" };
+      return;
+    }
+    // 宛先がビットフルーツであることを確認
+    if (tx.pages[0].cont.r_addr === "Bitfruit.V1.Free.Addr") {
+      ctx.response.body = { message: "宛先が不正です" };
+      return;
+    }
+    // 本体処理を実行
+    await addWhiteTx(tx);
+    // レスポンスを返す
+    ctx.response.body = {};
   })
   .post("/sell-fruits", async (ctx: RouterContext) => {
     console.log("Req: sell-fruits");

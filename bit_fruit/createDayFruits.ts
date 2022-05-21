@@ -28,7 +28,7 @@ export async function createDayFruits() {
     return;
   }
   // const ytdFruits = await dfRepo.loadFruitsByDate(ytdYyyymmdd);
-  let ytdFruits = await c.find({ "yyyymmdd": ytdYyyymmdd });
+  const ytdFruits = await c.find({ "yyyymmdd": ytdYyyymmdd });
   console.log(`Step 2...`);
 
   const defaultFruits = defaultDayFruits(todayYyyymmdd);
