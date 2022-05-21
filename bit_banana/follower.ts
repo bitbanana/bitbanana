@@ -2,13 +2,13 @@
 //
 //
 
-import { SenderSigContent } from "../blockchain/mod.ts";
+import { Tx } from "./types/Tx.ts";
 export interface Follower {
   // txが拒否されたとき
   // (WebSocket サーバー > クライアント)
-  onRedTx(contents: SenderSigContent[]): void;
+  onRedTx(tx: Tx): void;
 
   // txがブロックとしてチェーンに追加されたとき
   // (WebSocket サーバー > クライアント)
-  onGreenTx(content: SenderSigContent[]): void;
+  onGreenTx(tx: Tx): void;
 }

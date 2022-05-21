@@ -12,8 +12,10 @@ import { yyyyMMdd } from "../utils/date_format.ts";
 import { createStartBonusTx as startBonusTx } from "./create_start_bonus_tx.ts";
 import { Follower } from "../bit_banana/follower.ts";
 import { Bill } from "./types/Bill.ts";
+import { Tx } from "../bit_banana/types/Tx.ts";
 import { SellOrder } from "./types/SellOrder.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
+import { fullNode } from "../bit_banana/FullNode.ts";
 
 export class BitFruit implements Follower {
   wallet: Wallet;
@@ -27,16 +29,19 @@ export class BitFruit implements Follower {
 
   async init(): Promise<void> {
     await createDayFruits();
+    fullNode.followers.push(this);
   }
 
-  onRedTx(contents: SenderSigContent[]): void {
+  onRedTx(tx: Tx): void {
     throw new Error("トランザクション拒否時の処理がありません");
   }
 
-  async onGreenTx(contents: SenderSigContent[]): Promise<void> {
+  async onGreenTx(tx: Tx): Promise<void> {
     const billRepo = new WhiteBillRepo();
     const allBills = await billRepo.loadWhiteBills();
-    const greenBills = allBills.filter((bo) => bo.tx_id === contents[0].tx_id);
+    const greenBills = allBills.filter((bo) =>
+      bo.tx_id === tx.pages[0].cont.tx_id
+    );
     if (greenBills.length > 1) {
       throw new Error("重複した購入注文が存在します");
     }

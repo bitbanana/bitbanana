@@ -12,6 +12,7 @@ import {
   Stake,
 } from "../blockchain/mod.ts";
 import { Tx, TxPage } from "./types/Tx.ts";
+import { Follower } from "./follower.ts";
 import { VERSION } from "../bit_banana/config.ts";
 
 export class FullNode {
@@ -24,6 +25,7 @@ export class FullNode {
       token: 1,
     },
   ];
+  followers: Follower[] = [];
 
   async init(): Promise<void> {
     // Walletの読み込み
@@ -101,7 +103,9 @@ export class FullNode {
   }
 
   notifyGreenTx(tx: Tx) {
-    console.log("No Impl: notifyGreenTx");
+    for (const f of this.followers) {
+      f.onGreenTx(tx);
+    }
   }
 }
 
