@@ -3,7 +3,6 @@ import { BuyOrder } from "./types/BuyOrder.ts";
 import { SellOrder } from "./types/SellOrder.ts";
 import { Bill } from "./types/Bill.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
-import { bitfruitServer } from "./bit_fruit.ts";
 import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import { SenderSigContent } from "../blockchain/types/SenderSigContent.ts";
@@ -11,8 +10,6 @@ import { addWhiteTx } from "../bit_banana/web_api.ts";
 import { Tx, TxPage } from "../bit_banana/types/Tx.ts";
 import { Collection } from "../mongo/Collection.ts";
 import { yyyyMMdd } from "../utils/date_format.ts";
-
-await bitfruitServer.init();
 
 // ビットフルーツ一覧を見る
 export async function seeFruits(): Promise<DayFruit[]> {

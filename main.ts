@@ -22,9 +22,11 @@ import { updateDayFruits } from "./bit_fruit/updateDayFruits.ts";
 import { createDayFruits } from "./bit_fruit/createDayFruits.ts";
 import { datetime } from "./deps.ts";
 import { VERSION } from "./bit_banana/config.ts";
+import { bitfruitServer } from "./bit_fruit/bit_fruit.ts";
 
 // 初期化
-await fullNode.init();
+await fullNode.init(); // BitBanana
+await bitfruitServer.init(); // BitFruit
 
 const router = new Router();
 router
@@ -109,7 +111,7 @@ router
     ctx.response.body = {};
   })
   .post("/update-day-fruits", async (ctx: RouterContext) => {
-    // 毎日 6,12,18時に実行
+    // 毎日 11-12, 19-20時に実行
     console.log("Req: update-day-fruits");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
@@ -124,7 +126,7 @@ router
     ctx.response.body = { message: "UPDATE を実施しました" };
   })
   .post("/create-day-fruits", async (ctx: RouterContext) => {
-    // 毎日 0時に実行
+    // 毎日 3-4時に実行
     console.log("Req: create-day-fruits");
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;

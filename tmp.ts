@@ -85,8 +85,6 @@ const sig = [
 
 const ary = new TextEncoder().encode("HeLLO");
 
-console.log(ary);
-
 let ok = await window.crypto.subtle.verify(
   {
     name: "ECDSA",
@@ -96,8 +94,6 @@ let ok = await window.crypto.subtle.verify(
   Uint8Array.from(sig),
   Uint8Array.from(ary),
 );
-
-console.log(ok);
 
 // この3つが引数
 // pub_jwk

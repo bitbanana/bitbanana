@@ -3,19 +3,12 @@
 //
 
 import { DayFruitRepo } from "./DayFruitRepo.ts";
-import { DayFruit } from "./types/DayFruit.ts";
 import { createDayFruits } from "./createDayFruits.ts";
 import { Wallet } from "../wallet/wallet.ts";
 import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
-import {
-  Block,
-  createBlock as newBlock,
-  SenderSigContent,
-  Stake,
-} from "../blockchain/mod.ts";
+import { Block, SenderSigContent } from "../blockchain/mod.ts";
 import { yyyyMMdd } from "../utils/date_format.ts";
-import { signature } from "../validator_node/signature.ts";
 import { createStartBonusTx as startBonusTx } from "./create_start_bonus_tx.ts";
 import { Follower } from "../bit_banana/follower.ts";
 import { Bill } from "./types/Bill.ts";
