@@ -74,6 +74,7 @@ export class FullNode {
   }
 
   async onReceiveWhiteTx(): Promise<void> {
+    console.log("onReceiveWhiteTx");
     const tx = this.whiteTxList[this.whiteTxList.length - 1];
     const winnerStake = pickWinner(this.stakes);
     const prevBlock = await getLastBlock();
@@ -93,6 +94,7 @@ export class FullNode {
       winnerStake,
       vSig,
     );
+    console.log("onReceiveWhiteTx: Step2");
     const r = new BlockchainRepo();
     await r.saveBlock(block);
     this.notifyGreenTx(tx);

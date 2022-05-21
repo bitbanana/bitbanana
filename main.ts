@@ -116,7 +116,7 @@ router
       return;
     }
     // 宛先がビットフルーツであることを確認
-    if (tx.pages[0].cont.r_addr === "Bitfruit.V1.Free.Addr") {
+    if (tx.pages[0].cont.r_addr !== "Bitfruit.V1.Free.Addr") {
       ctx.response.body = { message: "宛先が不正です" };
       return;
     }
