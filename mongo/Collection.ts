@@ -98,17 +98,8 @@ export class Collection<DocType> {
   }
 
   async replaceOne(filter: object, doc: DocType): Promise<void> {
-    console.log(
-      `try repOne by doc ${JSON.stringify(doc)}`,
-    );
-
     const anyDoc: any = doc;
     delete anyDoc._id;
-
-    console.log(
-      `try repOne by anyDoc ${JSON.stringify(anyDoc)}`,
-    );
-
     const method = "POST";
     const path = "/action/replaceOne";
     const query = {
@@ -121,12 +112,7 @@ export class Collection<DocType> {
     };
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
-    const res = await fetch(BASE_URI + path, options);
-
-    const j = await res.json();
-    console.log(
-      `replaceOne response json ${j}`,
-    );
+    const _ = await fetch(BASE_URI + path, options);
   }
 
   async deleteMany(filter: object): Promise<void> {
