@@ -49,7 +49,7 @@ export class BitFruit implements Follower {
       const bill = greenBills[0];
       // 未払いのBillから削除
       await billRepo.removeWhiteBill(bill);
-      this.onGreenBill(bill);
+      await this.onGreenBill(bill);
       return;
     }
     console.warn("管理外のTxを受け取りました");
