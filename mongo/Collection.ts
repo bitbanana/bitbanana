@@ -99,7 +99,7 @@ export class Collection<DocType> {
 
   async replaceOne(filter: object, doc: DocType): Promise<void> {
     console.log(
-      `try replaceOne by ${doc}`,
+      `try replaceOne by ${JSON.stringify(doc)}`,
     );
 
     const method = "POST";
@@ -109,7 +109,7 @@ export class Collection<DocType> {
       database: DATABASE,
       dataSource: DATA_SOURCE,
       filter: filter,
-      update: doc,
+      update: { "$set": doc },
       upsert: true,
     };
     const queryJson = JSON.stringify(query);
