@@ -103,13 +103,13 @@ export class Collection<DocType> {
     );
 
     const method = "POST";
-    const path = "/action/replaceOne";
+    const path = "/action/updateOne";
     const query = {
       collection: this.name,
       database: DATABASE,
       dataSource: DATA_SOURCE,
       filter: filter,
-      replacement: doc,
+      update: doc,
       upsert: true,
     };
     const queryJson = JSON.stringify(query);
