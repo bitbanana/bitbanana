@@ -8,8 +8,6 @@ export type DayFruitConfig = {
   max_price: number;
   // 最初期の価格
   origin_price: number;
-  // 1つ買われたときの 上昇価格
-  up_conf: number;
-  // 1つ売却されたときの 下降価格
-  down_conf: number;
+  // 1つの取引で変動する価格
+  trade_rate_price: number;
 };

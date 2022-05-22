@@ -61,13 +61,7 @@ export class BitFruit implements Follower {
     const dfRepo = new DayFruitRepo();
     const date = yyyyMMdd(new Date());
     const dayFruit = await dfRepo.loadFruit(bill.buy_order.fruit_id, date);
-    console.log(
-      `fid: ${dayFruit.fruit_id} buy_count from: ${dayFruit.buy_count}`,
-    );
     dayFruit.buy_count += bill.buy_order.count;
-    console.log(
-      `fid: ${dayFruit.fruit_id} buy_count to: ${dayFruit.buy_count}`,
-    );
     await dfRepo.updateFruit(dayFruit);
     // 購入者の所有数を増やす
     const pRepo = new FruitPocketRepo();
@@ -91,13 +85,7 @@ export class BitFruit implements Follower {
     const dfRepo = new DayFruitRepo();
     const date = yyyyMMdd(new Date());
     const dayFruit = await dfRepo.loadFruit(order.fruit_id, date);
-    console.log(
-      `fid: ${dayFruit.fruit_id} sell_count from: ${dayFruit.sell_count}`,
-    );
     dayFruit.sell_count += order.count;
-    console.log(
-      `fid: ${dayFruit.fruit_id} sel_count to: ${dayFruit!.sell_count}`,
-    );
     await dfRepo.updateFruit(dayFruit);
     // 購入者の所有数を減らす
     const pRepo = new FruitPocketRepo();
@@ -111,9 +99,7 @@ export class BitFruit implements Follower {
       };
       pocket = newPocket;
     }
-    console.log(`fid: ${order.fruit_id} pocket.count from: ${pocket!.count}`);
     pocket!.count -= order.count;
-    console.log(`fid: ${order.fruit_id} pocket.count to: ${pocket!.count}`);
     await pRepo.savePocket(pocket!);
   }
 }

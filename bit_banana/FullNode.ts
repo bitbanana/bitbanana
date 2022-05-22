@@ -103,7 +103,7 @@ export class FullNode {
   }
 
   async notifyGreenTx(tx: Tx) {
-    for (const f of this.followers) {
+    for await (const f of this.followers) {
       await f.onGreenTx(tx);
     }
   }
