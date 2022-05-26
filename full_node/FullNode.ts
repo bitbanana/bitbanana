@@ -1,6 +1,5 @@
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
 import { BlockchainRepo } from "./BlockchainRepo.ts";
-import { BitbananaWalletRepo } from "./BitbananaWalletRepo.ts";
 import { getLastBlock } from "./getLastBlock.ts";
 
 import {
@@ -15,35 +14,17 @@ import { Follower } from "./follower.ts";
 import { VERSION } from "../full_node/config.ts";
 
 export class FullNode {
-  wallet: BitbananaWallet | null = null;
   whiteTxList: Tx[] = [];
   // 抽選に参加しているバリデーターのステーク
   stakes: Stake[] = [
     {
-      addr: "Validator.V1.Free.Addr",
-      token: 1,
+      addr: "@node1",
+      token: 0,
     },
   ];
   followers: Follower[] = [];
 
-  async init(): Promise<void> {
-    // Walletの読み込み
-    const wRepo = new BitbananaWalletRepo();
-    this.wallet = await wRepo.loadWallet();
-    if (this.wallet == null) {
-      console.log("Walletファイルが存在しません V1用に作成します");
-      const now = new Date().toISOString();
-      const v1Wallet: BitbananaWallet = {
-        addr: "FullNode.V1.Free.Addr",
-        jwk: "Coinbase.V1.JWK",
-        balance_memo: 0,
-        nickname: " My Wallet",
-        created_at: now,
-        version: VERSION,
-      };
-      this.wallet = v1Wallet;
-    }
-  }
+  async init(): Promise<void> {}
 
   createStartBonusTx(addr: string): Tx {
     const txId = crypto.randomUUID();
@@ -54,7 +35,7 @@ export class FullNode {
       fee: 0,
     };
     const tx: Tx = {
-      s_addr: "FullNode.V1.Free.Addr",
+      s_addr: "@node1",
       s_sig_cont: cont,
       s_sig: this.sSig(cont),
     };
@@ -62,11 +43,11 @@ export class FullNode {
   }
 
   sSig(con: SenderSigContent): string {
-    return "FullNode.V1.Free.Sig";
+    return "@node1の適当な署名";
   }
 
   vSig(con: SenderSigContent, sSig: string, v_token: number) {
-    return "Validator.V1.Free.Sig";
+    return "@node1の適当な署名";
   }
 
   async onReceiveWhiteTx(): Promise<void> {
