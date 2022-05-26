@@ -25,13 +25,11 @@ async function createTx(
   );
   const sig = buf2str(sigBuf);
 
-  const con: SenderSigContent = {
+  const cont: SenderSigContent = {
     tx_id: txId,
-    tx_page: 0,
-    tx_all_pages: 0,
     r_addr: "これは私のアドレスです",
     amount: 0,
     fee: 0,
   };
-  return con;
+  return cont;
 }
