@@ -107,13 +107,8 @@ router
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
     const tx: Tx = JSON.parse(string);
-    // 取引が1つであることを確認
-    if (tx.pages.length != 1) {
-      ctx.response.body = { message: "複数の取引には現在対応しておりません" };
-      return;
-    }
     // 宛先がビットフルーツであることを確認
-    if (tx.pages[0].cont.r_addr !== "Bitfruit.V1.Free.Addr") {
+    if (tx.s_sig_cont.r_addr !== "@bitfruitex") {
       ctx.response.body = { message: "宛先が不正です" };
       return;
     }
@@ -179,5 +174,5 @@ const PORT = 8000;
 app.listen({ port: PORT });
 
 const now = datetime().toZonedTime("Asia/Tokyo");
-const nowStr = now.format("YY/MM/dd HH:mm");
-console.log(`🚀Started at [${nowStr}] on PORT:${PORT}...`);
+const nowStr = now.format("HH:mm MM/dd");
+console.log(`🍌[${nowStr}] Started🍌`);

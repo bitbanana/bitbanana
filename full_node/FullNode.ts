@@ -10,7 +10,7 @@ import {
   SenderSigContent,
   Stake,
 } from "../blockchain/mod.ts";
-import { Tx, TxPage } from "./types/Tx.ts";
+import { Tx } from "./types/Tx.ts";
 import { Follower } from "./follower.ts";
 import { VERSION } from "../full_node/config.ts";
 
@@ -34,7 +34,7 @@ export class FullNode {
       console.log("Walletファイルが存在しません V1用に作成します");
       const now = new Date().toISOString();
       const v1Wallet: BitbananaWallet = {
-        addr: "Coinbase.V1.Free.Addr",
+        addr: "FullNode.V1.Free.Addr",
         jwk: "Coinbase.V1.JWK",
         balance_memo: 0,
         nickname: " My Wallet",
@@ -49,25 +49,20 @@ export class FullNode {
     const txId = crypto.randomUUID();
     const cont: SenderSigContent = {
       tx_id: txId,
-      tx_page: 1,
-      tx_all_pages: 1,
       r_addr: addr,
       amount: 5000,
       fee: 0,
     };
-    const txPage: TxPage = {
-      cont: cont,
-      s_sig: this.sSig(cont),
-    };
     const tx: Tx = {
-      s_addr: "Coinbase.V1.Free.Addr",
-      pages: [txPage],
+      s_addr: "FullNode.V1.Free.Addr",
+      s_sig_cont: cont,
+      s_sig: this.sSig(cont),
     };
     return tx;
   }
 
   sSig(con: SenderSigContent): string {
-    return "Coinbase.V1.Free.Sig";
+    return "FullNode.V1.Free.Sig";
   }
 
   vSig(con: SenderSigContent, sSig: string, v_token: number) {
@@ -79,19 +74,12 @@ export class FullNode {
     const tx = this.whiteTxList[this.whiteTxList.length - 1];
     const winnerStake = pickWinner(this.stakes);
     const prevBlock = await getLastBlock();
-    if (tx.pages.length > 1) {
-      throw new Error("複数ページのTxは未対応です");
-    }
-    const page = tx.pages[0];
-    if (page.cont.tx_all_pages !== 1 || page.cont.tx_page !== 1) {
-      throw new Error("1ページ目以外のTxは未対応です");
-    }
-    const vSig = this.vSig(page.cont, page.s_sig, winnerStake.token);
+    const vSig = this.vSig(tx.s_sig_cont, tx.s_sig, winnerStake.token);
     const block = await createBlock(
       prevBlock,
-      page.cont,
+      tx.s_sig_cont,
       tx.s_addr,
-      page.s_sig,
+      tx.s_sig,
       winnerStake,
       vSig,
     );

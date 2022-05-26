@@ -3,7 +3,7 @@
 //
 
 // types
-import { Block } from "../types/block.ts";
+import { Block } from "../types/Block.ts";
 
 // func
 import { calcBlockHash } from "./calc_block_hash.ts";

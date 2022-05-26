@@ -7,8 +7,6 @@ import { Block } from "../blockchain/mod.ts";
 import { Collection } from "../mongo/Collection.ts";
 
 export class BlockchainRepo {
-  // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./bit_banana/db/blockchain.json";
   async saveBlock(block: Block): Promise<void> {
     const c = new Collection<Block>("blockchain");
     await c.insertOne(block);

@@ -1,11 +1,7 @@
 // blockchain
 import { BitbananaWalletRepo } from "./BitbananaWalletRepo.ts";
 import { BitbananaWallet } from "./types/BitbananaWallet.ts";
-import {
-  createSigningKeyPair,
-  pubKey2str,
-  pvtKey2str,
-} from "../utils/signing_key_pair.ts";
+import { createSigningKeyPair, pubKey2str } from "../utils/signing_key_pair.ts";
 import { calcAddress } from "../blockchain/functions/calc_address.ts";
 import { VERSION } from "../full_node/config.ts";
 

@@ -6,8 +6,6 @@ const block: Block = {
   index: 0,
   time: "2022-01-01T00:00:00.000Z",
   tx_id: "",
-  tx_page: 0,
-  tx_all_pages: 0,
   s_addr: "",
   s_sig: "",
   r_addr: "",
@@ -23,7 +21,10 @@ const block: Block = {
 const hash = await calcBlockHash(block);
 block.hash = hash;
 
+console.log(JSON.stringify(block));
+
 const r = new BlockchainRepo();
 await r.saveBlock(block);
 
-// deno run --allow-read --allow-write bit_banana/tmp_block_gen.ts
+console.log("完了");
+// deno run --allow-read --allow-write full_node/tmp_block_gen.ts

@@ -27,8 +27,6 @@ export async function createStartBonusTx(
   const signature = buf2str(signatureBuf);
   const con: SenderSigContent = {
     tx_id: "",
-    tx_page: 0,
-    tx_all_pages: 0,
     r_addr: "",
     amount: 0,
     fee: 0,

@@ -6,11 +6,9 @@ import { Bitfruit } from "./types/Bitfruit.ts";
 import { Collection } from "../mongo/Collection.ts";
 
 export class BitfruitRepo {
-  // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./bit_fruit/db/dayfruits.json";
   // 取得
   async loadFruit(fruitId: number, yyyyMMdd: string): Promise<Bitfruit> {
-    const c = new Collection<Bitfruit>("dayfruits");
+    const c = new Collection<Bitfruit>("bitfruits");
     const fruit = await c.findOne({
       "fruit_id": fruitId,
       "yyyymmdd": yyyyMMdd,
@@ -19,7 +17,7 @@ export class BitfruitRepo {
   }
   // 日付を指定して取得
   async loadFruitsByDate(yyyyMMdd: string): Promise<Bitfruit[]> {
-    const c = new Collection<Bitfruit>("dayfruits");
+    const c = new Collection<Bitfruit>("bitfruits");
     const fruits = await c.find({
       "yyyymmdd": yyyyMMdd,
     });
@@ -27,7 +25,7 @@ export class BitfruitRepo {
   }
   // 作成/更新
   async updateFruit(fruit: Bitfruit): Promise<void> {
-    const c = new Collection<Bitfruit>("dayfruits");
+    const c = new Collection<Bitfruit>("bitfruits");
     console.log(
       `will update fruit id: ${fruit.fruit_id} yyyymmdd: ${fruit.yyyymmdd}`,
     );
@@ -39,7 +37,7 @@ export class BitfruitRepo {
 
   // 作成/更新
   async saveFruits(fruits: Bitfruit[]): Promise<void> {
-    const c = new Collection<Bitfruit>("dayfruits");
+    const c = new Collection<Bitfruit>("bitfruits");
     await c.insertMany(fruits);
   }
 }

@@ -36,7 +36,7 @@ $ denon reset
 $ denon main
 ```
 
-## BitFruit
+## Bit Fruit
 
 | name | 買われた時 | 売られた時 | min価格 | max価格 |
 | ---- | ----- | ----- | ----- | ----- |

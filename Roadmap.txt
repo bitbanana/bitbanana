@@ -71,5 +71,5 @@ V1.0.0リリース後の実装予定
 - 送金 Google連携後
 - ビットフルーツの分離
 - 過去の変動データ取得APIを作成 => 外部に実装依頼
-- DayFruits等はメモリにキャッシュとして持っておく
-- AccountSnapshotは変更がなかった時は保存通信しない DayFruitも
+- Bit Fruits等はメモリにキャッシュとして持っておく
+- BalanceSnapshotは変更がなかった時は保存通信しない Bit Fruitも

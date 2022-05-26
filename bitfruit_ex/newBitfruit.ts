@@ -1,7 +1,7 @@
 import { Bitfruit } from "./types/Bitfruit.ts";
 import { TradeConfig } from "./types/TradeConfig.ts";
 
-/// 新規で作成するDayFruit
+/// 新規で作成するBitfruit
 export function newBitfruit(
   config: TradeConfig,
   yyyymmdd: string,

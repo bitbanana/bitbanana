@@ -80,7 +80,9 @@ export class Collection<DocType> {
     };
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
-    const _ = await fetch(BASE_URI + path, options);
+    const res = await fetch(BASE_URI + path, options);
+    const j = await res.json();
+    console.log(j);
   }
 
   public async insertMany(docs: DocType[]) {

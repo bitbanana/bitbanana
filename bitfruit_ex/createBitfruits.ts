@@ -15,14 +15,11 @@ export async function createBitfruits() {
   );
   const ytdYyyymmdd = yyyyMMdd(ytd);
 
-  const c = new Collection<Bitfruit>("dayfruits");
+  const c = new Collection<Bitfruit>("bitfruits");
   const todayFruits = await c.find({ "yyyymmdd": todayYyyymmdd });
 
-  // ローカル版
-  // const dfRepo = new DayFruitRepo();
-  // const todayFruits = await dfRepo.loadFruitsByDate(todayYyyymmdd);
   if (todayFruits.length > 0) {
-    console.log(`DayFruits Already Exist`);
+    console.log(`Bitfruits Already Exist`);
     return;
   }
   // const ytdFruits = await dfRepo.loadFruitsByDate(ytdYyyymmdd);

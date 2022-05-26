@@ -8,7 +8,7 @@ export class BitbananaWalletRepo {
   // deno-lint-ignore require-await
   async loadWallet(): Promise<BitbananaWallet | null> {
     const wallet: BitbananaWallet = {
-      addr: "Coinbase.V1.Free.Addr",
+      addr: "FullNode.V1.Free.Addr",
       jwk: "Coinbase.V1.Key",
       balance_memo: 0,
       nickname: "Coinbase",

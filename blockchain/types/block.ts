@@ -9,10 +9,6 @@ export type Block = {
   time: string;
   // トランザクション ID
   tx_id: string;
-  // トランザクション内でのページ番号
-  tx_page: number;
-  // トランザクションの全ページ数
-  tx_all_pages: number;
   // 送信者のアドレス
   s_addr: string;
   // 送信者の署名
@@ -39,8 +35,6 @@ const block: Block = {
   index: 0,
   time: "1995-01-01T00:00:00.000Z",
   tx_id: "",
-  tx_page: 0,
-  tx_all_pages: 0,
   s_addr: "",
   s_sig: "",
   r_addr: "",

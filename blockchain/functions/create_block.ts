@@ -6,8 +6,8 @@
 import { calcBlockHash } from "./calc_block_hash.ts";
 
 // types
-import { Block } from "../types/block.ts";
-import { Stake } from "../types/stake.ts";
+import { Block } from "../types/Block.ts";
+import { Stake } from "../types/Stake.ts";
 import { SenderSigContent } from "../types/SenderSigContent.ts";
 
 // 新しいブロックを生成
@@ -25,8 +25,6 @@ export async function createBlock(
     index: index,
     time: time,
     tx_id: content.tx_id,
-    tx_page: content.tx_page,
-    tx_all_pages: content.tx_all_pages,
     s_addr: sAddr,
     s_sig: sSig,
     r_addr: content.r_addr,

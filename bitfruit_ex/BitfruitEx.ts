@@ -38,7 +38,7 @@ export class BitfruitEx implements Follower {
     const billRepo = new WhiteBillRepo();
     const allBills = await billRepo.loadWhiteBills();
     const greenBills = allBills.filter((bo) =>
-      bo.tx_id === tx.pages[0].cont.tx_id
+      bo.tx_id === tx.s_sig_cont.tx_id
     );
     if (greenBills.length > 1) {
       throw new Error("[!] 重複した購入注文が存在します");
@@ -56,11 +56,11 @@ export class BitfruitEx implements Follower {
   // 支払いが確認できた時
   async onGreenBill(bill: Bill) {
     // 集計 買われた数を1増やす
-    const dfRepo = new BitfruitRepo();
+    const fRepo = new BitfruitRepo();
     const date = yyyyMMdd(new Date());
-    const dayFruit = await dfRepo.loadFruit(bill.buy_order.fruit_id, date);
-    dayFruit.buy_count += bill.buy_order.count;
-    await dfRepo.updateFruit(dayFruit);
+    const fruit = await fRepo.loadFruit(bill.buy_order.fruit_id, date);
+    fruit.buy_count += bill.buy_order.count;
+    await fRepo.updateFruit(fruit);
     // 購入者の所有数を増やす
     const pRepo = new FruitPocketRepo();
     const pockets = await pRepo.loadPockets(bill.buy_order.addr);
@@ -80,11 +80,11 @@ export class BitfruitEx implements Follower {
   // 売却されたとき (pocketの管理のみ)
   async onUserSellFruits(order: SellOrder) {
     // 集計 売られた数を1増やす
-    const dfRepo = new BitfruitRepo();
+    const fRepo = new BitfruitRepo();
     const date = yyyyMMdd(new Date());
-    const dayFruit = await dfRepo.loadFruit(order.fruit_id, date);
-    dayFruit.sell_count += order.count;
-    await dfRepo.updateFruit(dayFruit);
+    const fruit = await fRepo.loadFruit(order.fruit_id, date);
+    fruit.sell_count += order.count;
+    await fRepo.updateFruit(fruit);
     // 購入者の所有数を減らす
     const pRepo = new FruitPocketRepo();
     const pockets = await pRepo.loadPockets(order.addr);

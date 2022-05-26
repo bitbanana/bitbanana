@@ -6,7 +6,7 @@
 import * as hash from "../../utils/sha256.ts";
 
 // types
-import { Block } from "../types/block.ts";
+import { Block } from "../types/Block.ts";
 
 // ブロックのハッシュを計算する
 export async function calcBlockHash(

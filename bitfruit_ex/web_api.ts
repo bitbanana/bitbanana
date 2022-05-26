@@ -7,7 +7,7 @@ import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import { SenderSigContent } from "../blockchain/types/SenderSigContent.ts";
 import { addWhiteTx } from "../full_node/web_api.ts";
-import { Tx, TxPage } from "../full_node/types/Tx.ts";
+import { Tx } from "../full_node/types/Tx.ts";
 import { bitfruitEx } from "./BitfruitEx.ts";
 import { Collection } from "../mongo/Collection.ts";
 import { yyyyMMdd } from "../utils/date_format.ts";
@@ -17,7 +17,7 @@ export async function seeFruits(): Promise<Bitfruit[]> {
   const today = new Date();
   const todayYyyymmdd = yyyyMMdd(today);
   // 通信
-  const c = new Collection<Bitfruit>("dayfruits");
+  const c = new Collection<Bitfruit>("bitfruits");
   const fruits = await c.find({ "yyyymmdd": todayYyyymmdd });
   return fruits;
 }
@@ -44,7 +44,7 @@ export async function buyFruits(order: BuyOrder): Promise<Bill> {
     id: id,
     tx_id: id,
     s_addr: order.addr,
-    r_addr: "Bitfruit.V1.Free.Addr",
+    r_addr: "@bitfruitex",
     created_at: now,
     amount: amount,
     buy_order: order,
@@ -61,27 +61,22 @@ export async function sellFruits(order: SellOrder): Promise<void> {
   await bitfruitEx.onUserSellFruits(order);
   // 支払いtxを作成
   const fruits = await seeFruits();
-  const dayFruit = fruits.find((e) => e.fruit_id == order.fruit_id);
-  if (dayFruit === undefined) {
-    console.log("sellFruits DayFruits Not Found");
+  const fruit = fruits.find((e) => e.fruit_id == order.fruit_id);
+  if (fruit === undefined) {
+    console.log("Bitfruits Not Found");
   }
-  const amount = dayFruit!.price * order.count;
+  const amount = fruit!.price * order.count;
   const uuid = crypto.randomUUID();
   const cont: SenderSigContent = {
     tx_id: uuid,
-    tx_page: 1,
-    tx_all_pages: 1,
     r_addr: order.addr,
     amount: amount,
     fee: 0,
   };
-  const txPage: TxPage = {
-    cont: cont,
-    s_sig: "BitFruit.V1.Free.Sig",
-  };
   const tx: Tx = {
-    s_addr: "BitFruit.V1.Free.Addr",
-    pages: [txPage],
+    s_addr: "@bitfruitex",
+    s_sig_cont: cont,
+    s_sig: "@bitfruitex.sig",
   };
   // 送金
   await addWhiteTx(tx);

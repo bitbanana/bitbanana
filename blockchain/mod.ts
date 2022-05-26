@@ -3,9 +3,9 @@
 //
 
 // types
-export type { Block } from "./types/block.ts";
-export type { Stake } from "./types/stake.ts";
-export type { Wallet } from "./types/wallet.ts";
+export type { Block } from "./types/Block.ts";
+export type { Stake } from "./types/Stake.ts";
+export type { Wallet } from "./types/Wallet.ts";
 export type { SenderSigContent } from "./types/SenderSigContent.ts";
 
 // func

@@ -3,7 +3,7 @@
 //
 
 // types
-import { Stake } from "../types/stake.ts";
+import { Stake } from "../types/Stake.ts";
 
 // 抽選プールを作って、ブロックを追加する権利があるwinnerを決める
 // ステーク(預けておいた)されたトークンの量に応じて当選率が上がる
