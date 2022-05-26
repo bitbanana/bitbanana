@@ -2,36 +2,29 @@
 //
 //
 
-import { serve } from "https://deno.land/std@0.114.0/http/server.ts";
-import {
-  addWhiteTx,
-  balanceInquiry,
-  startBonus,
-} from "./bit_banana/web_api.ts";
+import { addWhiteTx, balanceInquiry, startBonus } from "./full_node/web_api.ts";
 import {
   buyFruits,
   seeFruits,
   seePockets,
   sellFruits,
-} from "./bit_fruit/web_api.ts";
-import { fullNode } from "./bit_banana/FullNode.ts";
-import { Application, Router } from "https://deno.land/x/oak/mod.ts";
-import type { RouterContext as XContext } from "https://deno.land/x/oak/mod.ts";
-type RouterContext = XContext<any, any, any>;
-// cors用のmodule
-import { oakCors } from "https://deno.land/x/cors/mod.ts";
-import { BuyOrder } from "./bit_fruit/types/BuyOrder.ts";
-import { SellOrder } from "./bit_fruit/types/SellOrder.ts";
-import { Tx } from "./bit_banana/types/Tx.ts";
-import { updateDayFruits } from "./bit_fruit/updateDayFruits.ts";
-import { createDayFruits } from "./bit_fruit/createDayFruits.ts";
+} from "./bitfruit_ex/web_api.ts";
+import { fullNode } from "./full_node/FullNode.ts";
+import { Application, Router } from "./deps.ts";
+import { RouterContext } from "./deps.ts";
+import { oakCors } from "./deps.ts";
+import { BuyOrder } from "./bitfruit_ex/types/BuyOrder.ts";
+import { SellOrder } from "./bitfruit_ex/types/SellOrder.ts";
+import { Tx } from "./full_node/types/Tx.ts";
+import { updateBitfruits } from "./bitfruit_ex/updateBitfruits.ts";
+import { createBitfruits } from "./bitfruit_ex/createBitfruits.ts";
 import { datetime } from "./deps.ts";
-import { VERSION } from "./bit_banana/config.ts";
-import { bitfruitServer } from "./bit_fruit/bit_fruit.ts";
+import { VERSION } from "./full_node/config.ts";
+import { bitfruitEx } from "./bitfruit_ex/BitfruitEx.ts";
 
 // 初期化
-await fullNode.init(); // BitBanana
-await bitfruitServer.init(); // BitFruit
+await fullNode.init(); // FullNode
+await bitfruitEx.init(); // BitfruitEx
 
 const router = new Router();
 router
@@ -70,6 +63,7 @@ router
   })
   .post("/see-fruits", async (ctx: RouterContext) => {
     console.log("Req: see-fruits");
+
     // 本体処理を実行
     const fruits = await seeFruits();
     // レスポンスを返す
@@ -79,6 +73,7 @@ router
   })
   .post("/see-pockets", async (ctx: RouterContext) => {
     console.log("Req: see-pockets");
+
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
@@ -93,6 +88,7 @@ router
   })
   .post("/buy-fruits", async (ctx: RouterContext) => {
     console.log("Req: buy-fruits");
+
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
@@ -106,6 +102,7 @@ router
   })
   .post("/add-white-tx-bitfruit", async (ctx: RouterContext) => {
     console.log("Req: add-white-tx-bitfruit");
+
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
@@ -127,6 +124,7 @@ router
   })
   .post("/sell-fruits", async (ctx: RouterContext) => {
     console.log("Req: sell-fruits");
+
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
@@ -136,9 +134,10 @@ router
     // レスポンスを返す
     ctx.response.body = {};
   })
-  .post("/update-day-fruits", async (ctx: RouterContext) => {
+  .post("/update-bitfruits", async (ctx: RouterContext) => {
     // 毎日 11-12, 19-20時に実行
-    console.log("Req: update-day-fruits");
+    console.log("Req: update-bitfruits");
+
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
@@ -148,12 +147,13 @@ router
       ctx.response.body = { message: "不正なAPIKeyです" };
       return;
     }
-    await updateDayFruits();
+    await updateBitfruits();
     ctx.response.body = { message: "UPDATE を実施しました" };
   })
-  .post("/create-day-fruits", async (ctx: RouterContext) => {
+  .post("/create-bitfruits", async (ctx: RouterContext) => {
     // 毎日 3-4時に実行
-    console.log("Req: create-day-fruits");
+    console.log("Req: create-bitfruits");
+
     // 必要なパラメータを取り出す
     const body = await ctx.request.body().value;
     const string = JSON.stringify(body);
@@ -163,7 +163,7 @@ router
       ctx.response.body = { message: "不正なAPIKeyです" };
       return;
     }
-    await createDayFruits();
+    await createBitfruits();
     ctx.response.body = { message: "CREATE を実施しました" };
   });
 
@@ -180,4 +180,4 @@ app.listen({ port: PORT });
 
 const now = datetime().toZonedTime("Asia/Tokyo");
 const nowStr = now.format("YY/MM/dd HH:mm");
-console.log(`✨Started at [${nowStr}] on PORT:${PORT}...`);
+console.log(`🚀Started at [${nowStr}] on PORT:${PORT}...`);

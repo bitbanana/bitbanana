@@ -16,4 +16,8 @@ export { copySync } from "https://deno.land/std@0.131.0/fs/mod.ts";
 
 // Oak HTTP Server
 export { Application, Router } from "https://deno.land/x/oak/mod.ts";
-export type { RouterContext } from "https://deno.land/x/oak/mod.ts";
+import type { RouterContext as XContext } from "https://deno.land/x/oak/mod.ts";
+export type RouterContext = XContext<any, any, any>;
+
+// Oak CORS
+export { oakCors } from "https://deno.land/x/cors/mod.ts";
