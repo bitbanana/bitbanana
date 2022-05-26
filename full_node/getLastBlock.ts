@@ -1,4 +1,4 @@
-import { Block } from "../blockchain/types/block.ts";
+import { Block } from "../blockchain/types/Block.ts";
 import { Collection } from "../mongo/Collection.ts";
 
 export async function getLastBlock(): Promise<Block> {

@@ -3,7 +3,7 @@
 //
 
 import { BitfruitRepo } from "./BitfruitRepo.ts";
-import { createBitfruits } from "./createBitFruits.ts";
+import { createBitfruits } from "./createBitfruits.ts";
 import { Wallet } from "../wallet/wallet.ts";
 import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
