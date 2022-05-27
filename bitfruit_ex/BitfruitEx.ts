@@ -4,7 +4,6 @@
 
 import { BitfruitRepo } from "./BitfruitRepo.ts";
 import { createBitfruits } from "./createBitfruits.ts";
-import { Wallet } from "../wallet/wallet.ts";
 import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import { yyyyMMdd } from "../utils/date_format.ts";
@@ -17,15 +16,6 @@ import { node1 } from "../node1/Node1.ts";
 import { state } from "../full_node/State.ts";
 
 export class BitfruitEx implements Follower {
-  wallet: Wallet;
-
-  constructor() {
-    this.wallet = new Wallet(
-      "./bit_fruit/keychain",
-      "./bit_fruit/storage/key_value.json",
-    );
-  }
-
   async init(): Promise<void> {
     await createBitfruits();
     state.followers.push(this);
