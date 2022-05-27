@@ -169,7 +169,8 @@ router
   })
   .get("/bitfruits/:fid", async (ctx: RouterContext) => {
     const fid = ctx.params.fid;
-    const fruits = await getBitfruits(fid);
+    console.log(typeof fid);
+    const fruits = await getBitfruits(parseInt(fid));
     ctx.response.body = JSON.stringify(fruits);
   });
 

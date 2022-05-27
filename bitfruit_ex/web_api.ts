@@ -107,6 +107,7 @@ export async function getBitfruits(
 ): Promise<Bitfruit[]> {
   const c = new Collection<Bitfruit>("bitfruits");
   let filter = {}; // All Fruits
+  console.log(`fid exists? ${fruit_id !== undefined}`);
   if (fruit_id !== undefined) {
     filter = { "fruit_id": fruit_id };
   }
