@@ -66,7 +66,11 @@ export class Collection<DocType> {
     const options = createOptions(method, queryJson);
     const res = await fetch(BASE_URI + path, options);
     const resJson = await res.json();
-    return resJson.documents;
+    const anyDocs: any[] = resJson.documents;
+    for await (const anyDoc of anyDocs) {
+      delete anyDoc._id;
+    }
+    return anyDocs;
   }
 
   async insertOne(doc: DocType): Promise<void> {
