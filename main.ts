@@ -5,6 +5,7 @@
 import { addWhiteTx, balanceInquiry } from "./full_node/web_api.ts";
 import {
   buyFruits,
+  getBitfruits,
   seeFruits,
   seePockets,
   sellFruits,
@@ -161,6 +162,15 @@ router
     }
     await createBitfruits();
     ctx.response.body = { message: "CREATE を実施しました" };
+  })
+  .get("/bitfruits", async (ctx: RouterContext) => {
+    const fruits = await getBitfruits();
+    ctx.response.body = JSON.stringify(fruits);
+  })
+  .get("/bitfruits/:fid", async (ctx: RouterContext) => {
+    const fid = ctx.params.fid;
+    const fruits = await getBitfruits(fid);
+    ctx.response.body = JSON.stringify(fruits);
   });
 
 const app = new Application();
@@ -172,7 +182,7 @@ app.use(router.allowedMethods());
 
 // 8000 ポートで起動
 const PORT = 8000;
-app.listen({ port: PORT });
+await app.listen({ port: PORT });
 
 const now = datetime().toZonedTime("Asia/Tokyo");
 const nowStr = now.format("HH:mm MM/dd");

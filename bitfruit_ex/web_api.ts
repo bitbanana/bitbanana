@@ -101,3 +101,15 @@ export async function sellFruits(order: SellOrder): Promise<void> {
   // 送金
   await addWhiteTx(tx);
 }
+
+export async function getBitfruits(
+  fruit_id?: number,
+): Promise<Bitfruit[]> {
+  const c = new Collection<Bitfruit>("bitfruits");
+  let filter = {}; // All Fruits
+  if (fruit_id !== undefined) {
+    filter = { "fruit_id": fruit_id };
+  }
+  const fruits = await c.find(filter);
+  return fruits;
+}
