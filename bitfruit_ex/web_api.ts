@@ -7,10 +7,30 @@ import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import { SenderSigContent } from "../blockchain/types/SenderSigContent.ts";
 import { addWhiteTx } from "../full_node/web_api.ts";
-import { Tx } from "../full_node/types/Tx.ts";
+import { Tx } from "../blockchain/types/Tx.ts";
 import { bitfruitEx } from "./BitfruitEx.ts";
 import { Collection } from "../mongo/Collection.ts";
 import { yyyyMMdd } from "../utils/date_format.ts";
+import { createStartBonusTx } from "./createStartBonusTx.ts";
+import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
+import { balanceInquiry } from "../full_node/web_api.ts";
+
+// 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
+// 公開鍵をサーバーに登録する
+export async function startBonus(
+  addr: string,
+): Promise<StartBonusRes> {
+  const balance = await balanceInquiry(addr);
+  if (balance !== 0) {
+    throw new Error("Already has balance");
+  }
+  const tx = createStartBonusTx(addr);
+  await addWhiteTx(tx);
+  const req: StartBonusRes = {
+    new_balance: 5000,
+  };
+  return req;
+}
 
 // ビットフルーツ一覧を見る
 export async function seeFruits(): Promise<Bitfruit[]> {
@@ -63,7 +83,7 @@ export async function sellFruits(order: SellOrder): Promise<void> {
   const fruits = await seeFruits();
   const fruit = fruits.find((e) => e.fruit_id == order.fruit_id);
   if (fruit === undefined) {
-    console.log("Bitfruits Not Found");
+    console.log("Sell Bitfruits Not Found");
   }
   const amount = fruit!.price * order.count;
   const uuid = crypto.randomUUID();
@@ -76,7 +96,7 @@ export async function sellFruits(order: SellOrder): Promise<void> {
   const tx: Tx = {
     s_addr: "@bitfruitex",
     s_sig_cont: cont,
-    s_sig: "@bitfruitex.sig",
+    s_sig: "@bitfruitex.tmp.sig",
   };
   // 送金
   await addWhiteTx(tx);

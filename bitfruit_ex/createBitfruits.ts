@@ -19,7 +19,7 @@ export async function createBitfruits() {
   const todayFruits = await c.find({ "yyyymmdd": todayYyyymmdd });
 
   if (todayFruits.length > 0) {
-    console.log(`Bitfruits Already Exist`);
+    console.log(`Today Bitfruits Already Exist`);
     return;
   }
   // const ytdFruits = await dfRepo.loadFruitsByDate(ytdYyyymmdd);

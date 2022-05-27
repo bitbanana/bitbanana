@@ -1,30 +1,12 @@
-import { fullNode } from "./FullNode.ts";
-
-import { Tx } from "./types/Tx.ts";
+import { Tx } from "../blockchain/types/Tx.ts";
 
 import { BalanceSnapshot } from "./types/BalanceSnapshot.ts";
 import { BalanceSnapshotRepo } from "./BalanceSnapshotRepo.ts";
 import { BlockchainRepo } from "./BlockchainRepo.ts";
 
 import { calcBalance } from "./calcBalance.ts";
-import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
-
-// 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
-// 公開鍵をサーバーに登録する
-export async function startBonus(
-  addr: string,
-): Promise<StartBonusRes> {
-  const balance = await balanceInquiry(addr);
-  if (balance !== 0) {
-    throw new Error("すでに残高が存在するためスタートボーナスはもらえません");
-  }
-  const tx = fullNode.createStartBonusTx(addr);
-  await addWhiteTx(tx);
-  const req: StartBonusRes = {
-    new_balance: 5000,
-  };
-  return req;
-}
+import { state } from "./State.ts";
+import { onReceiveWhiteTx } from "./FullNode.ts";
 
 // 残高照会 (全レコード参照)
 export async function balanceInquiry(addr: string): Promise<number> {
@@ -41,7 +23,7 @@ export async function balanceInquiry(addr: string): Promise<number> {
       latest_block_index: 0,
       // ジェネシスブロック
       latest_block_hash:
-        "cd4b506b735bc5fbe99c74bd5c45eeb3005b3a25a675f1a8c45a5233e04f3592",
+        "c1c9d8bab7cbca7fe6a69e9df06fc4b17cb6c366412c12b31edb6e8eb8dc6572",
       addr: addr,
       balance: 0,
     };
@@ -58,6 +40,6 @@ export async function balanceInquiry(addr: string): Promise<number> {
 export async function addWhiteTx(
   tx: Tx,
 ): Promise<void> {
-  fullNode.whiteTxList.push(tx);
-  await fullNode.onReceiveWhiteTx();
+  state.whiteTxList.push(tx);
+  await onReceiveWhiteTx();
 }

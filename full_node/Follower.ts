@@ -2,7 +2,7 @@
 //
 //
 
-import { Tx } from "./types/Tx.ts";
+import { Tx } from "../blockchain/types/Tx.ts";
 export interface Follower {
   // txが拒否されたとき
   // (WebSocket サーバー > クライアント)

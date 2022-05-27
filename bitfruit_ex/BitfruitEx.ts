@@ -8,12 +8,13 @@ import { Wallet } from "../wallet/wallet.ts";
 import { FruitPocket } from "./types/FruitPocket.ts";
 import { FruitPocketRepo } from "./FruitPocketRepo.ts";
 import { yyyyMMdd } from "../utils/date_format.ts";
-import { Follower } from "../full_node/follower.ts";
+import { Follower } from "../full_node/Follower.ts";
 import { Bill } from "./types/Bill.ts";
-import { Tx } from "../full_node/types/Tx.ts";
+import { Tx } from "../blockchain/types/Tx.ts";
 import { SellOrder } from "./types/SellOrder.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
-import { fullNode } from "../full_node/FullNode.ts";
+import { node1 } from "../node1/Node1.ts";
+import { state } from "../full_node/State.ts";
 
 export class BitfruitEx implements Follower {
   wallet: Wallet;
@@ -27,7 +28,7 @@ export class BitfruitEx implements Follower {
 
   async init(): Promise<void> {
     await createBitfruits();
-    fullNode.followers.push(this);
+    state.followers.push(this);
   }
 
   onRedTx(tx: Tx): void {

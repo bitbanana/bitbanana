@@ -2,20 +2,21 @@
 //
 //
 
-import { addWhiteTx, balanceInquiry, startBonus } from "./full_node/web_api.ts";
+import { addWhiteTx, balanceInquiry } from "./full_node/web_api.ts";
 import {
   buyFruits,
   seeFruits,
   seePockets,
   sellFruits,
+  startBonus,
 } from "./bitfruit_ex/web_api.ts";
-import { fullNode } from "./full_node/FullNode.ts";
+import { node1 } from "./node1/Node1.ts";
 import { Application, Router } from "./deps.ts";
 import { RouterContext } from "./deps.ts";
 import { oakCors } from "./deps.ts";
 import { BuyOrder } from "./bitfruit_ex/types/BuyOrder.ts";
 import { SellOrder } from "./bitfruit_ex/types/SellOrder.ts";
-import { Tx } from "./full_node/types/Tx.ts";
+import { Tx } from "./blockchain/types/Tx.ts";
 import { updateBitfruits } from "./bitfruit_ex/updateBitfruits.ts";
 import { createBitfruits } from "./bitfruit_ex/createBitfruits.ts";
 import { datetime } from "./deps.ts";
@@ -23,7 +24,7 @@ import { VERSION } from "./full_node/config.ts";
 import { bitfruitEx } from "./bitfruit_ex/BitfruitEx.ts";
 
 // 初期化
-await fullNode.init(); // FullNode
+await node1.init(); // FullNode
 await bitfruitEx.init(); // BitfruitEx
 
 const router = new Router();

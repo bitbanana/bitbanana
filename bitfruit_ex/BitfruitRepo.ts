@@ -26,9 +26,6 @@ export class BitfruitRepo {
   // 作成/更新
   async updateFruit(fruit: Bitfruit): Promise<void> {
     const c = new Collection<Bitfruit>("bitfruits");
-    console.log(
-      `will update fruit id: ${fruit.fruit_id} yyyymmdd: ${fruit.yyyymmdd}`,
-    );
     await c.replaceOne(
       { "fruit_id": fruit.fruit_id, "yyyymmdd": fruit.yyyymmdd },
       fruit,
