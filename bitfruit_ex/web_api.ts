@@ -14,7 +14,7 @@ import { yyyyMMdd } from "../utils/date_format.ts";
 import { createStartBonusTx } from "./createStartBonusTx.ts";
 import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
 import { balanceInquiry } from "../full_node/web_api.ts";
-import { startBonusAmount } from "./config.ts";
+import { startBonusAmount } from "./config/config.ts";
 
 // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
 // 公開鍵をサーバーに登録する
