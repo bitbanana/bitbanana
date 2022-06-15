@@ -14,6 +14,7 @@ import { yyyyMMdd } from "../utils/date_format.ts";
 import { createStartBonusTx } from "./createStartBonusTx.ts";
 import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
 import { balanceInquiry } from "../full_node/web_api.ts";
+import { startBonusAmount } from "./config.ts";
 
 // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
 // 公開鍵をサーバーに登録する
@@ -26,8 +27,12 @@ export async function startBonus(
   }
   const tx = createStartBonusTx(addr);
   await addWhiteTx(tx);
+  const today = yyyyMMdd(new Date());
+  const c = new Collection<DailyAccess>("dailyaccess");
+  await c.increment({ yyyymmdd: today }, "api_start_bonus");
+  const newBalance = startBonusAmount;
   const req: StartBonusRes = {
-    new_balance: 5000,
+    new_balance: newBalance,
   };
   return req;
 }

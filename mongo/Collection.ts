@@ -1,10 +1,20 @@
 import { config } from "https://deno.land/x/dotenv/mod.ts";
 
-// .env から
-// const API_POINT = config({ path: "./private/.env" })["API_POINT"];
-const API_POINT = Deno.env.get("API_POINT");
-// const API_KEY = config({ path: "./private/.env" })["API_KEY"];
-const API_KEY = Deno.env.get("API_KEY");
+// どこで実行されているか
+const deployId = Deno.env.get("DENO_DEPLOYMENT_ID");
+console.log({ deployId });
+
+const isOnDenodeploy = deployId !== undefined;
+
+// Deno Deploy 上の環境変数を読み込む
+let API_POINT = Deno.env.get("API_POINT");
+let API_KEY = Deno.env.get("API_KEY");
+
+if (!isOnDenodeploy) {
+  // ローカルの .env から読み込む
+  API_POINT = config({ path: "./private/.env" })["API_POINT"];
+  API_KEY = config({ path: "./private/.env" })["API_KEY"];
+}
 
 // 固定
 const DATA_SOURCE = "Bitbanana";
@@ -131,6 +141,26 @@ export class Collection<DocType> {
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
     const _ = await fetch(BASE_URI + path, options);
+  }
+
+  async increment(filter: object, fieldName: string): Promise<void> {
+    const method = "POST";
+    const path = "/action/updateOne";
+    const newObj: any = { $inc: {} };
+    newObj.$inc[fieldName] = 1;
+    const query = {
+      collection: this.name,
+      database: DATABASE,
+      dataSource: DATA_SOURCE,
+      filter: filter,
+      update: newObj,
+      upsert: true,
+    };
+    const queryJson = JSON.stringify(query);
+    const options = createOptions(method, queryJson);
+    const res = await fetch(BASE_URI + path, options);
+    const resJson = await res.json();
+    console.log(resJson);
   }
 }
 
