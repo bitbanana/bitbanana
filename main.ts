@@ -180,9 +180,9 @@ app.use(router.routes());
 // routerの設定を読み取り、許可するHTTPメソッドを自動設定
 app.use(router.allowedMethods());
 
-// 8000 ポートで起動
-const PORT = 8000;
-await app.listen({ port: PORT });
+// 80 ポートで起動
+const PORT = 80;
+app.listen({ port: PORT });
 
 const now = datetime().toZonedTime("Asia/Tokyo");
 const nowStr = now.format("HH:mm MM/dd");
