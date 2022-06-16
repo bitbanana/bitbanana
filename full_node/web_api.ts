@@ -41,5 +41,6 @@ export async function addWhiteTx(
   tx: Tx,
 ): Promise<void> {
   state.whiteTxList.push(tx);
+  console.log("ここまできてます2.5");
   await onReceiveWhiteTx();
 }

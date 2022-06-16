@@ -114,6 +114,9 @@ router
       ctx.response.body = { message: "宛先が不正です" };
       return;
     }
+
+    console.log("ここまできてます");
+
     // 本体処理を実行
     await addWhiteTx(tx);
     // レスポンスを返す

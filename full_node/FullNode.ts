@@ -16,6 +16,8 @@ import { node1 } from "../node1/Node1.ts";
 
 export async function onReceiveWhiteTx(): Promise<void> {
   const tx = state.whiteTxList[state.whiteTxList.length - 1];
+  console.log("ここまできてます2");
+
   const winnerStake = pickWinner(state.stakes);
   const prevBlock = await getLastBlock();
   // MEMO: - 現在バリデーターは node1 しかいないので、直接依存する
@@ -28,6 +30,9 @@ export async function onReceiveWhiteTx(): Promise<void> {
     winnerStake,
     vSig,
   );
+
+  console.log("ここまできてます3");
+
   const r = new BlockchainRepo();
   await r.saveBlock(block);
   await notifyGreenTx(tx);
