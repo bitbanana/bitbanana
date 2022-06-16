@@ -22,4 +22,16 @@ export class FruitPocketRepo {
       "fruit_id": pocket.fruit_id,
     }, pocket);
   }
+  // 所有数をインクリメント(upsert 0基準)
+  async incrementCount(addr: string, fruitId: number, diff: number) {
+    const c = new Collection<FruitPocket>("fruitpockets");
+    await c.increment(
+      {
+        "owner_addr": addr,
+        "fruit_id": fruitId,
+      },
+      "count",
+      diff,
+    );
+  }
 }

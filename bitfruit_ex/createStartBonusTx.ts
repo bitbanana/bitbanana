@@ -5,7 +5,11 @@ import { buf2str } from "../utils/buf_base64.ts";
 import { SenderSigContent } from "../blockchain/mod.ts";
 
 import { Tx } from "../blockchain/types/Tx.ts";
-import { startBonusAmount } from "./config/config.ts";
+import {
+  bitfruitExAddr,
+  bitfruitExTmpSig,
+  startBonusAmount,
+} from "./config/config.ts";
 
 /// トランザクションを作成
 export function createStartBonusTx(addr: string): Tx {
@@ -18,9 +22,9 @@ export function createStartBonusTx(addr: string): Tx {
     fee: 0,
   };
   const tx: Tx = {
-    s_addr: "@node1",
+    s_addr: bitfruitExAddr,
     s_sig_cont: cont,
-    s_sig: "@node1.tmp.sig",
+    s_sig: bitfruitExTmpSig,
   };
   return tx;
 }

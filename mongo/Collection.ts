@@ -141,11 +141,15 @@ export class Collection<DocType> {
     const _ = await fetch(BASE_URI + path, options);
   }
 
-  async increment(filter: object, fieldName: string): Promise<void> {
+  async increment(
+    filter: object,
+    fieldName: string,
+    diff = 1,
+  ): Promise<void> {
     const method = "POST";
     const path = "/action/updateOne";
     const newObj: any = { $inc: {} };
-    newObj.$inc[fieldName] = 1;
+    newObj.$inc[fieldName] = diff;
     const query = {
       collection: this.name,
       database: DATABASE,

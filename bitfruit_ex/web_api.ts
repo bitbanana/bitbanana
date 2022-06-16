@@ -15,7 +15,7 @@ import { yyyyMMdd } from "../utils/date_format.ts";
 import { createStartBonusTx } from "./createStartBonusTx.ts";
 import { StartBonusReq, StartBonusRes } from "./types/StartBonus.ts";
 import { balanceInquiry } from "../full_node/web_api.ts";
-import { startBonusAmount } from "./config/config.ts";
+import { bitfruitExAddr, startBonusAmount } from "./config/config.ts";
 
 // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
 // 公開鍵をサーバーに登録する
@@ -70,7 +70,7 @@ export async function buyFruits(order: BuyOrder): Promise<Bill> {
     id: id,
     tx_id: id,
     s_addr: order.addr,
-    r_addr: "@bitfruitex",
+    r_addr: bitfruitExAddr,
     created_at: now,
     amount: amount,
     buy_order: order,
@@ -100,7 +100,7 @@ export async function sellFruits(order: SellOrder): Promise<void> {
     fee: 0,
   };
   const tx: Tx = {
-    s_addr: "@bitfruitex",
+    s_addr: bitfruitExAddr,
     s_sig_cont: cont,
     s_sig: "@bitfruitex.tmp.sig",
   };

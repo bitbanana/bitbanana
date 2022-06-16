@@ -47,49 +47,33 @@ export class BitfruitEx implements Follower {
   // 支払いが確認できた時
   async onGreenBill(bill: Bill) {
     // 集計 買われた数を1増やす
-    const fRepo = new BitfruitRepo();
+    const fruitRepo = new BitfruitRepo();
     const date = yyyyMMdd(new Date());
-    const fruit = await fRepo.loadFruit(bill.buy_order.fruit_id, date);
+    const fruit = await fruitRepo.loadFruit(bill.buy_order.fruit_id, date);
     fruit.buy_count += bill.buy_order.count;
-    await fRepo.updateFruit(fruit);
+    await fruitRepo.updateFruit(fruit);
     // 購入者の所有数を増やす
-    const pRepo = new FruitPocketRepo();
-    const pockets = await pRepo.loadPockets(bill.buy_order.addr);
-    let pocket = pockets.find((e) => e.fruit_id === bill.buy_order.fruit_id);
-    if (pocket === undefined) {
-      const newPocket: FruitPocket = {
-        owner_addr: bill.buy_order.addr,
-        fruit_id: bill.buy_order.fruit_id,
-        count: bill.buy_order.count,
-      };
-      pocket = newPocket;
-    }
-    pocket!.count += bill.buy_order.count;
-    await pRepo.savePocket(pocket!);
+    const pocketRepo = new FruitPocketRepo();
+    const diff = bill.buy_order.count;
+    await pocketRepo.incrementCount(
+      bill.buy_order.addr,
+      bill.buy_order.fruit_id,
+      diff,
+    );
   }
 
   // 売却されたとき (pocketの管理のみ)
   async onUserSellFruits(order: SellOrder) {
     // 集計 売られた数を1増やす
-    const fRepo = new BitfruitRepo();
+    const fruitRepo = new BitfruitRepo();
     const date = yyyyMMdd(new Date());
-    const fruit = await fRepo.loadFruit(order.fruit_id, date);
+    const fruit = await fruitRepo.loadFruit(order.fruit_id, date);
     fruit.sell_count += order.count;
-    await fRepo.updateFruit(fruit);
+    await fruitRepo.updateFruit(fruit);
     // 購入者の所有数を減らす
-    const pRepo = new FruitPocketRepo();
-    const pockets = await pRepo.loadPockets(order.addr);
-    let pocket = pockets.find((e) => e.fruit_id === order.fruit_id);
-    if (pocket === undefined) {
-      const newPocket: FruitPocket = {
-        owner_addr: order.addr,
-        fruit_id: order.fruit_id,
-        count: order.count,
-      };
-      pocket = newPocket;
-    }
-    pocket!.count -= order.count;
-    await pRepo.savePocket(pocket!);
+    const pocketRepo = new FruitPocketRepo();
+    const diff = -order.count;
+    await pocketRepo.incrementCount(order.addr, order.fruit_id, diff);
   }
 }
 

@@ -23,6 +23,7 @@ import { createBitfruits } from "./bitfruit_ex/createBitfruits.ts";
 import { datetime } from "./deps.ts";
 import { VERSION } from "./full_node/config.ts";
 import { bitfruitEx } from "./bitfruit_ex/BitfruitEx.ts";
+import { bitfruitExAddr } from "./bitfruit_ex/config/config.ts";
 
 // 初期化
 await node1.init(); // FullNode
@@ -110,7 +111,7 @@ router
     const string = JSON.stringify(body);
     const tx: Tx = JSON.parse(string);
     // 宛先がビットフルーツであることを確認
-    if (tx.s_sig_cont.r_addr !== "@bitfruitex") {
+    if (tx.s_sig_cont.r_addr !== bitfruitExAddr) {
       ctx.response.body = { message: "宛先が不正です" };
       return;
     }
