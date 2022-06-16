@@ -22,7 +22,10 @@ export async function createBlock(
   const time = new Date().toISOString();
   const index = prevB.index + 1;
 
-  console.log("createBlock: 1");
+  console.log({ stake });
+  console.log({ content });
+  console.log({ prevB });
+  console.log("addr: ", stake.addr);
 
   const block: Block = {
     index: index,
@@ -39,12 +42,6 @@ export async function createBlock(
     prev_hash: prevB.hash,
     hash: "",
   };
-
-  console.log("createBlock: 2");
-
   block.hash = await calcBlockHash(block);
-
-  console.log("createBlock: 3");
-
   return block;
 }
