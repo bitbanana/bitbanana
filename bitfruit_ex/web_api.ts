@@ -1,6 +1,7 @@
 import { Bitfruit } from "./types/Bitfruit.ts";
 import { BuyOrder } from "./types/BuyOrder.ts";
 import { SellOrder } from "./types/SellOrder.ts";
+import { DailyAccess } from "./types/DailyAccess.ts";
 import { Bill } from "./types/Bill.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
 import { FruitPocket } from "./types/FruitPocket.ts";
