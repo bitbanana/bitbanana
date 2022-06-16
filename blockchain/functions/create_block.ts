@@ -21,6 +21,9 @@ export async function createBlock(
 ): Promise<Block> {
   const time = new Date().toISOString();
   const index = prevB.index + 1;
+
+  console.log("createBlock: 1");
+
   const block: Block = {
     index: index,
     time: time,
@@ -37,7 +40,11 @@ export async function createBlock(
     hash: "",
   };
 
+  console.log("createBlock: 2");
+
   block.hash = await calcBlockHash(block);
+
+  console.log("createBlock: 3");
 
   return block;
 }
