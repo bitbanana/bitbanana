@@ -9,7 +9,7 @@ class Node1 {
     // バリデーターに応募
     const stake = {
       addr: this.addr,
-      token: 0,
+      token: 1,
     };
     state.stakes.push(stake);
   }

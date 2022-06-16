@@ -2,8 +2,6 @@ import { config } from "https://deno.land/x/dotenv/mod.ts";
 
 // どこで実行されているか
 const deployId = Deno.env.get("DENO_DEPLOYMENT_ID");
-console.log({ deployId });
-
 const isOnDenodeploy = deployId !== undefined;
 
 // Deno Deploy 上の環境変数を読み込む
@@ -158,9 +156,7 @@ export class Collection<DocType> {
     };
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
-    const res = await fetch(BASE_URI + path, options);
-    const resJson = await res.json();
-    console.log(resJson);
+    const _ = await fetch(BASE_URI + path, options);
   }
 }
 
