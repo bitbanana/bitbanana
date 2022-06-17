@@ -1,6 +1,14 @@
-import { BalanceSnapshot } from "./types/BalanceSnapshot.ts";
+//
+//
+//
+
+// mongo
 import { Collection } from "../mongo/Collection.ts";
 
+// others
+import { BalanceSnapshot } from "./types/BalanceSnapshot.ts";
+
+/// BalanceSnapshotRepo
 export class BalanceSnapshotRepo {
   // 読み込み
   async findSnapshot(addr: string): Promise<BalanceSnapshot | null> {

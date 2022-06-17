@@ -1,7 +1,7 @@
-import { Bitfruit } from "./types/Bitfruit.ts";
-import { Collection } from "../mongo/Collection.ts";
-import { yyyyMMdd } from "../utils/date_format.ts";
-import { tradeConfigs } from "./tradeConfigs.ts";
+import { Bitfruit } from "../types/Bitfruit.ts";
+import { Collection } from "../../mongo/Collection.ts";
+import { yyyyMMdd } from "../../utils/date_format.ts";
+import { tradeConfigs } from "../config/config.ts";
 
 // 6時間ごとに実行される
 export async function updateBitfruits() {

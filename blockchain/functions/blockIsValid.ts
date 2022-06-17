@@ -6,14 +6,14 @@
 import { Block } from "../types/Block.ts";
 
 // func
-import { calcBlockHash } from "./calc_block_hash.ts";
+import { getBlockHash } from "./getBlockHash.ts";
 
 // ブロックが有効かどうか確認する
-export async function validateBlock(b: Block, prevB: Block): Promise<boolean> {
+export async function blockIsValid(b: Block, prevB: Block): Promise<boolean> {
   // ハッシュが偽造されていないことを確認
   const copyB = b;
   copyB.hash = "";
-  const copyBHash = await calcBlockHash(copyB); // 計算した値
+  const copyBHash = await getBlockHash(copyB); // 計算した値
   if (b.hash != copyBHash) {
     return false;
   }

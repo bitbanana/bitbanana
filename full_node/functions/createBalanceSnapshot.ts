@@ -1,5 +1,5 @@
-import { Block } from "../blockchain/mod.ts";
-import { BalanceSnapshot } from "./types/BalanceSnapshot.ts";
+import { Block } from "../../blockchain/mod.ts";
+import { BalanceSnapshot } from "../types/BalanceSnapshot.ts";
 
 // 残高計算のアルゴリズム
 // 1. スナップショットを取得する ない場合は作成する
@@ -9,25 +9,25 @@ import { BalanceSnapshot } from "./types/BalanceSnapshot.ts";
 //    - 受信者の場合は amount を足し算
 //    - バリデーターの場合は fee を足し算
 
-export function calcBalance(
+export function createBalanceSnapshot(
   blocks: Block[],
-  snapshot: BalanceSnapshot,
+  oldSnapshot: BalanceSnapshot,
   addr: string,
 ): BalanceSnapshot {
   if (blocks.length <= 0) {
-    return snapshot;
+    return oldSnapshot;
   }
   // 最古のブロック
   const oldestB = blocks[0];
   // 最新のブロック
   const latestB = blocks[blocks.length - 1];
   // 残高
-  let balance = snapshot.balance;
+  let balance = oldSnapshot.balance;
 
   // スナップショットとの整合を確認
   if (
-    oldestB.index !== snapshot.latest_block_index + 1 ||
-    oldestB.prev_hash !== snapshot.latest_block_hash
+    oldestB.index !== oldSnapshot.latest_block_index + 1 ||
+    oldestB.prev_hash !== oldSnapshot.latest_block_hash
   ) {
     throw new Error("スナップショットのデータがズレています");
   }

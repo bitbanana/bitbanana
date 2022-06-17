@@ -1,4 +1,9 @@
-import { config } from "https://deno.land/x/dotenv/mod.ts";
+//
+//
+//
+
+// deps
+import { config } from "../deps.ts";
 
 // どこで実行されているか
 const deployId = Deno.env.get("DENO_DEPLOYMENT_ID");

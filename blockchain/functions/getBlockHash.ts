@@ -9,7 +9,7 @@ import * as hash from "../../utils/sha256.ts";
 import { Block } from "../types/Block.ts";
 
 // ブロックのハッシュを計算する
-export async function calcBlockHash(
+export async function getBlockHash(
   b: Block,
 ): Promise<string> {
   b.hash = "";

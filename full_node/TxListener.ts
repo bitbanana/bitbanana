@@ -2,8 +2,11 @@
 //
 //
 
-import { Tx } from "../blockchain/types/Tx.ts";
-export interface Follower {
+// blockchain
+import { Tx } from "../blockchain/mod.ts";
+
+/// TxListener
+export interface TxListener {
   // txが拒否されたとき
   // (WebSocket サーバー > クライアント)
   onRedTx(tx: Tx): void;

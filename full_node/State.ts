@@ -1,12 +1,11 @@
-import { Stake } from "../blockchain/mod.ts";
-import { Tx } from "../blockchain/types/Tx.ts";
-import { Follower } from "./Follower.ts";
+import { Stake, Tx } from "../blockchain/mod.ts";
+import { TxListener } from "./TxListener.ts";
 
-class State {
+export class State {
+  // 処理待ちのTx
   whiteTxList: Tx[] = [];
   // 抽選に参加しているバリデーターのステーク
   stakes: Stake[] = [];
-  followers: Follower[] = [];
+  // Txの処理を監視しているリスナー
+  txListeners: TxListener[] = [];
 }
-
-export const state = new State();

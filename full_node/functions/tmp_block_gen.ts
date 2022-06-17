@@ -1,6 +1,6 @@
 // blockchain
-import { Block, calcBlockHash } from "../blockchain/mod.ts";
-import { BlockchainRepo } from "./BlockchainRepo.ts";
+import { Block, getBlockHash } from "../../blockchain/mod.ts";
+import { BlockchainRepo } from "../BlockchainRepo.ts";
 
 const block: Block = {
   index: 0,
@@ -18,7 +18,7 @@ const block: Block = {
   hash: "",
 };
 
-const hash = await calcBlockHash(block);
+const hash = await getBlockHash(block);
 block.hash = hash;
 
 console.log(JSON.stringify(block));
@@ -27,4 +27,4 @@ const r = new BlockchainRepo();
 await r.saveBlock(block);
 
 console.log("完了");
-// deno run --allow-read --allow-write full_node/tmp_block_gen.ts
+// deno run --allow-read --allow-write full_node/functions/tmp_block_gen.ts

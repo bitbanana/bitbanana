@@ -2,16 +2,18 @@
 //
 //
 
-import { Bill } from "./types/Bill.ts";
+// mongo
 import { Collection } from "../mongo/Collection.ts";
 
+// others
+import { Bill } from "./types/Bill.ts";
+
+/// WhiteBillRepo
 export class WhiteBillRepo {
-  // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./bit_fruit/db/whitebills.json";
   // 取得
-  async loadWhiteBills(): Promise<Bill[]> {
+  async loadWhiteBills(txId: string): Promise<Bill[]> {
     const c = new Collection<Bill>("whitebills");
-    const bills = await c.find({});
+    const bills = await c.find({ "tx_id": txId });
     return bills;
   }
   // 追加

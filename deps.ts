@@ -15,9 +15,13 @@ export { v4 } from "https://deno.land/std@0.131.0/uuid/mod.ts";
 export { copySync } from "https://deno.land/std@0.131.0/fs/mod.ts";
 
 // Oak HTTP Server
-export { Application, Router } from "https://deno.land/x/oak/mod.ts";
-import type { RouterContext as XContext } from "https://deno.land/x/oak/mod.ts";
+export { Application, Router } from "https://deno.land/x/oak@v10.5.1/mod.ts";
+import type { RouterContext as XContext } from "https://deno.land/x/oak@v10.5.1/mod.ts";
+// deno-lint-ignore no-explicit-any
 export type RouterContext = XContext<any, any, any>;
 
 // Oak CORS
-export { oakCors } from "https://deno.land/x/cors/mod.ts";
+export { oakCors } from "https://deno.land/x/cors@v1.2.2/mod.ts";
+
+// dotenv
+export { config } from "https://deno.land/x/dotenv@v3.2.0/mod.ts";

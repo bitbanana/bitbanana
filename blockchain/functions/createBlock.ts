@@ -3,7 +3,7 @@
 //
 
 // func
-import { calcBlockHash } from "./calc_block_hash.ts";
+import { getBlockHash } from "./getBlockHash.ts";
 
 // types
 import { Block } from "../types/Block.ts";
@@ -37,6 +37,6 @@ export async function createBlock(
     prev_hash: prevB.hash,
     hash: "",
   };
-  block.hash = await calcBlockHash(block);
+  block.hash = await getBlockHash(block);
   return block;
 }

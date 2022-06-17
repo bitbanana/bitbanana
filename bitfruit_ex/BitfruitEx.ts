@@ -2,78 +2,121 @@
 //
 //
 
-import { BitfruitRepo } from "./BitfruitRepo.ts";
-import { createBitfruits } from "./createBitfruits.ts";
-import { FruitPocket } from "./types/FruitPocket.ts";
-import { FruitPocketRepo } from "./FruitPocketRepo.ts";
-import { yyyyMMdd } from "../utils/date_format.ts";
-import { Follower } from "../full_node/Follower.ts";
-import { Bill } from "./types/Bill.ts";
-import { Tx } from "../blockchain/types/Tx.ts";
-import { SellOrder } from "./types/SellOrder.ts";
-import { WhiteBillRepo } from "./WhiteBillRepo.ts";
-import { node1 } from "../node1/Node1.ts";
-import { state } from "../full_node/State.ts";
+// blockchain
+import { Tx } from "../blockchain/mod.ts";
 
-export class BitfruitEx implements Follower {
+// full_node
+import { TxListener } from "../full_node/mod.ts";
+
+// node1
+import { node1 } from "../node1/mod.ts";
+
+// others
+import { FruitPocket } from "./types/FruitPocket.ts";
+import { Bill } from "./types/Bill.ts";
+import { SellOrder } from "./types/SellOrder.ts";
+import { Bitfruit } from "./types/Bitfruit.ts";
+import { BuyOrder } from "./types/BuyOrder.ts";
+import { createBitfruits } from "./functions/createBitfruits.ts";
+import { startBonus as _startBonus } from "./functions/startBonus.ts";
+import { seeFruits as _seeFruits } from "./functions/seeFruits.ts";
+import { seePockets as _seePockets } from "./functions/seePockets.ts";
+import { buyFruits as _buyFruits } from "./functions/buyFruits.ts";
+import { sellFruits as _sellFruits } from "./functions/sellFruits.ts";
+import { StartBonusRes } from "./types/StartBonus.ts";
+import { WhiteBillRepo } from "./WhiteBillRepo.ts";
+import { BitfruitRepo } from "./BitfruitRepo.ts";
+import { Trader } from "./Trader.ts";
+
+/// IBitfruitEx
+export interface IBitfruitEx {
+  // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
+  // 公開鍵をサーバーに登録する
+  startBonus(addr: string): Promise<StartBonusRes>;
+
+  // ビットフルーツ一覧を見る
+  seeFruits(): Promise<Bitfruit[]>;
+
+  // 所有数を確認
+  seePockets(addr: string): Promise<FruitPocket[]>;
+
+  // ビットフルーツの購入注文
+  buyFruits(order: BuyOrder): Promise<Bill>;
+
+  // ビットフルーツを売却注文
+  sellFruits(order: SellOrder): Promise<void>;
+
+  // 価格推移をみる
+  getBitfruits(fruit_id?: number): Promise<Bitfruit[]>;
+}
+
+/// BitfruitEx
+export class BitfruitEx implements IBitfruitEx, TxListener {
   async init(): Promise<void> {
     await createBitfruits();
-    state.followers.push(this);
+    node1.fullNode.state.txListeners.push(this);
   }
 
-  onRedTx(tx: Tx): void {
-    throw new Error("トランザクション拒否時の処理がありません");
+  /// impl IBitfruitEx
+  async startBonus(addr: string): Promise<StartBonusRes> {
+    return await _startBonus(addr);
   }
 
+  /// impl IBitfruitEx
+  async seeFruits(): Promise<Bitfruit[]> {
+    return await _seeFruits();
+  }
+
+  /// impl IBitfruitEx
+  async seePockets(addr: string): Promise<FruitPocket[]> {
+    return await _seePockets(addr);
+  }
+
+  /// impl IBitfruitEx
+  async buyFruits(order: BuyOrder): Promise<Bill> {
+    return await _buyFruits(order);
+  }
+
+  /// impl IBitfruitEx
+  async sellFruits(order: SellOrder): Promise<void> {
+    return await _sellFruits(order);
+  }
+
+  /// impl IBitfruitEx
+  async getBitfruits(fruit_id?: number): Promise<Bitfruit[]> {
+    const repo = new BitfruitRepo();
+    return await repo.getBitfruits(fruit_id);
+  }
+
+  /// impl TxListener
   async onGreenTx(tx: Tx): Promise<void> {
     const billRepo = new WhiteBillRepo();
-    const allBills = await billRepo.loadWhiteBills();
-    const greenBills = allBills.filter((bo) =>
-      bo.tx_id === tx.s_sig_cont.tx_id
-    );
-    if (greenBills.length > 1) {
-      throw new Error("[!] 重複した購入注文が存在します");
+    const targetBills = await billRepo.loadWhiteBills(tx.s_sig_cont.tx_id);
+    if (targetBills.length > 1) {
+      // 支払い待ちの注文が複数見つかった
+      throw new Error(
+        `[!] 複数の注文 に 1つの支払い が紐づいています TxID: ${tx.s_sig_cont.tx_id}`,
+      );
     }
-    if (greenBills.length === 1) {
-      const bill = greenBills[0];
+    if (targetBills.length === 1) {
+      // 支払い待ちの注文が一つ見つかった
+      const bill = targetBills[0];
       // 未払いのBillから削除
       await billRepo.removeWhiteBill(bill);
-      await this.onGreenBill(bill);
+      const trader = new Trader();
+      // 購入された数を集計
+      await trader.incBuyCount(bill);
+      // 所有数を増やす
+      await trader.incPocketCount(bill);
       return;
     }
-    console.warn("管理外のTxを受け取りました");
+    console.log("注文に紐づいていないTxをスルーします");
   }
 
-  // 支払いが確認できた時
-  async onGreenBill(bill: Bill) {
-    // 集計 買われた数を1増やす
-    const fruitRepo = new BitfruitRepo();
-    const date = yyyyMMdd(new Date());
-    const fruit = await fruitRepo.loadFruit(bill.buy_order.fruit_id, date);
-    fruit.buy_count += bill.buy_order.count;
-    await fruitRepo.updateFruit(fruit);
-    // 購入者の所有数を増やす
-    const pocketRepo = new FruitPocketRepo();
-    const diff = bill.buy_order.count;
-    await pocketRepo.incrementCount(
-      bill.buy_order.addr,
-      bill.buy_order.fruit_id,
-      diff,
-    );
-  }
-
-  // 売却されたとき (pocketの管理のみ)
-  async onUserSellFruits(order: SellOrder) {
-    // 集計 売られた数を1増やす
-    const fruitRepo = new BitfruitRepo();
-    const date = yyyyMMdd(new Date());
-    const fruit = await fruitRepo.loadFruit(order.fruit_id, date);
-    fruit.sell_count += order.count;
-    await fruitRepo.updateFruit(fruit);
-    // 購入者の所有数を減らす
-    const pocketRepo = new FruitPocketRepo();
-    const diff = -order.count;
-    await pocketRepo.incrementCount(order.addr, order.fruit_id, diff);
+  /// impl TxListener
+  onRedTx(tx: Tx): void {
+    // TODO: - 実装
+    throw new Error("未実装です");
   }
 }
 

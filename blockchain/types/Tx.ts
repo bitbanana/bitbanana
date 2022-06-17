@@ -1,4 +1,4 @@
-import { SenderSigContent } from "../../blockchain/mod.ts";
+import { SenderSigContent } from "./SenderSigContent.ts";
 
 export type Tx = {
   s_addr: string;

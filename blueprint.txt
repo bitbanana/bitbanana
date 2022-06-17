@@ -48,13 +48,13 @@
   - on-red-tx (WebSocket サーバー > クライアント)
       txが拒否されたとき
       本人たちにだけ通知するようにする
-      Followerに addr を追加予定
+      TxListner に addr を追加予定
   - それの pull バージョン
 
   - on-green-tx (WebSocket サーバー > クライアント)
       txがブロックとしてチェーンに追加されたとき
       本人たちにだけ通知するようにする
-      Followerに addr を追加予定
+      TxListener に addr を追加予定
   - それの pull バージョン
 
 # BitFruitEx WebAPI

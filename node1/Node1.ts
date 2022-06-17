@@ -1,8 +1,10 @@
-import { state } from "../full_node/State.ts";
+import { FullNode } from "../full_node/mod.ts";
 
 class Node1 {
   addr = "@node1";
   sig = "@node1.tmp.sig";
+
+  fullNode = new FullNode();
 
   // deno-lint-ignore require-await
   async init(): Promise<void> {
@@ -11,7 +13,7 @@ class Node1 {
       addr: this.addr,
       token: 1,
     };
-    state.stakes.push(stake);
+    this.fullNode.state.stakes.push(stake);
   }
 }
 

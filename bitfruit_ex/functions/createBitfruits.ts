@@ -1,10 +1,10 @@
-import { Bitfruit } from "./types/Bitfruit.ts";
-import { yyyyMMdd } from "../utils/date_format.ts";
-import { Collection } from "../mongo/Collection.ts";
-import { tradeConfigs } from "./tradeConfigs.ts";
-import { newBitfruit } from "./newBitfruit.ts";
+import { Bitfruit } from "../types/Bitfruit.ts";
+import { yyyyMMdd } from "../../utils/date_format.ts";
+import { Collection } from "../../mongo/Collection.ts";
+import { tradeConfigs } from "../config/config.ts";
+import { TradeConfig } from "../types/TradeConfig.ts";
 
-// その日の最初に実行される
+// その日のビットフルーツを作成する
 export async function createBitfruits() {
   const today = new Date();
   const todayYyyymmdd = yyyyMMdd(today);
@@ -47,4 +47,19 @@ export async function createBitfruits() {
 
   // 保存
   await c.insertMany(todayFruits);
+}
+
+/// 新規で作成するBitfruit
+export function newBitfruit(
+  config: TradeConfig,
+  yyyymmdd: string,
+): Bitfruit {
+  return {
+    fruit_id: config.fruit_id,
+    yyyymmdd: yyyymmdd,
+    buy_count: 0,
+    sell_count: 0,
+    price_ytd: config.origin_price,
+    price: config.origin_price,
+  };
 }

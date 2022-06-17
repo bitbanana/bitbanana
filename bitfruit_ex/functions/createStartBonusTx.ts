@@ -1,15 +1,10 @@
-// utils
-import { buf2str } from "../utils/buf_base64.ts";
-
-// blockchain
-import { SenderSigContent } from "../blockchain/mod.ts";
-
-import { Tx } from "../blockchain/types/Tx.ts";
+import { SenderSigContent } from "../../blockchain/mod.ts";
+import { Tx } from "../../blockchain/types/Tx.ts";
 import {
   bitfruitExAddr,
   bitfruitExTmpSig,
   startBonusAmount,
-} from "./config/config.ts";
+} from "../config/config.ts";
 
 /// トランザクションを作成
 export function createStartBonusTx(addr: string): Tx {

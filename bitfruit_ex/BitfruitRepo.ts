@@ -2,9 +2,13 @@
 //
 //
 
-import { Bitfruit } from "./types/Bitfruit.ts";
+// mongo
 import { Collection } from "../mongo/Collection.ts";
 
+// others
+import { Bitfruit } from "./types/Bitfruit.ts";
+
+/// BitfruitRepo
 export class BitfruitRepo {
   // 取得
   async loadFruit(fruitId: number, yyyyMMdd: string): Promise<Bitfruit> {
@@ -15,6 +19,19 @@ export class BitfruitRepo {
     });
     return fruit;
   }
+
+  // 取得
+  async getBitfruits(fruit_id?: number): Promise<Bitfruit[]> {
+    const c = new Collection<Bitfruit>("bitfruits");
+    let filter = {}; // All Fruits
+    console.log(`fid exists? ${fruit_id !== undefined}`);
+    if (fruit_id !== undefined) {
+      filter = { "fruit_id": fruit_id };
+    }
+    const fruits = await c.find(filter);
+    return fruits;
+  }
+
   // 日付を指定して取得
   async loadFruitsByDate(yyyyMMdd: string): Promise<Bitfruit[]> {
     const c = new Collection<Bitfruit>("bitfruits");
@@ -23,16 +40,36 @@ export class BitfruitRepo {
     });
     return fruits;
   }
-  // 作成/更新
-  async updateFruit(fruit: Bitfruit): Promise<void> {
+
+  // 売却された数を集計
+  async incSellCount(
+    fruitId: number,
+    yyyymmdd: string,
+    diff: number,
+  ): Promise<void> {
     const c = new Collection<Bitfruit>("bitfruits");
-    await c.replaceOne(
-      { "fruit_id": fruit.fruit_id, "yyyymmdd": fruit.yyyymmdd },
-      fruit,
+    await c.increment(
+      { "fruit_id": fruitId, "yyyymmdd": yyyymmdd },
+      "sell_count",
+      diff,
     );
   }
 
-  // 作成/更新
+  // 購入された数を集計
+  async incBuyCount(
+    fruitId: number,
+    yyyymmdd: string,
+    diff: number,
+  ): Promise<void> {
+    const c = new Collection<Bitfruit>("bitfruits");
+    await c.increment(
+      { "fruit_id": fruitId, "yyyymmdd": yyyymmdd },
+      "buy_count",
+      diff,
+    );
+  }
+
+  // 保存
   async saveFruits(fruits: Bitfruit[]): Promise<void> {
     const c = new Collection<Bitfruit>("bitfruits");
     await c.insertMany(fruits);

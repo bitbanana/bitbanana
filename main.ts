@@ -2,30 +2,35 @@
 //
 //
 
-import { addWhiteTx, balanceInquiry } from "./full_node/web_api.ts";
+// deps
 import {
-  buyFruits,
-  getBitfruits,
-  seeFruits,
-  seePockets,
-  sellFruits,
-  startBonus,
-} from "./bitfruit_ex/web_api.ts";
-import { node1 } from "./node1/Node1.ts";
-import { Application, Router } from "./deps.ts";
-import { RouterContext } from "./deps.ts";
-import { oakCors } from "./deps.ts";
-import { BuyOrder } from "./bitfruit_ex/types/BuyOrder.ts";
-import { SellOrder } from "./bitfruit_ex/types/SellOrder.ts";
-import { Tx } from "./blockchain/types/Tx.ts";
-import { updateBitfruits } from "./bitfruit_ex/updateBitfruits.ts";
-import { createBitfruits } from "./bitfruit_ex/createBitfruits.ts";
-import { datetime } from "./deps.ts";
-import { VERSION } from "./full_node/config.ts";
-import { bitfruitEx } from "./bitfruit_ex/BitfruitEx.ts";
-import { bitfruitExAddr } from "./bitfruit_ex/config/config.ts";
+  Application,
+  datetime,
+  oakCors,
+  Router,
+  RouterContext,
+} from "./deps.ts";
 
-// 初期化
+// blockchain
+import { Tx } from "./blockchain/mod.ts";
+
+// bitfruit_ex
+import {
+  bitfruitEx,
+  bitfruitExAddr,
+  BuyOrder,
+  createBitfruits,
+  SellOrder,
+  updateBitfruits,
+} from "./bitfruit_ex/mod.ts";
+
+// node1
+import { node1 } from "./node1/mod.ts";
+
+// バージョン
+const VERSION = "0.7.0";
+
+// インスタンス初期化
 await node1.init(); // FullNode
 await bitfruitEx.init(); // BitfruitEx
 
@@ -43,7 +48,7 @@ router
     const json = JSON.parse(string);
     const addr: string = json["addr"];
     // 本体処理を実行
-    const res = await startBonus(addr);
+    const res = await bitfruitEx.startBonus(addr);
     // レスポンスを返す
     ctx.response.body = {
       new_balance: res.new_balance,
@@ -58,7 +63,7 @@ router
     const json = JSON.parse(string);
     const addr: string = json["addr"];
     // 本体処理を実行
-    const balance = await balanceInquiry(addr);
+    const balance = await node1.fullNode.balanceInquiry(addr);
     // レスポンスを返す
     ctx.response.body = {
       balance: balance,
@@ -68,7 +73,7 @@ router
     console.log("Req: see-fruits");
 
     // 本体処理を実行
-    const fruits = await seeFruits();
+    const fruits = await bitfruitEx.seeFruits();
     // レスポンスを返す
     ctx.response.body = {
       fruits: fruits,
@@ -83,7 +88,7 @@ router
     const json = JSON.parse(string);
     const addr: string = json["addr"];
     // 本体処理を実行
-    const pockets = await seePockets(addr);
+    const pockets = await bitfruitEx.seePockets(addr);
     // レスポンスを返す
     ctx.response.body = {
       pockets: pockets,
@@ -97,7 +102,7 @@ router
     const string = JSON.stringify(body);
     const order: BuyOrder = JSON.parse(string);
     // 本体処理を実行
-    const bill = await buyFruits(order);
+    const bill = await bitfruitEx.buyFruits(order);
     // レスポンスを返す
     ctx.response.body = {
       bill: bill,
@@ -116,7 +121,7 @@ router
       return;
     }
     // 本体処理を実行
-    await addWhiteTx(tx);
+    await node1.fullNode.addWhiteTx(tx);
     // レスポンスを返す
     ctx.response.body = {};
   })
@@ -128,7 +133,7 @@ router
     const string = JSON.stringify(body);
     const order: SellOrder = JSON.parse(string);
     // 本体処理を実行
-    await sellFruits(order);
+    await bitfruitEx.sellFruits(order);
     // レスポンスを返す
     ctx.response.body = {};
   })
@@ -165,12 +170,12 @@ router
     ctx.response.body = { message: "CREATE を実施しました" };
   })
   .get("/bitfruits", async (ctx: RouterContext) => {
-    const fruits = await getBitfruits();
+    const fruits = await bitfruitEx.getBitfruits();
     ctx.response.body = JSON.stringify(fruits);
   })
   .get("/bitfruits/:fid", async (ctx: RouterContext) => {
     const fid = ctx.params.fid;
-    const fruits = await getBitfruits(parseInt(fid));
+    const fruits = await bitfruitEx.getBitfruits(parseInt(fid));
     ctx.response.body = JSON.stringify(fruits);
   });
 
