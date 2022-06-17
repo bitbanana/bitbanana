@@ -26,6 +26,7 @@ import { sellFruits as _sellFruits } from "./functions/sellFruits.ts";
 import { StartBonusRes } from "./types/StartBonus.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
 import { BitfruitRepo } from "./BitfruitRepo.ts";
+import { DailyAccessRepo } from "./DailyAccessRepo.ts";
 import { Trader } from "./Trader.ts";
 
 /// IBitfruitEx
@@ -48,6 +49,9 @@ export interface IBitfruitEx {
 
   // 価格推移をみる
   getBitfruits(fruit_id?: number): Promise<Bitfruit[]>;
+
+  // アクセス数を見る
+  getDailyAccess(): Promise<DailyAccess[]>;
 }
 
 /// BitfruitEx
@@ -86,6 +90,12 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
   async getBitfruits(fruit_id?: number): Promise<Bitfruit[]> {
     const repo = new BitfruitRepo();
     return await repo.getBitfruits(fruit_id);
+  }
+
+  /// impl IBitfruitEx
+  async getDailyAccess(): Promise<DailyAccess[]> {
+    const repo = new DailyAccessRepo();
+    return await repo.getDailyAccessList();
   }
 
   /// impl TxListener

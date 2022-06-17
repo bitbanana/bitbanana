@@ -10,8 +10,6 @@ import { FruitPocket } from "./types/FruitPocket.ts";
 
 /// FruitPocketRepo
 export class FruitPocketRepo {
-  // データベースの代わりにするjsonファイル プロジェクトルートからのパス
-  filePath = "./bit_fruit/db/fruitpockets.json";
   // 取得
   async loadPockets(addr: string): Promise<FruitPocket[]> {
     const c = new Collection<FruitPocket>("fruitpockets");

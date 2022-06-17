@@ -170,12 +170,19 @@ router
     ctx.response.body = { message: "CREATE を実施しました" };
   })
   .get("/bitfruits", async (ctx: RouterContext) => {
+    console.log("Req: bitfruits");
     const fruits = await bitfruitEx.getBitfruits();
     ctx.response.body = JSON.stringify(fruits);
   })
   .get("/bitfruits/:fid", async (ctx: RouterContext) => {
     const fid = ctx.params.fid;
+    console.log(`Req: bitfruits/${fid}`);
     const fruits = await bitfruitEx.getBitfruits(parseInt(fid));
+    ctx.response.body = JSON.stringify(fruits);
+  })
+  .get("/daily-access", async (ctx: RouterContext) => {
+    console.log("Req: daily-access");
+    const fruits = await bitfruitEx.getDailyAccess();
     ctx.response.body = JSON.stringify(fruits);
   });
 
