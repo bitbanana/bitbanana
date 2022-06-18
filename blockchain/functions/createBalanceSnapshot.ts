@@ -1,5 +1,10 @@
-import { Block } from "../../blockchain/mod.ts";
+//
+//
+//
+
+// in-mod
 import { BalanceSnapshot } from "../types/BalanceSnapshot.ts";
+import { Block } from "../../blockchain/mod.ts";
 
 // 残高計算のアルゴリズム
 // 1. スナップショットを取得する ない場合は作成する

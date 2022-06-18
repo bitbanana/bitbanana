@@ -1,5 +1,5 @@
 // utils
-import { buf2str } from "../utils/buf_base64.ts";
+import { buf2str } from "./buf_base64.ts";
 
 // Tx に対して署名する
 export async function signature(

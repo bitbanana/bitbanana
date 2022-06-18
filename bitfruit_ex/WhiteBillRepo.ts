@@ -2,28 +2,26 @@
 //
 //
 
-// mongo
-import { Collection } from "../mongo/Collection.ts";
+// utils
+import { MongoCollection } from "../utils/mod.ts";
 
-// others
+// in-mod
 import { Bill } from "./types/Bill.ts";
 
 /// WhiteBillRepo
 export class WhiteBillRepo {
+  collection = new MongoCollection<Bill>("whitebills");
   // 取得
   async loadWhiteBills(txId: string): Promise<Bill[]> {
-    const c = new Collection<Bill>("whitebills");
-    const bills = await c.find({ "tx_id": txId });
+    const bills = await this.collection.find({ "tx_id": txId });
     return bills;
   }
   // 追加
   async insertWhiteBill(bill: Bill): Promise<void> {
-    const c = new Collection<Bill>("whitebills");
-    await c.insertOne(bill);
+    await this.collection.insertOne(bill);
   }
   // 削除
   async removeWhiteBill(bill: Bill): Promise<void> {
-    const c = new Collection<Bill>("whitebills");
-    await c.deleteMany({ "id": bill.id });
+    await this.collection.deleteMany({ "id": bill.id });
   }
 }

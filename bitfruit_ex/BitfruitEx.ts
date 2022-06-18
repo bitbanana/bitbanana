@@ -3,10 +3,7 @@
 //
 
 // blockchain
-import { Tx } from "../blockchain/mod.ts";
-
-// full_node
-import { TxListener } from "../full_node/mod.ts";
+import { Tx, TxListener } from "../blockchain/mod.ts";
 
 // node1
 import { node1 } from "../node1/mod.ts";
@@ -28,37 +25,13 @@ import { WhiteBillRepo } from "./WhiteBillRepo.ts";
 import { BitfruitRepo } from "./BitfruitRepo.ts";
 import { DailyAccessRepo } from "./DailyAccessRepo.ts";
 import { Trader } from "./Trader.ts";
-
-/// IBitfruitEx
-export interface IBitfruitEx {
-  // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
-  // 公開鍵をサーバーに登録する
-  startBonus(addr: string): Promise<StartBonusRes>;
-
-  // ビットフルーツ一覧を見る
-  seeFruits(): Promise<Bitfruit[]>;
-
-  // 所有数を確認
-  seePockets(addr: string): Promise<FruitPocket[]>;
-
-  // ビットフルーツの購入注文
-  buyFruits(order: BuyOrder): Promise<Bill>;
-
-  // ビットフルーツを売却注文
-  sellFruits(order: SellOrder): Promise<void>;
-
-  // 価格推移をみる
-  getBitfruits(fruit_id?: number): Promise<Bitfruit[]>;
-
-  // アクセス数を見る
-  getDailyAccess(): Promise<DailyAccess[]>;
-}
+import { IBitfruitEx } from "./interfaces/IBitfruitEx.ts";
 
 /// BitfruitEx
 export class BitfruitEx implements IBitfruitEx, TxListener {
   async init(): Promise<void> {
     await createBitfruits();
-    node1.fullNode.state.txListeners.push(this);
+    await node1.fullNode.addTxListener(this);
   }
 
   /// impl IBitfruitEx
@@ -130,4 +103,4 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
   }
 }
 
-export const bitfruitEx = new BitfruitEx();
+export const bitfruitEx: IBitfruitEx = new BitfruitEx();

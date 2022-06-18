@@ -1,3 +1,7 @@
+//
+// export utils
+//
+
 export { base58 } from "./base58.ts";
 export { buf2str, str2buf } from "./buf_base64.ts";
 export {
@@ -16,3 +20,4 @@ export {
   str2signPvtKey,
   str2vrfyPubKey,
 } from "./signing_key_pair.ts";
+export { Collection as MongoCollection } from "./MongoClient.ts";

@@ -2,10 +2,8 @@
 //
 //
 
-// func
+// in-mod
 import { getBlockHash } from "./getBlockHash.ts";
-
-// types
 import { Block } from "../types/Block.ts";
 import { Stake } from "../types/Stake.ts";
 import { SenderSigContent } from "../types/SenderSigContent.ts";

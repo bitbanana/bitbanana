@@ -2,7 +2,7 @@
 //
 //
 
-// types
+// in-mod
 import { Stake } from "../types/Stake.ts";
 
 // 抽選プールを作って、ブロックを追加する権利があるwinnerを決める

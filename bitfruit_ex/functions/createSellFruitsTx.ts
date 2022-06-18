@@ -1,5 +1,7 @@
-import { SenderSigContent } from "../../blockchain/mod.ts";
-import { Tx } from "../../blockchain/types/Tx.ts";
+// blockchain
+import { SenderSigContent, Tx } from "../../blockchain/mod.ts";
+
+// in-mod
 import { bitfruitExAddr, bitfruitExTmpSig } from "../config/config.ts";
 import { SellOrder } from "../types/SellOrder.ts";
 import { seeFruits as _seeFruits } from "./seeFruits.ts";
@@ -9,7 +11,7 @@ export async function createSellFruitsTx(order: SellOrder): Promise<Tx> {
   const fruits = await _seeFruits();
   const fruit = fruits.find((e) => e.fruit_id == order.fruit_id);
   if (fruit === undefined) {
-    console.log("Sell Bitfruits Not Found");
+    throw new Error(`Sell Not Found Fruit ID: ${order.fruit_id}`);
   }
   const amount = fruit!.price * order.count;
   const uuid = crypto.randomUUID();

@@ -1,5 +1,7 @@
-import { SenderSigContent } from "../../blockchain/mod.ts";
-import { Tx } from "../../blockchain/types/Tx.ts";
+// blockchain
+import { SenderSigContent, Tx } from "../../blockchain/mod.ts";
+
+// in-mod
 import {
   bitfruitExAddr,
   bitfruitExTmpSig,

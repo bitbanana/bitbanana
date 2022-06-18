@@ -2,16 +2,20 @@
 //
 //
 
-import { Tx } from "../../blockchain/types/Tx.ts";
+// node1
+import { node1 } from "../../node1/mod.ts";
+
+// blockchain
+import { SenderSigContent, Tx } from "../../blockchain/mod.ts";
+
+// in-mod
 import { SellOrder } from "../types/SellOrder.ts";
 import { bitfruitExAddr, bitfruitExTmpSig } from "../config/config.ts";
-import { SenderSigContent } from "../../blockchain/types/SenderSigContent.ts";
 import { startBonus as _startBonus } from "./startBonus.ts";
 import { seeFruits as _seeFruits } from "./seeFruits.ts";
 import { seePockets as _seePockets } from "./seePockets.ts";
 import { buyFruits as _buyFruits } from "./buyFruits.ts";
 import { Trader } from "../Trader.ts";
-import { node1 } from "../../node1/Node1.ts";
 
 export async function sellFruits(order: SellOrder): Promise<void> {
   const trader = new Trader();

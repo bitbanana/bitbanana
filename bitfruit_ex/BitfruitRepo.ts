@@ -2,17 +2,17 @@
 //
 //
 
-// mongo
-import { Collection } from "../mongo/Collection.ts";
+// utils
+import { MongoCollection } from "../utils/mod.ts";
 
-// others
+// in-mod
 import { Bitfruit } from "./types/Bitfruit.ts";
 
 /// BitfruitRepo
 export class BitfruitRepo {
   // 取得
   async loadFruit(fruitId: number, yyyyMMdd: string): Promise<Bitfruit> {
-    const c = new Collection<Bitfruit>("bitfruits");
+    const c = new MongoCollection<Bitfruit>("bitfruits");
     const fruit = await c.findOne({
       "fruit_id": fruitId,
       "yyyymmdd": yyyyMMdd,
@@ -22,7 +22,7 @@ export class BitfruitRepo {
 
   // 取得
   async getBitfruits(fruit_id?: number): Promise<Bitfruit[]> {
-    const c = new Collection<Bitfruit>("bitfruits");
+    const c = new MongoCollection<Bitfruit>("bitfruits");
     let filter = {}; // All Fruits
     console.log(`fid exists? ${fruit_id !== undefined}`);
     if (fruit_id !== undefined) {
@@ -34,7 +34,7 @@ export class BitfruitRepo {
 
   // 日付を指定して取得
   async loadFruitsByDate(yyyyMMdd: string): Promise<Bitfruit[]> {
-    const c = new Collection<Bitfruit>("bitfruits");
+    const c = new MongoCollection<Bitfruit>("bitfruits");
     const fruits = await c.find({
       "yyyymmdd": yyyyMMdd,
     });
@@ -47,7 +47,7 @@ export class BitfruitRepo {
     yyyymmdd: string,
     diff: number,
   ): Promise<void> {
-    const c = new Collection<Bitfruit>("bitfruits");
+    const c = new MongoCollection<Bitfruit>("bitfruits");
     await c.increment(
       { "fruit_id": fruitId, "yyyymmdd": yyyymmdd },
       "sell_count",
@@ -61,7 +61,7 @@ export class BitfruitRepo {
     yyyymmdd: string,
     diff: number,
   ): Promise<void> {
-    const c = new Collection<Bitfruit>("bitfruits");
+    const c = new MongoCollection<Bitfruit>("bitfruits");
     await c.increment(
       { "fruit_id": fruitId, "yyyymmdd": yyyymmdd },
       "buy_count",
@@ -71,7 +71,18 @@ export class BitfruitRepo {
 
   // 保存
   async saveFruits(fruits: Bitfruit[]): Promise<void> {
-    const c = new Collection<Bitfruit>("bitfruits");
+    const c = new MongoCollection<Bitfruit>("bitfruits");
     await c.insertMany(fruits);
+  }
+
+  // 複数を更新
+  async updateMany(fruits: Bitfruit[]): Promise<void> {
+    const c = new MongoCollection<Bitfruit>("bitfruits");
+    for await (const f of fruits) {
+      await c.replaceOne(
+        { "fruit_id": f.fruit_id, "yyyymmdd": f.yyyymmdd },
+        f,
+      );
+    }
   }
 }

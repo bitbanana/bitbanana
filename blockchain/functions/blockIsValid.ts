@@ -2,10 +2,8 @@
 //
 //
 
-// types
+// in-mod
 import { Block } from "../types/Block.ts";
-
-// func
 import { getBlockHash } from "./getBlockHash.ts";
 
 // ブロックが有効かどうか確認する

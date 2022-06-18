@@ -3,9 +3,9 @@
 //
 
 // utils
-import * as hash from "../../utils/sha256.ts";
+import * as hash from "../../utils/mod.ts";
 
-// types
+// in-mod
 import { Block } from "../types/Block.ts";
 
 // ブロックのハッシュを計算する

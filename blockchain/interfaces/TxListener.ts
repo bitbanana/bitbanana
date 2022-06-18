@@ -2,8 +2,8 @@
 //
 //
 
-// blockchain
-import { Tx } from "../blockchain/mod.ts";
+// in-mod
+import { Tx } from "../mod.ts";
 
 /// TxListener
 export interface TxListener {

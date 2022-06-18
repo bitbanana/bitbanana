@@ -3,8 +3,7 @@
 //
 
 // utils
-import { base58 } from "../../utils/base58.ts";
-import { sha256ary } from "../../utils/sha256.ts";
+import { base58, sha256ary } from "../../utils/mod.ts";
 
 // 公開鍵からアドレスを作成
 export async function getAddr(pubKeyB64: string): Promise<string> {

@@ -1,10 +1,22 @@
-import { FullNode } from "../full_node/mod.ts";
+// blockchain
+import { FullNode, IFullNode } from "../blockchain/mod.ts";
 
+// in-mod
+import { BlockchainRepo } from "./BlockchainRepo.ts";
+import { BalanceSnapshotRepo } from "./BalanceSnapshotRepo.ts";
+
+/// Node1
 class Node1 {
   addr = "@node1";
   sig = "@node1.tmp.sig";
+  fullNode: IFullNode;
 
-  fullNode = new FullNode();
+  constructor() {
+    // DI
+    const blockchainRepo = new BlockchainRepo();
+    const snapshotRepo = new BalanceSnapshotRepo();
+    this.fullNode = new FullNode(snapshotRepo, blockchainRepo);
+  }
 
   // deno-lint-ignore require-await
   async init(): Promise<void> {
@@ -13,7 +25,7 @@ class Node1 {
       addr: this.addr,
       token: 1,
     };
-    this.fullNode.state.stakes.push(stake);
+    this.fullNode.addStake(stake);
   }
 }
 

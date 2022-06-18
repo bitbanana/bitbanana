@@ -28,7 +28,7 @@ import {
 import { node1 } from "./node1/mod.ts";
 
 // バージョン
-const VERSION = "0.7.0";
+const VERSION = "0.8.0";
 
 // インスタンス初期化
 await node1.init(); // FullNode
@@ -137,22 +137,6 @@ router
     // レスポンスを返す
     ctx.response.body = {};
   })
-  .post("/update-bitfruits", async (ctx: RouterContext) => {
-    // 毎日 11-12, 19-20時に実行
-    console.log("Req: update-bitfruits");
-
-    // 必要なパラメータを取り出す
-    const body = await ctx.request.body().value;
-    const string = JSON.stringify(body);
-    const json: { api_key: string } = JSON.parse(string);
-    const API_KEY = Deno.env.get("CRON_API_KEY");
-    if (json.api_key !== API_KEY) {
-      ctx.response.body = { message: "不正なAPIKeyです" };
-      return;
-    }
-    await updateBitfruits();
-    ctx.response.body = { message: "UPDATE を実施しました" };
-  })
   .post("/create-bitfruits", async (ctx: RouterContext) => {
     // 毎日 3-4時に実行
     console.log("Req: create-bitfruits");
@@ -168,6 +152,22 @@ router
     }
     await createBitfruits();
     ctx.response.body = { message: "CREATE を実施しました" };
+  })
+  .post("/update-bitfruits", async (ctx: RouterContext) => {
+    // 毎日 11-12, 19-20時に実行
+    console.log("Req: update-bitfruits");
+
+    // 必要なパラメータを取り出す
+    const body = await ctx.request.body().value;
+    const string = JSON.stringify(body);
+    const json: { api_key: string } = JSON.parse(string);
+    const API_KEY = Deno.env.get("CRON_API_KEY");
+    if (json.api_key !== API_KEY) {
+      ctx.response.body = { message: "不正なAPIKeyです" };
+      return;
+    }
+    await updateBitfruits();
+    ctx.response.body = { message: "UPDATE を実施しました" };
   })
   .get("/bitfruits", async (ctx: RouterContext) => {
     console.log("Req: bitfruits");

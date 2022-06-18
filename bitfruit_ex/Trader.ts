@@ -5,7 +5,7 @@
 // utils
 import { yyyyMMdd } from "../utils/mod.ts";
 
-// others
+// in-mod
 import { Bill } from "./types/Bill.ts";
 import { SellOrder } from "./types/SellOrder.ts";
 import { startBonus as _startBonus } from "./functions/startBonus.ts";

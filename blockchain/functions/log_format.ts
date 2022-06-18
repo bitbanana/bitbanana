@@ -3,9 +3,9 @@
 //
 
 // utils
-import * as date_format from "../../utils/date_format.ts";
+import * as date_format from "../../utils/mod.ts";
 
-// types
+// in-mod
 import { Block } from "../types/Block.ts";
 
 export function blockLog(b: Block): string {

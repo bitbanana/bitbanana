@@ -1,52 +1,52 @@
-import { Bitfruit } from "../types/Bitfruit.ts";
+// utils
 import { yyyyMMdd } from "../../utils/date_format.ts";
-import { Collection } from "../../mongo/Collection.ts";
+
+// others
+import { Bitfruit } from "../types/Bitfruit.ts";
 import { tradeConfigs } from "../config/config.ts";
 import { TradeConfig } from "../types/TradeConfig.ts";
+import { BitfruitRepo } from "../BitfruitRepo.ts";
 
 // その日のビットフルーツを作成する
 export async function createBitfruits() {
+  // yyyymmdd
   const today = new Date();
-  const todayYyyymmdd = yyyyMMdd(today);
   const ytd = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate() - 1,
   );
+  const todayYyyymmdd = yyyyMMdd(today);
   const ytdYyyymmdd = yyyyMMdd(ytd);
-
-  const c = new Collection<Bitfruit>("bitfruits");
-  const todayFruits = await c.find({ "yyyymmdd": todayYyyymmdd });
-
+  // Repo
+  const fRepo = new BitfruitRepo();
+  // 今日のビットフルーツ
+  const todayFruits = await fRepo.loadFruitsByDate(todayYyyymmdd);
   if (todayFruits.length > 0) {
     console.log(`Today Bitfruits Already Exist`);
     return;
   }
-  // const ytdFruits = await dfRepo.loadFruitsByDate(ytdYyyymmdd);
-  const ytdFruits = await c.find({ "yyyymmdd": ytdYyyymmdd });
-
+  // 昨日のビットフルーツ
+  const ytdFruits = await fRepo.loadFruitsByDate(ytdYyyymmdd);
   // 取り扱いが必要な全てのフルーツに対して
-  for await (const dfc of tradeConfigs) {
+  for await (const conf of tradeConfigs) {
     // 昨日のフルーツを見つける
-    let ytdFruit = ytdFruits.find((e) => e.fruit_id == dfc.fruit_id);
+    let ytdFruit = ytdFruits.find((e) => e.fruit_id == conf.fruit_id);
     if (ytdFruit == undefined || ytdFruit == null) {
       // 昨日のフルーツが見つからなかったら新しく作り直す
       console.log(`ytdF not found. newF created`);
-      ytdFruit = newBitfruit(dfc, todayYyyymmdd);
+      ytdFruit = newBitfruit(conf, ytdYyyymmdd);
     }
-    const todayFruit: Bitfruit = {
-      fruit_id: ytdFruit.fruit_id,
-      yyyymmdd: todayYyyymmdd,
-      buy_count: 0,
-      sell_count: 0,
-      price_ytd: ytdFruit.price,
-      price: ytdFruit.price,
-    };
+    // 更新
+    const todayFruit = ytdFruit;
+    todayFruit.yyyymmdd = todayYyyymmdd;
+    todayFruit.buy_count = 0;
+    todayFruit.sell_count = 0;
+    // 登録
     todayFruits.push(todayFruit);
   }
-
   // 保存
-  await c.insertMany(todayFruits);
+  await fRepo.saveFruits(todayFruits);
 }
 
 /// 新規で作成するBitfruit
