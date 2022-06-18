@@ -157,13 +157,13 @@ export class Collection<DocType> {
     const path = "/action/updateOne";
     const newObj: any = { $inc: {} };
     newObj.$inc[fieldName] = diff;
-    if (filter[fieldName] === undefined) {
-      filter[fieldName] = {};
-    }
     if (diff < 0) {
       // 減らすとき
       // need 以上の場合のみ実行
       const need = min - diff;
+      if (filter[fieldName] === undefined) {
+        filter[fieldName] = {};
+      }
       filter[fieldName]["$gte"] = need;
     }
     const upsert = (diff < 0) ? false : true; // 減らす時は false
