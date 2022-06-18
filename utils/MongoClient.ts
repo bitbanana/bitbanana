@@ -146,15 +146,33 @@ export class Collection<DocType> {
     const _ = await fetch(BASE_URI + path, options);
   }
 
+  // min max を超える場合は操作をしない
   async increment(
-    filter: object,
+    filter: any,
     fieldName: string,
     diff = 1,
+    min = 0,
+    max = 9999,
   ): Promise<void> {
     const method = "POST";
     const path = "/action/updateOne";
     const newObj: any = { $inc: {} };
     newObj.$inc[fieldName] = diff;
+    if (filter[fieldName] === undefined) {
+      filter[fieldName] = {};
+    }
+    if (diff < 0) {
+      // 減らすとき
+      // need 以上の場合のみ実行
+      const need = min - diff;
+      filter[fieldName]["$gte"] = need;
+    }
+    if (diff > 0) {
+      // 増やすとき
+      // need 以下の場合のみ実行
+      const need = max - diff;
+      filter[fieldName]["$lte"] = need;
+    }
     const query = {
       collection: this.name,
       database: DATABASE,
@@ -165,7 +183,14 @@ export class Collection<DocType> {
     };
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
-    const _ = await fetch(BASE_URI + path, options);
+    const res = await fetch(BASE_URI + path, options);
+    const resJson = await res.json();
+    if (resJson["modifiedCount"] === 0 && resJson["upsertedId"] === undefined) {
+      // 更新されたレコードも、新規作成されたレコードもないとき
+      throw new Error("ERR increment OVER min-max");
+      return;
+    }
+    return;
   }
 }
 
