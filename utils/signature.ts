@@ -1,4 +1,8 @@
-// utils
+//
+//
+//
+
+// in-mod
 import { buf2str } from "./buf_base64.ts";
 
 // Tx に対して署名する

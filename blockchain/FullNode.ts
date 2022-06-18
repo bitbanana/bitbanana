@@ -8,11 +8,14 @@ import { node1 } from "../node1/mod.ts";
 // in-mod
 import { IBlockchainRepo } from "./interfaces/IBlockchainRepo.ts";
 import { IBalanceSnapshotRepo } from "./interfaces/IBalanceSnapshotRepo.ts";
-import { balanceInquiry as _balanceInquiry } from "./functions/balanceInquiry.ts";
 import { IFullNode } from "./interfaces/IFullNode.ts";
-import { createBlock, pickWinner, State, Tx } from "../blockchain/mod.ts";
-import { Stake } from "./types/Stake.ts";
 import { TxListener } from "./interfaces/TxListener.ts";
+import { createBlock } from "./functions/createBlock.ts";
+import { pickWinner } from "./functions/pickWinner.ts";
+import { balanceInquiry as _balanceInquiry } from "./functions/balanceInquiry.ts";
+import { State } from "./types/State.ts";
+import { Tx } from "./types/Tx.ts";
+import { Stake } from "./types/Stake.ts";
 
 /// FullNode
 export class FullNode implements IFullNode {

@@ -2,8 +2,8 @@
 //
 //
 
-// blockchain
-import { Block } from "../../blockchain/mod.ts";
+// in-mod
+import { Block } from "../types/Block.ts";
 
 /// IBlockchainRepo
 export interface IBlockchainRepo {

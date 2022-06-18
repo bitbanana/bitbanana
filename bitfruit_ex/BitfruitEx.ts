@@ -56,7 +56,9 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
 
   /// impl IBitfruitEx
   async sellFruits(order: SellOrder): Promise<void> {
-    return await _sellFruits(order);
+    const tx = await _sellFruits(order);
+    // ユーザーへ送金
+    return await node1.fullNode.addWhiteTx(tx);
   }
 
   /// impl IBitfruitEx

@@ -1,7 +1,13 @@
+//
+//
+//
+
 // in-mod
 import { TxListener } from "../interfaces/TxListener.ts";
-import { Stake, Tx } from "../mod.ts";
+import { Stake } from "./Stake.ts";
+import { Tx } from "./Tx.ts";
 
+/// State
 export type State = {
   // 処理待ちのTx
   whiteTxList: Tx[];

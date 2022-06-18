@@ -1,5 +1,5 @@
 //
-// blockchain
+// export blockchain
 //
 
 // types

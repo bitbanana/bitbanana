@@ -2,6 +2,7 @@
 //
 //
 
+/// Block
 export type Block = {
   // 何番目のブロックか
   index: number;

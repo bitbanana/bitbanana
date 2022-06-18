@@ -2,9 +2,6 @@
 //
 //
 
-// node1
-import { node1 } from "../../node1/mod.ts";
-
 // blockchain
 import { SenderSigContent, Tx } from "../../blockchain/mod.ts";
 
@@ -17,7 +14,9 @@ import { seePockets as _seePockets } from "./seePockets.ts";
 import { buyFruits as _buyFruits } from "./buyFruits.ts";
 import { Trader } from "../Trader.ts";
 
-export async function sellFruits(order: SellOrder): Promise<void> {
+/// sellFruits
+/// return: Tx 支払い用のTx
+export async function sellFruits(order: SellOrder): Promise<Tx> {
   const trader = new Trader();
   // 集計 売られた数を1増やす
   await trader.incSellCount(order);
@@ -42,6 +41,5 @@ export async function sellFruits(order: SellOrder): Promise<void> {
     s_sig_cont: cont,
     s_sig: bitfruitExTmpSig,
   };
-  // 送金
-  await node1.fullNode.addWhiteTx(tx);
+  return tx;
 }

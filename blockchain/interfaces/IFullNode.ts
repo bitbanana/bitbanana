@@ -2,8 +2,10 @@
 //
 //
 
-// blockchain
-import { Stake, Tx, TxListener } from "../../blockchain/mod.ts";
+// in-mod
+import { Stake } from "../types/Stake.ts";
+import { Tx } from "../types/Tx.ts";
+import { TxListener } from "../interfaces/TxListener.ts";
 
 /// IFullNode
 export interface IFullNode {

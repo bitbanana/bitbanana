@@ -2,6 +2,7 @@
 //
 //
 
+// in-mod
 import { buf2str, str2buf } from "./buf_base64.ts";
 
 // 新しい 署名用の 鍵ペアを作成

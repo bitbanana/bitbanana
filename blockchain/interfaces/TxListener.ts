@@ -3,7 +3,7 @@
 //
 
 // in-mod
-import { Tx } from "../mod.ts";
+import { Tx } from "../types/Tx.ts";
 
 /// TxListener
 export interface TxListener {

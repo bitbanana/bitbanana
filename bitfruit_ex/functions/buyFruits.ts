@@ -4,9 +4,9 @@
 
 // in-mod
 import { Bill } from "../types/Bill.ts";
-import { WhiteBillRepo } from "../WhiteBillRepo.ts";
 import { BuyOrder } from "../types/BuyOrder.ts";
 import { bitfruitExAddr } from "../config/config.ts";
+import { WhiteBillRepo } from "../WhiteBillRepo.ts";
 import { startBonus as _startBonus } from "./startBonus.ts";
 import { seeFruits as _seeFruits } from "./seeFruits.ts";
 import { seePockets as _seePockets } from "./seePockets.ts";
