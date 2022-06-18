@@ -178,12 +178,10 @@ export class Collection<DocType> {
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
     const res = await fetch(BASE_URI + path, options);
-    console.log(`QUERY: ${JSON.stringify(query, null, 2)}`);
     const resJson = await res.json();
-    console.log(`RES: ${JSON.stringify(resJson, null, 2)}`);
     if (resJson["modifiedCount"] === 0 && resJson["upsertedId"] === undefined) {
       // 更新されたレコードも、新規作成されたレコードもないとき
-      throw new Error("ERR increment OVER min-max");
+      throw new Error("ERR increment less than min");
     }
     return;
   }

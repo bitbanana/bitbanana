@@ -18,10 +18,10 @@ import { Trader } from "../Trader.ts";
 /// return: Tx 支払い用のTx
 export async function sellFruits(order: SellOrder): Promise<Tx> {
   const trader = new Trader();
+  // 購入者の所有数を減らす
+  await trader.decPocketCount(order); // 不正な場合はここでエラー
   // 集計 売られた数を1増やす
   await trader.incSellCount(order);
-  // 購入者の所有数を減らす
-  await trader.decPocketCount(order);
   // 支払いtxを作成
   const fruits = await _seeFruits();
   const fruit = fruits.find((e) => e.fruit_id == order.fruit_id);

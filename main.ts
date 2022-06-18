@@ -28,7 +28,7 @@ import {
 import { node1 } from "./node1/mod.ts";
 
 // バージョン
-const VERSION = "0.8.0";
+const VERSION = "0.9.0";
 
 // インスタンス初期化
 await node1.init(); // FullNode
