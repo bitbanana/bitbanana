@@ -8,7 +8,6 @@ import { Bill } from "../types/Bill.ts";
 import { SellOrder } from "../types/SellOrder.ts";
 import { Bitfruit } from "../types/Bitfruit.ts";
 import { BuyOrder } from "../types/BuyOrder.ts";
-import { StartBonusRes } from "../types/StartBonus.ts";
 import { startBonus as _startBonus } from "../functions/startBonus.ts";
 import { seeFruits as _seeFruits } from "../functions/seeFruits.ts";
 import { seePockets as _seePockets } from "../functions/seePockets.ts";
@@ -22,7 +21,7 @@ export interface IBitfruitEx {
 
   // 初回限定ボーナスをもらう (実は残高0なら何度でももらえる)
   // 公開鍵をサーバーに登録する
-  startBonus(addr: string): Promise<StartBonusRes>;
+  startBonus(addr: string): Promise<number>;
 
   // ビットフルーツ一覧を見る
   seeFruits(): Promise<Bitfruit[]>;

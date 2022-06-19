@@ -3,7 +3,7 @@
 //
 
 // deps
-import { datetime } from "../deps.ts";
+import { datetime } from "../deps/deps.ts";
 
 export function timeReadable(time: string): string {
   const date = datetime(time);

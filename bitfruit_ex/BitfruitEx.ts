@@ -20,7 +20,6 @@ import { seeFruits as _seeFruits } from "./functions/seeFruits.ts";
 import { seePockets as _seePockets } from "./functions/seePockets.ts";
 import { buyFruits as _buyFruits } from "./functions/buyFruits.ts";
 import { sellFruits as _sellFruits } from "./functions/sellFruits.ts";
-import { StartBonusRes } from "./types/StartBonus.ts";
 import { WhiteBillRepo } from "./WhiteBillRepo.ts";
 import { BitfruitRepo } from "./BitfruitRepo.ts";
 import { DailyAccessRepo } from "./DailyAccessRepo.ts";
@@ -35,7 +34,7 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
   }
 
   /// impl IBitfruitEx
-  async startBonus(addr: string): Promise<StartBonusRes> {
+  async startBonus(addr: string): Promise<number> {
     return await _startBonus(addr);
   }
 

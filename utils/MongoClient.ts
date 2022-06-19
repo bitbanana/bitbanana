@@ -3,27 +3,13 @@
 //
 
 // deps
-import { config } from "../deps.ts";
-
-// どこで実行されているか
-const deployId = Deno.env.get("DENO_DEPLOYMENT_ID");
-const isOnDenodeploy = deployId !== undefined;
-
-// Deno Deploy 上の環境変数を読み込む
-let API_POINT = Deno.env.get("API_POINT");
-let API_KEY = Deno.env.get("API_KEY");
-
-if (!isOnDenodeploy) {
-  // ローカルの .env から読み込む
-  API_POINT = config({ path: "./private/.env" })["API_POINT"];
-  API_KEY = config({ path: "./private/.env" })["API_KEY"];
-}
+import { env } from "../deps/env.ts";
 
 // 固定
 const DATA_SOURCE = "Bitbanana";
 const DATABASE = "bitbananaDB";
 const BASE_URI =
-  `https://data.mongodb-api.com/app/${API_POINT}/endpoint/data/beta`;
+  `https://data.mongodb-api.com/app/${env.API_POINT}/endpoint/data/beta`;
 
 export class Collection<DocType> {
   constructor(public name: string) {}
@@ -193,7 +179,7 @@ function createOptions(method: string, query: string): any {
     method: method,
     headers: {
       "Content-Type": "application/json",
-      "api-key": API_KEY,
+      "api-key": env.API_KEY,
     },
     body: query,
   };
