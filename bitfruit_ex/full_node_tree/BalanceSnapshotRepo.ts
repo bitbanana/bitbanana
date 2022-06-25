@@ -3,10 +3,10 @@
 //
 
 // utils
-import { MongoCollection } from "../utils/mod.ts";
+import { MongoCollection } from "../../utils/mod.ts";
 
-// blockchain
-import { BalanceSnapshot, IBalanceSnapshotRepo } from "../blockchain/mod.ts";
+// core
+import { BalanceSnapshot, IBalanceSnapshotRepo } from "../../core/mod.ts";
 
 /// BalanceSnapshotRepo
 export class BalanceSnapshotRepo implements IBalanceSnapshotRepo {

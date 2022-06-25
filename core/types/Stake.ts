@@ -8,4 +8,6 @@ export type Stake = {
   addr: string;
   // 応募金 敷金みたいな感じで帰ってくる (後で上限付ける)
   token: number;
+  // ブロック作成のURL
+  url_create_block: string;
 };

@@ -2,6 +2,9 @@
 //
 //
 
+// core
+import { Block, Stake, Tx } from "../../core/mod.ts";
+
 // in-mod
 import { FruitPocket } from "../types/FruitPocket.ts";
 import { Bill } from "../types/Bill.ts";
@@ -40,4 +43,10 @@ export interface IBitfruitEx {
 
   // アクセス数を見る
   getDailyAccess(): Promise<DailyAccess[]>;
+
+  // Validator createBlock
+  createBlock(tx: Tx, prevBlock: Block, winnerStake: Stake): Promise<void>;
+
+  // Full-Node applyStake
+  applyStake(stake: Stake): Promise<void>;
 }

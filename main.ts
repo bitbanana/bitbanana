@@ -12,8 +12,8 @@ import {
 } from "./deps/deps.ts";
 import { env } from "./deps/env.ts";
 
-// blockchain
-import { Tx } from "./blockchain/mod.ts";
+// core
+import { Tx } from "./core/mod.ts";
 
 // bitfruit_ex
 import {

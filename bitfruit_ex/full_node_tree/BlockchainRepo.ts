@@ -3,13 +3,13 @@
 //
 
 // utils
-import { MongoCollection } from "../utils/mod.ts";
+import { MongoCollection } from "../../utils/mod.ts";
 
-// blockchain
-import { Block, IBlockchainRepo } from "../blockchain/mod.ts";
+// core
+import { Block, IBlockchainRepo } from "../../core/mod.ts";
 
 // in-mod
-import { genesisBlock } from "./config/config.ts";
+import { genesisBlock } from "./config.ts";
 
 /// BlockchainRepo
 export class BlockchainRepo implements IBlockchainRepo {

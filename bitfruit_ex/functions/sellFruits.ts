@@ -2,8 +2,8 @@
 //
 //
 
-// blockchain
-import { SenderSigContent, Tx } from "../../blockchain/mod.ts";
+// core
+import { SenderSigContent, Tx } from "../../core/mod.ts";
 
 // in-mod
 import { SellOrder } from "../types/SellOrder.ts";

@@ -2,9 +2,6 @@
 //
 //
 
-// node1
-import { node1 } from "../node1/mod.ts";
-
 // in-mod
 import { IBlockchainRepo } from "./interfaces/IBlockchainRepo.ts";
 import { IBalanceSnapshotRepo } from "./interfaces/IBalanceSnapshotRepo.ts";
@@ -13,6 +10,7 @@ import { TxListener } from "./interfaces/TxListener.ts";
 import { createBlock } from "./functions/createBlock.ts";
 import { pickWinner } from "./functions/pickWinner.ts";
 import { balanceInquiry as _balanceInquiry } from "./functions/balanceInquiry.ts";
+import { callCreateBlock } from "./functions/callCreateBlock.ts";
 import { State } from "./types/State.ts";
 import { Tx } from "./types/Tx.ts";
 import { Stake } from "./types/Stake.ts";
@@ -21,12 +19,16 @@ import { Stake } from "./types/Stake.ts";
 export class FullNode implements IFullNode {
   /// State
   state: State;
+  /// addr
+  addr: string;
 
   // constructor
   constructor(
+    addr: string,
     private snapshotRepo: IBalanceSnapshotRepo,
     private blockchainRepo: IBlockchainRepo,
   ) {
+    this.addr = addr;
     this.state = {
       whiteTxList: [],
       stakes: [],
@@ -44,18 +46,7 @@ export class FullNode implements IFullNode {
     this.state.whiteTxList.push(tx);
     const winnerStake = pickWinner(this.state.stakes);
     const prevBlock = await this.blockchainRepo.getLastBlock();
-    // MEMO: - 現在バリデーターは node1 しかいないので、直接依存する
-    // --- --- BIGIN Validator work --- ---
-    const vSig = node1.sig;
-    const block = await createBlock(
-      prevBlock,
-      tx.s_sig_cont,
-      tx.s_addr,
-      tx.s_sig,
-      winnerStake,
-      vSig,
-    );
-    // --- --- END Validator work --- ---
+    const block = await callCreateBlock(tx, prevBlock, winnerStake);
     await this.blockchainRepo.saveBlock(block);
     await this.notifyGreenTx(tx);
   }

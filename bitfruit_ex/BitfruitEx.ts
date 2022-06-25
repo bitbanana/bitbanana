@@ -2,11 +2,8 @@
 //
 //
 
-// blockchain
-import { Tx, TxListener } from "../blockchain/mod.ts";
-
-// node1
-import { node1 } from "../node1/mod.ts";
+// core
+import { Block, Stake, Tx, TxListener } from "../core/mod.ts";
 
 // others
 import { FruitPocket } from "./types/FruitPocket.ts";
@@ -25,12 +22,20 @@ import { BitfruitRepo } from "./BitfruitRepo.ts";
 import { DailyAccessRepo } from "./DailyAccessRepo.ts";
 import { Trader } from "./Trader.ts";
 import { IBitfruitEx } from "./interfaces/IBitfruitEx.ts";
+import { initFullNode } from "./full_node_tree/initFullNode.ts";
+import { initValidator } from "./validator_tree/initValidator.ts";
+import { bitfruitExAddr } from "./config/config.ts";
 
 /// BitfruitEx
 export class BitfruitEx implements IBitfruitEx, TxListener {
+  fullNode = initFullNode();
+  validator = initValidator();
+
   async init(): Promise<void> {
     await createBitfruits();
-    await node1.fullNode.addTxListener(this);
+    // バリデーターとして応募する。URLはここでは特別にアドレスを使う
+    await this.validator.apply(bitfruitExAddr);
+    await this.fullNode.addTxListener(this);
   }
 
   /// impl IBitfruitEx
@@ -57,7 +62,7 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
   async sellFruits(order: SellOrder): Promise<void> {
     const tx = await _sellFruits(order);
     // ユーザーへ送金
-    return await node1.fullNode.addWhiteTx(tx);
+    return await this.fullNode.addWhiteTx(tx);
   }
 
   /// impl IBitfruitEx
@@ -70,6 +75,21 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
   async getDailyAccess(): Promise<DailyAccess[]> {
     const repo = new DailyAccessRepo();
     return await repo.getDailyAccessList();
+  }
+
+  // impl IBitfruitEx
+  async createBlock(
+    tx: Tx,
+    prevBlock: Block,
+    winnerStake: Stake,
+  ): Promise<void> {
+    await this.validator.createBlock(tx, prevBlock, winnerStake);
+    return;
+  }
+
+  // impl IBitfruitEx
+  async applyStake(stake: Stake): Promise<void> {
+    await this.fullNode.addStake(stake);
   }
 
   /// impl TxListener

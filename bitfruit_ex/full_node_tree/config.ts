@@ -2,8 +2,8 @@
 //
 //
 
-// blockchain
-import { Block } from "../../blockchain/mod.ts";
+// core
+import { Block } from "../../core/mod.ts";
 
 export const genesisBlock: Block = {
   index: 0,
