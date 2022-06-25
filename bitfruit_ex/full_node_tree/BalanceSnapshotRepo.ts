@@ -5,8 +5,8 @@
 // utils
 import { MongoCollection } from "../../utils/mod.ts";
 
-// core
-import { BalanceSnapshot, IBalanceSnapshotRepo } from "../../core/mod.ts";
+// bitbanana
+import { BalanceSnapshot, IBalanceSnapshotRepo } from "../../bitbanana/mod.ts";
 
 /// BalanceSnapshotRepo
 export class BalanceSnapshotRepo implements IBalanceSnapshotRepo {

@@ -12,8 +12,8 @@ import {
 } from "./deps/deps.ts";
 import { env } from "./deps/env.ts";
 
-// core
-import { Tx } from "./core/mod.ts";
+// bitbanana
+import { Tx } from "./bitbanana/mod.ts";
 
 // bitfruit_ex
 import {

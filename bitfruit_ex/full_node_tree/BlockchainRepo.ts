@@ -5,8 +5,8 @@
 // utils
 import { MongoCollection } from "../../utils/mod.ts";
 
-// core
-import { Block, IBlockchainRepo } from "../../core/mod.ts";
+// bitbanana
+import { Block, IBlockchainRepo } from "../../bitbanana/mod.ts";
 
 // in-mod
 import { genesisBlock } from "./config.ts";

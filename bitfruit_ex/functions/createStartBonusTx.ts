@@ -1,5 +1,5 @@
-// core
-import { SenderSigContent, Tx } from "../../core/mod.ts";
+// bitbanana
+import { SenderSigContent, Tx } from "../../bitbanana/mod.ts";
 
 // in-mod
 import {

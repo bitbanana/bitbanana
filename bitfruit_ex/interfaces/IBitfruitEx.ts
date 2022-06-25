@@ -2,8 +2,8 @@
 //
 //
 
-// core
-import { Block, Stake, Tx } from "../../core/mod.ts";
+// bitbanana
+import { Block, Stake, Tx } from "../../bitbanana/mod.ts";
 
 // in-mod
 import { FruitPocket } from "../types/FruitPocket.ts";

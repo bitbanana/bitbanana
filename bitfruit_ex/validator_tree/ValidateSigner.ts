@@ -2,8 +2,8 @@
 //
 //
 
-// core
-import { IValidateSigner, ValidatorSigContent } from "../../core/mod.ts";
+// bitbanana
+import { IValidateSigner, ValidatorSigContent } from "../../bitbanana/mod.ts";
 
 // in-mod
 import { bitfruitExTmpSig } from "../config/config.ts";

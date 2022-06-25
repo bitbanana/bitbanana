@@ -2,8 +2,8 @@
 //
 //
 
-// core
-import { Validator } from "../../core/mod.ts";
+// bitbanana
+import { Validator } from "../../bitbanana/mod.ts";
 // in-mod
 import { bitfruitExAddr } from "../config/config.ts";
 import { ValidateSigner } from "./ValidateSigner.ts";

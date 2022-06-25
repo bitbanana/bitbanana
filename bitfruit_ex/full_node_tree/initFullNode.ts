@@ -2,8 +2,8 @@
 //
 //
 
-// core
-import { FullNode, IFullNode } from "../../core/mod.ts";
+// bitbanana
+import { FullNode, IFullNode } from "../../bitbanana/mod.ts";
 // in-mod
 import { bitfruitExAddr } from "../config/config.ts";
 import { BlockchainRepo } from "./BlockchainRepo.ts";

@@ -2,8 +2,8 @@
 //
 //
 
-// core
-import { IFullNode } from "../../core/mod.ts";
+// bitbanana
+import { IFullNode } from "../../bitbanana/mod.ts";
 
 // in-mod
 import { DailyAccessRepo } from "../DailyAccessRepo.ts";

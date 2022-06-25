@@ -2,8 +2,8 @@
 //
 //
 
-// core
-import { Block } from "../../core/mod.ts";
+// bitbanana
+import { Block } from "../../bitbanana/mod.ts";
 
 export const genesisBlock: Block = {
   index: 0,
