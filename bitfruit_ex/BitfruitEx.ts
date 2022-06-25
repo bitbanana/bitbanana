@@ -40,7 +40,12 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
 
   /// impl IBitfruitEx
   async startBonus(addr: string): Promise<number> {
-    return await _startBonus(addr);
+    const balance = await this.fullNode.balanceInquiry(addr);
+    if (balance !== 0) {
+      throw new Error("Already has balance");
+    }
+    const accessRepo = new DailyAccessRepo();
+    return await _startBonus(accessRepo, this.fullNode, addr);
   }
 
   /// impl IBitfruitEx
@@ -90,6 +95,16 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
   // impl IBitfruitEx
   async applyStake(stake: Stake): Promise<void> {
     await this.fullNode.addStake(stake);
+  }
+
+  // impl IBitfruitEx
+  async balanceInquiry(addr: string): Promise<number> {
+    return await this.fullNode.balanceInquiry(addr);
+  }
+
+  // impl IBitfruitEx
+  async addWhiteTx(tx: Tx): Promise<void> {
+    await this.fullNode.addWhiteTx(tx);
   }
 
   /// impl TxListener

@@ -49,4 +49,10 @@ export interface IBitfruitEx {
 
   // Full-Node applyStake
   applyStake(stake: Stake): Promise<void>;
+
+  // Full-Node balanceInquiry
+  balanceInquiry(addr: string): Promise<number>;
+
+  // Full-Node addWhiteTx
+  addWhiteTx(tx: Tx): Promise<void>;
 }

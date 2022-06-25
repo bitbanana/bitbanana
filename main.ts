@@ -25,14 +25,10 @@ import {
   updateBitfruits,
 } from "./bitfruit_ex/mod.ts";
 
-// node1
-import { node1 } from "./node1/mod.ts";
-
 // バージョン
 const VERSION = "0.9.0";
 
 // インスタンス初期化
-await node1.init(); // FullNode
 await bitfruitEx.init(); // BitfruitEx
 
 // リクエストからjsonパラメータを取り出す
@@ -59,7 +55,7 @@ router
   .post("/balance-inquiry", async (ctx: RouterContext) => {
     console.log("Req: balance-inquiry");
     const req = await getReqJson<{ addr: string }>(ctx);
-    const balance = await node1.fullNode.balanceInquiry(req.addr);
+    const balance = await bitfruitEx.balanceInquiry(req.addr);
     ctx.response.body = { balance: balance };
   })
   .post("/see-fruits", async (ctx: RouterContext) => {
@@ -87,7 +83,7 @@ router
       ctx.response.body = { message: "宛先が不正です" };
       return;
     }
-    await node1.fullNode.addWhiteTx(tx);
+    await bitfruitEx.addWhiteTx(tx);
     ctx.response.body = {};
   })
   .post("/sell-fruits", async (ctx: RouterContext) => {

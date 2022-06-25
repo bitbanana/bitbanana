@@ -1,10 +1,8 @@
 # Officialシリーズ
 
-- Node1
-  - 現在唯一のフルノード&バリデーター
-  - アドレスは @node1
 - BitFruitEx
   - ビットフルーツ取引所
+  - 現在唯一のフルノード&バリデーターも兼ねる
   - アドレスは @bitfruitex
   - 価格変動APIなどを提供
   - コインを発行できる特別な機関
@@ -31,7 +29,7 @@
   - 未処理のTxを追加
   - ポケットの値、売られた数 を更新
 
-# Node1 WebAPI
+# Full Node WebAPI
 
   - start-bonus
       初回限定ボーナスをもらう

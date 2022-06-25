@@ -6,10 +6,9 @@
 
 ## Future
 
-[ ] Node1 と BitFruitEx のキーペアを決定して保存
-  - NODE1_PVT_KEY, NODE1_PUB_KEY
+[ ] BitFruitEx のキーペアを決定して保存
   - EX_PVT_KEY, EX_PUB_KEY
-[ ] Node1 と BitFruitEx の署名を実装
+[ ] BitFruitEx の署名を実装
 [ ] 初回ボーナスのバリデーション強化 残高0ではなくまだ一度も取引してないことを確認
 [ ] 定期的にデータ整合ランダムチェック
 [ ] 都度の整合バリデーションは重いのでしばらくはしない
