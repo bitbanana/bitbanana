@@ -45,7 +45,7 @@ export interface IBitfruitEx {
   getDailyAccess(): Promise<DailyAccess[]>;
 
   // Validator createBlock
-  createBlock(tx: Tx, prevBlock: Block, winnerStake: Stake): Promise<void>;
+  createBlock(tx: Tx, prevBlock: Block, winnerStake: Stake): Promise<Block>;
 
   // Full-Node applyStake
   applyStake(stake: Stake): Promise<void>;

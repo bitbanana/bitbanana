@@ -17,9 +17,9 @@ export async function callCreateBlock(
   prevBlock: Block,
   winnerStake: Stake,
 ): Promise<Block> {
-  if (winnerStake.addr == bitfruitExAddr) {
-    // 通信を介さず Bitfruit のバリデーターの createBlock を直接呼び出す
-    await bitfruitEx.createBlock(tx, prevBlock, winnerStake);
+  if (winnerStake.addr != bitfruitExAddr) {
+    throw new Error("一般バリデータは現在募集されていません");
   }
-  throw new Error("一般バリデータは現在募集されていません");
+  // 通信を介さず Bitfruit のバリデーターの createBlock を直接呼び出す
+  return await bitfruitEx.createBlock(tx, prevBlock, winnerStake);
 }

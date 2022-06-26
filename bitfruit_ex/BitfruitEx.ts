@@ -87,9 +87,8 @@ export class BitfruitEx implements IBitfruitEx, TxListener {
     tx: Tx,
     prevBlock: Block,
     winnerStake: Stake,
-  ): Promise<void> {
-    await this.validator.createBlock(tx, prevBlock, winnerStake);
-    return;
+  ): Promise<Block> {
+    return await this.validator.createBlock(tx, prevBlock, winnerStake);
   }
 
   // impl IBitfruitEx

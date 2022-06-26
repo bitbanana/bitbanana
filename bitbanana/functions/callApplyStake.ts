@@ -15,9 +15,9 @@ export async function callApplyStake(
   // deno-lint-ignore no-unused-vars
   nodeUrl: string,
 ): Promise<void> {
-  if (stake.addr == bitfruitExAddr) {
-    // 通信を介さず Bitfruit の fullBode に直接追加する
-    await bitfruitEx.applyStake(stake);
+  if (stake.addr != bitfruitExAddr) {
+    throw new Error("一般バリデータは現在応募できません");
   }
-  throw new Error("一般バリデータは現在応募できません");
+  // 通信を介さず Bitfruit の fullBode に直接追加する
+  await bitfruitEx.applyStake(stake);
 }
