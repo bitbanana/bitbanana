@@ -35,6 +35,7 @@ export class BitfruitRepo {
   // 日付を指定して取得
   async loadFruitsByDate(yyyyMMdd: string): Promise<Bitfruit[]> {
     const c = new MongoCollection<Bitfruit>("bitfruits");
+    console.log(`loadFruitsByDate: yyyymmdd ${yyyyMMdd}`);
     const fruits = await c.find({
       "yyyymmdd": yyyyMMdd,
     });

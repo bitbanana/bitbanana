@@ -55,6 +55,8 @@ export class Collection<DocType> {
   async find(filter: Object): Promise<DocType[]> {
     const method = "POST";
     const path = "/action/find";
+    console.log(`DATABASE: ${DATABASE}, DATA_SOURCE ${DATA_SOURCE}`);
+    console.log(`filter: ${filter}`);
     const query = {
       collection: this.name,
       database: DATABASE,
@@ -63,7 +65,9 @@ export class Collection<DocType> {
     };
     const queryJson = JSON.stringify(query);
     const options = createOptions(method, queryJson);
+    console.log(`willfetch: ${queryJson}`);
     const res = await fetch(BASE_URI + path, options);
+    console.log(`didfetch: ${res}`);
     const resJson = await res.json();
     const anyDocs: any[] = resJson.documents;
     for await (const anyDoc of anyDocs) {
