@@ -67,9 +67,10 @@ export class Collection<DocType> {
     const options = createOptions(method, queryJson);
     console.log(`willfetch: ${queryJson}`);
     const res = await fetch(BASE_URI + path, options);
-    console.log(`didfetch: ${res}`);
+    console.log(`didfetch res.ok: ${res.ok}, res.status: ${res.status}`);
     const resJson = await res.json();
     const anyDocs: any[] = resJson.documents;
+    console.log(`anyDocs: ${anyDocs}`);
     for await (const anyDoc of anyDocs) {
       delete anyDoc._id;
     }

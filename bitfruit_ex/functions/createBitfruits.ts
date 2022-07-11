@@ -21,13 +21,16 @@ export async function createBitfruits() {
   // Repo
   const fRepo = new BitfruitRepo();
   // 今日のビットフルーツ
+  console.log(`one`);
   const todayFruits = await fRepo.loadFruitsByDate(todayYyyymmdd);
   if (todayFruits.length > 0) {
     console.log(`Today Bitfruits Already Exist`);
     return;
   }
   // 昨日のビットフルーツ
+  console.log(`two`);
   const ytdFruits = await fRepo.loadFruitsByDate(ytdYyyymmdd);
+  console.log(`three ytdFruits: ${ytdFruits}`);
   // 取り扱いが必要な全てのフルーツに対して
   for await (const conf of tradeConfigs) {
     // 昨日のフルーツを見つける
